@@ -101,49 +101,79 @@
 </script>
 
 <h1>TrueSkill Online Calculator</h1>
-<p>
-	<b>Current Config:</b>
-	<br />Default Mu:
-	<input
-		type="number"
-		bind:value={defaultMu}
-		on:input={() => {
-			updateCalculations();
-		}}
-	/>
-	<br />Default Sigma:
-	<input
-		type="number"
-		bind:value={defaultSigma}
-		on:input={() => {
-			updateCalculations();
-		}}
-	/>
-	<br />Beta:
-	<input
-		type="number"
-		bind:value={betaValue}
-		on:input={() => {
-			updateCalculations();
-		}}
-	/>
-	<br />Tau:
-	<input
-		type="number"
-		bind:value={tauValue}
-		on:input={() => {
-			updateCalculations();
-		}}
-	/>
-	<br />Draw Probability:
-	<input
-		type="number"
-		bind:value={drawProbability}
-		on:input={() => {
-			updateCalculations();
-		}}
-	/>
-</p>
+<div class="box">
+	<h2>Current Config:</h2>
+	<p>Hover over the values to see the explanation.</p>
+	<table>
+		<tr>
+			<td title="The default Value of Mu (μ) for new players."> Default Mu (μ):</td>
+			<td>
+				<input
+					type="number"
+					bind:value={defaultMu}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+		</tr>
+		<tr>
+			<td title="The default Value of Sigma (σ) for new players.">Default Sigma (σ):</td>
+			<td>
+				<input
+					type="number"
+					bind:value={defaultSigma}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+		</tr>
+		<tr>
+			<td
+				title="The distance in rating points to guarantee about a 76% chance of winning for the higher rated player."
+			>
+				Beta (β):</td
+			>
+			<td>
+				<input
+					type="number"
+					bind:value={betaValue}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+		</tr>
+		<tr>
+			<td title="The additive dynamics factor, the higher the value, the more dynamic the ratings.">
+				Tau (τ):</td
+			>
+			<td>
+				<input
+					type="number"
+					bind:value={tauValue}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+		</tr>
+		<tr>
+			<td title="The chance of a draw occurring in your game."> Draw Probability:</td>
+			<td>
+				<input
+					type="number"
+					bind:value={drawProbability}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+		</tr>
+	</table>
+</div>
+
 <button on:click={() => incrementTeamCount()}> Add Team </button>
 <button on:click={() => decreaseTeamCount()}> Remove Team </button>
 <p><b>Starting Teams: ({teamCount})</b></p>
@@ -171,7 +201,7 @@
 					on:input={() => {
 						updateCalculations();
 					}}
-					>
+				/>
 			</td>
 
 			<td>
@@ -203,6 +233,12 @@
 		<button on:click={() => removePlayerFromTeam(i)}> Remove Player </button>
 	{/each}
 </table>
+<br />
+<div
+	title="The match quality is the chance of a draw occurring in the given game. The higher the value, the closer the game will be."
+>
+	Match Quality: {quality}
+</div>
 <p><b>Resulting Teams: ({teamCount})</b></p>
 <table>
 	<tr>
@@ -213,37 +249,34 @@
 	{#each newTeams as team, i}
 		<tr>
 			<td>
-				<input
-					type="text"
-					bind:value={team.name}
-					readonly
-				/>
+				<input type="text" bind:value={team.name} readonly />
 			</td>
 			<td>
-				<input
-					type="number"
-					bind:value={team.rank}
-					readonly
-					>
+				<input type="text" bind:value={team.rank} readonly />
 			</td>
 
 			<td>
 				{#each team.players as player, j}
-					<input
-						type="number"
-						value={player.mu}
-						readonly
-					/>
+					<input type="text" value={player.mu} readonly />
 
-					<input
-						type="number"
-						value={player.sigma}
-						readonly
-					/>
+					<input type="text" value={player.sigma} readonly />
 					<br />
 				{/each}
 			</td>
 		</tr>
 	{/each}
 </table>
-<p>Match Quality: {quality}</p>
+
+<style>
+	.box {
+		border: 1px solid black;
+		padding: 10px;
+		margin: 10px;
+		background: #f2f2f2;
+	}
+
+	td {
+		padding: 10px;
+		background: #f2f2f2;
+	}
+</style>

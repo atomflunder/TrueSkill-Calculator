@@ -50,5 +50,5 @@ export const matchQuality = function (env: TrueSkill, teams: Team[]): string {
 		}
 		ratings.push(teamRatings);
 	}
-	return `${env.quality(ratings)}`;
+	return `${(env.quality(ratings) * 100).toFixed(2)}%`;
 };
