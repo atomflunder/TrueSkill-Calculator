@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { TrueSkill, Rating } from 'ts-trueskill';
-	import { getDefaultTeam, type Team } from '../Teams.js';
-	import { calculateRatings, matchQuality } from '../TrueSkill.js';
-	import { getDefaultPlayer } from '../Players.js';
+	import { getDefaultTeam, type Team } from '../Teams';
+	import { calculateRatings, matchQuality } from '../TrueSkill';
+	import { getDefaultPlayer } from '../Players';
 
 	let defaultMu = 25;
 	let defaultSigma = 25 / 3;

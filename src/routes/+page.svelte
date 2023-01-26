@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Teams from './Teams.svelte';
+	import TrueSkillCalculator from './TrueSkillCalculator.svelte';
 </script>
 
-<Teams />
+<TrueSkillCalculator />
 
 <p>Made by atomflunder. <a href="https://github.com/atomflunder/trueskill-calc">GitHub Link</a></p>
