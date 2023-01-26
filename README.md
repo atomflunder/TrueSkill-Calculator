@@ -1,7 +1,7 @@
 # TrueSkill Online Calculator
 
 This is a simple TrueSkill calculator that runs in your browser. It is based on the TrueSkill algorithm by Microsoft.  
-[Link to the calculator](..)
+[Link to the calculator](https://atomflunder.github.io/trueskill-calc/)
 
 ## How to use
 
