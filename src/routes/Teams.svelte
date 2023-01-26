@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { TrueSkill, Rating } from 'ts-trueskill';
-	import type { Team } from '../Teams.js';
-	import { teamToString } from '../Teams.js';
+	import { getDefaultTeam, type Team } from '../Teams.js';
 	import { calculateRatings, matchQuality } from '../TrueSkill.js';
+	import { getDefaultPlayer } from '../Players.js';
 
 	let defaultMu = 25;
 	let defaultSigma = 25 / 3;
@@ -13,30 +13,33 @@
 	let env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
 
 	export let teamCount = 2;
+
 	export let currentTeams: Team[] = [
 		{
 			name: 'Team 1',
-			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
+			players: [
+				getDefaultPlayer(defaultMu, defaultSigma),
+				getDefaultPlayer(defaultMu, defaultSigma)
+			],
 			rank: 1
 		},
 		{
 			name: 'Team 2',
-			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
+			players: [
+				getDefaultPlayer(defaultMu, defaultSigma),
+				getDefaultPlayer(defaultMu, defaultSigma)
+			],
 			rank: 2
 		}
 	];
 
 	export let newTeams: Team[] = calculateRatings(env, currentTeams);
-	export let quality = matchQuality(env, newTeams);
+	export let quality = matchQuality(env, currentTeams);
 
 	const incrementTeamCount = () => {
 		if (teamCount < 50) {
 			teamCount += 1;
-			const newTeam = {
-				name: `Team ${teamCount}`,
-				players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
-				rank: teamCount
-			};
+			const newTeam = getDefaultTeam(defaultMu, defaultSigma, teamCount);
 			currentTeams.push(newTeam);
 			currentTeams = currentTeams;
 			updateCalculations();
@@ -52,10 +55,48 @@
 		}
 	};
 
+	const addPlayerToTeam = (teamIndex: number) => {
+		if (currentTeams[teamIndex].players.length < 20) {
+			currentTeams[teamIndex].players.push(getDefaultPlayer(defaultMu, defaultSigma));
+			currentTeams = currentTeams;
+			updateCalculations();
+		}
+	};
+
+	const removePlayerFromTeam = (teamIndex: number) => {
+		if (currentTeams[teamIndex].players.length > 1) {
+			currentTeams[teamIndex].players.pop();
+			currentTeams = currentTeams;
+			updateCalculations();
+		}
+	};
+
+	const updatePlayerInTeam = (
+		teamIndex: number,
+		playerIndex: number,
+		newMu: number | undefined,
+		newSigma: number | undefined
+	) => {
+		let mu = currentTeams[teamIndex].players[playerIndex].mu;
+		let sigma = currentTeams[teamIndex].players[playerIndex].sigma;
+
+		if (newMu !== undefined) {
+			mu = newMu;
+		}
+		if (newSigma !== undefined) {
+			sigma = newSigma;
+		}
+
+		currentTeams[teamIndex].players[playerIndex] = new Rating(mu, sigma);
+
+		currentTeams = currentTeams;
+		updateCalculations();
+	};
+
 	export const updateCalculations = function () {
 		env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
 		newTeams = calculateRatings(env, currentTeams);
-		quality = matchQuality(env, newTeams);
+		quality = matchQuality(env, currentTeams);
 	};
 </script>
 
@@ -106,19 +147,103 @@
 <button on:click={() => incrementTeamCount()}> Add Team </button>
 <button on:click={() => decreaseTeamCount()}> Remove Team </button>
 <p><b>Starting Teams: ({teamCount})</b></p>
-<ul>
+<table>
+	<tr>
+		<th>Team Name</th>
+		<th>Rank</th>
+		<th>Player Mu (μ) & Sigma (σ)</th>
+	</tr>
 	{#each currentTeams as team, i}
-		<li>
-			{teamToString(team)}
-		</li>
+		<tr>
+			<td>
+				<input
+					type="text"
+					bind:value={team.name}
+					on:input={() => {
+						updateCalculations();
+					}}
+				/>
+			</td>
+			<td>
+				<input
+					type="number"
+					bind:value={team.rank}
+					on:input={() => {
+						updateCalculations();
+					}}
+					>
+			</td>
+
+			<td>
+				{#each team.players as player, j}
+					<input
+						type="number"
+						value={player.mu}
+						on:input={(event) => {
+							if (event.target instanceof HTMLInputElement) {
+								updatePlayerInTeam(i, j, Number(event.target.valueAsNumber), undefined);
+							}
+						}}
+					/>
+
+					<input
+						type="number"
+						value={player.sigma}
+						on:input={(event) => {
+							if (event.target instanceof HTMLInputElement) {
+								updatePlayerInTeam(i, j, undefined, Number(event.target.valueAsNumber));
+							}
+						}}
+					/>
+					<br />
+				{/each}
+			</td>
+		</tr>
+		<button on:click={() => addPlayerToTeam(i)}> Add Player </button>
+		<button on:click={() => removePlayerFromTeam(i)}> Remove Player </button>
 	{/each}
-</ul>
+</table>
 <p><b>Resulting Teams: ({teamCount})</b></p>
-<ul>
+<table>
+	<tr>
+		<th>Team Name</th>
+		<th>Rank</th>
+		<th>Player Mu (μ) & Sigma (σ)</th>
+	</tr>
 	{#each newTeams as team, i}
-		<li>
-			{teamToString(team)}
-		</li>
+		<tr>
+			<td>
+				<input
+					type="text"
+					bind:value={team.name}
+					readonly
+				/>
+			</td>
+			<td>
+				<input
+					type="number"
+					bind:value={team.rank}
+					readonly
+					>
+			</td>
+
+			<td>
+				{#each team.players as player, j}
+					<input
+						type="number"
+						value={player.mu}
+						readonly
+					/>
+
+					<input
+						type="number"
+						value={player.sigma}
+						readonly
+					/>
+					<br />
+				{/each}
+			</td>
+		</tr>
 	{/each}
-</ul>
+</table>
 <p>Match Quality: {quality}</p>

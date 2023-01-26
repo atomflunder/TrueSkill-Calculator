@@ -1,4 +1,4 @@
-import type { TrueSkill } from 'ts-trueskill';
+import type { TrueSkill, Rating } from 'ts-trueskill';
 import type { Team } from './Teams';
 
 export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[] {
@@ -19,7 +19,11 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 
 	const ratings = [];
 	for (let i = 0; i < teams.length; i++) {
-		ratings.push(teams[i].players);
+		const teamRatings = [];
+		for (let j = 0; j < teams[i].players.length; j++) {
+			teamRatings.push(teams[i].players[j]);
+		}
+		ratings.push(teamRatings);
 	}
 	const newRatings = env.rate(ratings, ranks, weights, 0.0001);
 
@@ -38,9 +42,14 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 };
 
 export const matchQuality = function (env: TrueSkill, teams: Team[]): string {
-	const ratings = [];
+	const ratings: Rating[][] = [];
 	for (let i = 0; i < teams.length; i++) {
-		ratings.push(teams[i].players);
+		const teamRatings: Rating[] = [];
+		for (let j = 0; j < teams[i].players.length; j++) {
+			teamRatings.push(teams[i].players[j]);
+		}
+		ratings.push(teamRatings);
 	}
-	return `${(env.quality(ratings) * 100).toFixed(2)}%`;
+	console.log(ratings);
+	return `${env.quality(ratings)}`;
 };
