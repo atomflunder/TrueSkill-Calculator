@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { TrueSkill, Rating, rate } from 'ts-trueskill';
-
-	type Team = {
-		name: string;
-		players: Rating[];
-	};
+	import { TrueSkill, Rating } from 'ts-trueskill';
+	import type { Team } from '../Teams.js';
+	import { teamToString } from '../Teams.js';
+	import { calculateRatings, matchQuality } from '../TrueSkill.js';
 
 	let defaultMu = 25;
 	let defaultSigma = 25 / 3;
@@ -14,71 +12,30 @@
 
 	let env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
 
-	export const calculateRatings = function (teams: Team[]): Team[] {
-		const ranks = [];
-		// TODO: Add support for draws
-		for (let i = 0; i < teams.length; i++) {
-			ranks.push(i);
-		}
-
-		const weights = [];
-		// TODO: Add support for weights
-		for (let i = 0; i < teams.length; i++) {
-			let teamWeights = [];
-			for (let j = 0; j < teams[i].players.length; j++) {
-				teamWeights.push(1);
-			}
-			weights.push(teamWeights);
-		}
-
-		const ratings = [];
-		for (let i = 0; i < teams.length; i++) {
-			ratings.push(teams[i].players);
-		}
-		const newRatings = env.rate(ratings, ranks, weights, 0.0001);
-
-		const newTeams = [];
-
-		for (let i = 0; i < teams.length; i++) {
-			const newTeam = {
-				name: teams[i].name,
-				players: newRatings[i]
-			};
-			newTeams.push(newTeam);
-		}
-
-		return newTeams;
-	};
-
-	export const matchQuality = function (teams: Team[]): string {
-		const ratings = [];
-		for (let i = 0; i < teams.length; i++) {
-			ratings.push(teams[i].players);
-		}
-		return `${(env.quality(ratings) * 100).toFixed(2)}%`;
-	};
-
 	export let teamCount = 2;
 	export let currentTeams: Team[] = [
 		{
 			name: 'Team 1',
-			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)]
+			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
+			rank: 1
 		},
 		{
 			name: 'Team 2',
-			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)]
+			players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
+			rank: 2
 		}
 	];
 
-	export let newTeams: Team[] = calculateRatings(currentTeams);
-	export let quality = matchQuality(newTeams);
+	export let newTeams: Team[] = calculateRatings(env, currentTeams);
+	export let quality = matchQuality(env, newTeams);
 
-	export const incrementTeamCount = () => {
+	const incrementTeamCount = () => {
 		if (teamCount < 50) {
 			teamCount += 1;
 			const newTeam = {
 				name: `Team ${teamCount}`,
-				players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)]
+				players: [new Rating(defaultMu, defaultSigma), new Rating(defaultMu, defaultSigma)],
+				rank: teamCount
 			};
 			currentTeams.push(newTeam);
 			currentTeams = currentTeams;
@@ -86,7 +43,7 @@
 		}
 	};
 
-	export const decreaseTeamCount = () => {
+	const decreaseTeamCount = () => {
 		if (teamCount > 2) {
 			teamCount -= 1;
 			currentTeams.pop();
@@ -95,21 +52,10 @@
 		}
 	};
 
-	export const teamToString = function (team: Team): string {
-		let result = `${team.name}\n`;
-		for (let i = 0; i < team.players.length; i++) {
-			const rank = team.players[i].mu - 3 * team.players[i].sigma;
-			result += `Mu (μ): ${team.players[i].mu.toFixed(3)} - Sigma (σ): ${team.players[
-				i
-			].sigma.toFixed(3)} - Rank: ${rank.toFixed(3)}\n`;
-		}
-		return result;
-	};
-
 	export const updateCalculations = function () {
 		env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
-		newTeams = calculateRatings(currentTeams);
-		quality = matchQuality(newTeams);
+		newTeams = calculateRatings(env, currentTeams);
+		quality = matchQuality(env, newTeams);
 	};
 </script>
 
