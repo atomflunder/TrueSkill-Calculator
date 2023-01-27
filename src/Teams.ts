@@ -1,9 +1,8 @@
-import type { Rating } from 'ts-trueskill';
-import { getDefaultPlayer, type Mutable } from './Players';
+import { getDefaultPlayer, type Player } from './Players';
 
 export type Team = {
 	name: string;
-	players: Mutable<Rating>[];
+	players: Player[];
 	rank: number;
 };
 
@@ -12,16 +11,16 @@ export const getFirstTwoTeams = (defaultMu: number, defaultSigma: number): Team[
 		{
 			name: 'Team 1',
 			players: [
-				getDefaultPlayer(defaultMu, defaultSigma),
-				getDefaultPlayer(defaultMu, defaultSigma)
+				getDefaultPlayer(defaultMu, defaultSigma, 1),
+				getDefaultPlayer(defaultMu, defaultSigma, 2)
 			],
 			rank: 1
 		},
 		{
 			name: 'Team 2',
 			players: [
-				getDefaultPlayer(defaultMu, defaultSigma),
-				getDefaultPlayer(defaultMu, defaultSigma)
+				getDefaultPlayer(defaultMu, defaultSigma, 1),
+				getDefaultPlayer(defaultMu, defaultSigma, 2)
 			],
 			rank: 2
 		}
@@ -35,7 +34,10 @@ export const getDefaultTeam = (
 ): Team => {
 	const newTeam = {
 		name: `Team ${teamCount}`,
-		players: [getDefaultPlayer(defaultMu, defaultSigma), getDefaultPlayer(defaultMu, defaultSigma)],
+		players: [
+			getDefaultPlayer(defaultMu, defaultSigma, 1),
+			getDefaultPlayer(defaultMu, defaultSigma, 2)
+		],
 		rank: teamCount
 	};
 	return newTeam;

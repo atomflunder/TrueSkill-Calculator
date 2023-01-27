@@ -109,7 +109,7 @@
 			<b>Default Mu (μ):</b> The default Value of Mu (μ) for new players. By default set to 25.
 		</li>
 		<li>
-			<b>Default Sigma (σ)</b> The default Value of Sigma (σ) for new players. By default set to 25/3
+			<b>Default Sigma (σ):</b> The default Value of Sigma (σ) for new players. By default set to 25/3
 			≈ 8.333.
 		</li>
 		<li>

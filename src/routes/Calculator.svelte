@@ -38,9 +38,9 @@
 		}
 	};
 
-	const addPlayerToTeam = (teamIndex: number) => {
+	const addPlayerToTeam = (teamIndex: number, playerIndex: number) => {
 		if (currentTeams[teamIndex].players.length < 20) {
-			currentTeams[teamIndex].players.push(getDefaultPlayer(defaultMu, defaultSigma));
+			currentTeams[teamIndex].players.push(getDefaultPlayer(defaultMu, defaultSigma, playerIndex));
 			currentTeams = currentTeams;
 			refreshCalculations();
 		}
@@ -60,8 +60,8 @@
 		newMu: number | undefined,
 		newSigma: number | undefined
 	) => {
-		let mu = currentTeams[teamIndex].players[playerIndex].mu;
-		let sigma = currentTeams[teamIndex].players[playerIndex].sigma;
+		let mu = currentTeams[teamIndex].players[playerIndex].rating.mu;
+		let sigma = currentTeams[teamIndex].players[playerIndex].rating.sigma;
 
 		if (newMu !== undefined) {
 			mu = newMu;
@@ -70,8 +70,14 @@
 			sigma = newSigma;
 		}
 
-		currentTeams[teamIndex].players[playerIndex] = new Rating(mu, sigma);
+		currentTeams[teamIndex].players[playerIndex].rating = new Rating(mu, sigma);
 
+		currentTeams = currentTeams;
+		refreshCalculations();
+	};
+
+	const changePlayerName = (teamIndex: number, playerIndex: number, newName: string) => {
+		currentTeams[teamIndex].players[playerIndex].name = newName;
 		currentTeams = currentTeams;
 		refreshCalculations();
 	};
@@ -109,18 +115,18 @@
 <button class="team-remove-button" on:click={() => decreaseTeamCount()}> Remove Team </button>
 
 <p class="main"><b>Starting Teams: ({teamCount})</b></p>
-<table class="main">
-	<tr>
-		<th>Team Name</th>
-		<th>Rank</th>
-		<th>Player Mu (μ) & Sigma (σ)</th>
-	</tr>
+<table class="main-table">
+	<th>Team Name</th>
+	<th>Rank</th>
+	<th>Players</th>
+	<th>Mu (μ)</th>
+	<th>Sigma (σ)</th>
+
 	{#each currentTeams as team, i}
-
 		<tr>
-
 			<td>
 				<input
+					class="input"
 					type="text"
 					bind:value={team.name}
 					on:input={() => {
@@ -130,6 +136,7 @@
 			</td>
 			<td>
 				<input
+					class="input"
 					type="number"
 					bind:value={team.rank}
 					on:input={() => {
@@ -137,37 +144,63 @@
 					}}
 				/>
 			</td>
-
 			<td>
 				{#each team.players as player, j}
-					<!-- TODO: Add support for player names -->
-					<p style="display: inline;">Player {j + 1}:</p>
-					<input
-						type="number"
-						value={player.mu}
-						on:input={(event) => {
-							if (event.target instanceof HTMLInputElement) {
-								updatePlayerInTeam(i, j, Number(event.target.valueAsNumber), undefined);
-							}
-						}}
-					/>
-					<input
-						type="number"
-						value={player.sigma}
-						on:input={(event) => {
-							if (event.target instanceof HTMLInputElement) {
-								updatePlayerInTeam(i, j, undefined, Number(event.target.valueAsNumber));
-							}
-						}}
-					/>
-					<br />
+					<tr>
+						<input
+							class="input"
+							type="text"
+							value={player.name}
+							on:input={(event) => {
+								if (event.target instanceof HTMLInputElement) {
+									changePlayerName(i, j, event.target.value);
+								}
+							}}
+						/>
+					</tr>
 				{/each}
 			</td>
-			<button class="player-add-button" on:click={() => addPlayerToTeam(i)}> Add Player to {team.name} </button>
-			<button class="player-remove-button" on:click={() => removePlayerFromTeam(i)}>
-				Remove Player from {team.name}
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input
+							class="input"
+							type="number"
+							value={player.rating.mu}
+							on:input={(event) => {
+								if (event.target instanceof HTMLInputElement) {
+									updatePlayerInTeam(i, j, Number(event.target.valueAsNumber), undefined);
+								}
+							}}
+						/>
+					</tr>
+				{/each}
+			</td>
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input
+							class="input"
+							type="number"
+							value={player.rating.sigma}
+							on:input={(event) => {
+								if (event.target instanceof HTMLInputElement) {
+									updatePlayerInTeam(i, j, undefined, Number(event.target.valueAsNumber));
+								}
+							}}
+						/>
+					</tr>
+				{/each}
+			</td>
+			<button
+				class="player-add-button"
+				on:click={() => addPlayerToTeam(i, team.players.length + 1)}
+			>
+				Add Player to Team
 			</button>
-
+			<button class="player-remove-button" on:click={() => removePlayerFromTeam(i)}>
+				Remove Player from Team
+			</button>
 		</tr>
 	{/each}
 </table>
@@ -183,27 +216,40 @@
 <hr />
 <br />
 <p class="main"><b>Resulting Teams: ({teamCount})</b></p>
-<table class="main">
-	<tr>
-		<th>Team Name</th>
-		<th>Rank</th>
-		<th>Player Mu (μ) & Sigma (σ)</th>
-	</tr>
+<table class="main-table">
+	<th>Team Name</th>
+	<th>Rank</th>
+	<th>Players</th>
+	<th>Mu (μ)</th>
+	<th>Sigma (σ)</th>
+
 	{#each newTeams as team, i}
 		<tr>
 			<td>
-				<input type="text" bind:value={team.name} readonly />
+				<input class="input" type="text" value={team.name} readonly />
 			</td>
 			<td>
-				<input type="text" bind:value={team.rank} readonly />
+				<input class="input" type="number" value={team.rank} readonly />
 			</td>
-
 			<td>
 				{#each team.players as player, j}
-					<p style="display: inline;">Player {j + 1}:</p>
-					<input type="text" value={player.mu} />
-					<input type="text" value={player.sigma} />
-					<br />
+					<tr>
+						<input class="input" type="text" value={player.name} readonly />
+					</tr>
+				{/each}
+			</td>
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input class="input" type="number" value={player.rating.mu} readonly />
+					</tr>
+				{/each}
+			</td>
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input class="input" type="number" value={player.rating.sigma} readonly />
+					</tr>
 				{/each}
 			</td>
 		</tr>
@@ -275,10 +321,38 @@
 		padding: 0 15px;
 	}
 
+	.main-table {
+		margin-left: 400px;
+		font-size: 28px;
+		padding: 0 15px;
+		border-collapse: collapse;
+	}
+
+	.main-table td {
+		padding: 4px;
+	}
+
+	.main-table th {
+		padding: 8px;
+	}
+
 	.header {
 		margin-left: 400px;
 		font-size: 36px;
 		padding: 0 15px;
+	}
+
+	.input {
+		background-color: #414244;
+		font-size: large;
+		color: #f2f2f2;
+		border: 0px;
+		padding: 6px;
+		border-radius: 4px;
+	}
+
+	tr:nth-child(odd) {
+		background-color: #202020;
 	}
 
 	:global(body) {
