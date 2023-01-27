@@ -177,7 +177,7 @@
 <button on:click={() => incrementTeamCount()}> Add Team </button>
 <button on:click={() => decreaseTeamCount()}> Remove Team </button>
 <p><b>Starting Teams: ({teamCount})</b></p>
-<table>
+<table class = "paddingBetweenCols">
 	<tr>
 		<th>Team Name</th>
 		<th>Rank</th>
@@ -206,7 +206,7 @@
 
 			<td>
 				{#each team.players as player, j}
-					<input
+				<p style="display: inline;">Player {j + 1}: </p><input
 						type="number"
 						value={player.mu}
 						on:input={(event) => {
@@ -214,8 +214,8 @@
 								updatePlayerInTeam(i, j, Number(event.target.valueAsNumber), undefined);
 							}
 						}}
+						
 					/>
-
 					<input
 						type="number"
 						value={player.sigma}
@@ -240,7 +240,7 @@
 	Match Quality: {quality}
 </div>
 <p><b>Resulting Teams: ({teamCount})</b></p>
-<table>
+<table class = "paddingBetweenCols">
 	<tr>
 		<th>Team Name</th>
 		<th>Rank</th>
@@ -257,9 +257,15 @@
 
 			<td>
 				{#each team.players as player, j}
-					<input type="text" value={player.mu} readonly />
-
-					<input type="text" value={player.sigma} readonly />
+				<p style="display: inline;">Player {j + 1}: </p><input
+						type="text"
+						value={player.mu}
+						
+					/>
+					<input
+						type="text"
+						value={player.sigma}
+					/>
 					<br />
 				{/each}
 			</td>
@@ -275,8 +281,20 @@
 		background: #f2f2f2;
 	}
 
-	td {
-		padding: 10px;
-		background: #f2f2f2;
+	.paddingBetweenCols td {
+		padding: 0 15px;
+	}
+
+	table tr:nth-child(even) td {
+		background-color: #f2f2f2;
+	}
+
+	table tr:nth-child(odd) td {
+		background-color: #e9e9e9;
+	}
+
+	:global(body) {
+		background-color: #faf6eb;
+		font-family: 'Trebuchet MS', Verdana, Tahoma, sans-serif;
 	}
 </style>
