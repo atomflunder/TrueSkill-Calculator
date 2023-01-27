@@ -12,6 +12,12 @@
 <TrueSkillCalculator />
 
 <style>
+	:global(body) {
+		background-color: #161616;
+		font-family: 'Trebuchet MS', Verdana, Tahoma, sans-serif;
+		color: #f2f2f2;
+	}
+
 	.side-icon {
 		text-align: right;
 		position: absolute;

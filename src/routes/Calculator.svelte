@@ -24,7 +24,6 @@
 			teamCount += 1;
 			const newTeam = getDefaultTeam(defaultMu, defaultSigma, teamCount);
 			currentTeams.push(newTeam);
-			currentTeams = currentTeams;
 			refreshCalculations();
 		}
 	};
@@ -33,7 +32,6 @@
 		if (teamCount > 2) {
 			teamCount -= 1;
 			currentTeams.pop();
-			currentTeams = currentTeams;
 			refreshCalculations();
 		}
 	};
@@ -41,7 +39,6 @@
 	const addPlayerToTeam = (teamIndex: number, playerIndex: number) => {
 		if (currentTeams[teamIndex].players.length < 20) {
 			currentTeams[teamIndex].players.push(getDefaultPlayer(defaultMu, defaultSigma, playerIndex));
-			currentTeams = currentTeams;
 			refreshCalculations();
 		}
 	};
@@ -49,12 +46,11 @@
 	const removePlayerFromTeam = (teamIndex: number) => {
 		if (currentTeams[teamIndex].players.length > 1) {
 			currentTeams[teamIndex].players.pop();
-			currentTeams = currentTeams;
 			refreshCalculations();
 		}
 	};
 
-	const updatePlayerInTeam = (
+	const updatePlayerMuSigma = (
 		teamIndex: number,
 		playerIndex: number,
 		newMu: number | undefined,
@@ -71,18 +67,38 @@
 		}
 
 		currentTeams[teamIndex].players[playerIndex].rating = new Rating(mu, sigma);
-
-		currentTeams = currentTeams;
 		refreshCalculations();
 	};
 
-	const changePlayerName = (teamIndex: number, playerIndex: number, newName: string) => {
+	const updatePlayerName = (teamIndex: number, playerIndex: number, newName: string) => {
 		currentTeams[teamIndex].players[playerIndex].name = newName;
-		currentTeams = currentTeams;
+		refreshCalculations();
+	};
+
+	const updatePlayerWeight = (teamIndex: number, playerIndex: number, newWeight: number) => {
+		if (newWeight < 0) {
+			newWeight = 0;
+		} else if (newWeight > 1) {
+			newWeight = 1;
+		}
+
+		currentTeams[teamIndex].players[playerIndex].weight = newWeight;
+		refreshCalculations();
+	};
+
+	const updateTeamRanks = (teamIndex: number, newRank: number) => {
+		if (newRank < 1 || !newRank) {
+			newRank = 1;
+		} else if (newRank > teamCount) {
+			newRank = teamCount;
+		}
+
+		currentTeams[teamIndex].rank = newRank;
 		refreshCalculations();
 	};
 
 	const refreshCalculations = () => {
+		currentTeams = currentTeams;
 		[env, newTeams, quality] = updateCalculations(
 			defaultMu,
 			defaultSigma,
@@ -116,11 +132,16 @@
 
 <p class="main"><b>Starting Teams: ({teamCount})</b></p>
 <table class="main-table">
-	<th>Team Name</th>
-	<th>Rank</th>
-	<th>Players</th>
-	<th>Mu (μ)</th>
-	<th>Sigma (σ)</th>
+	<th title="The Name of the Team.">Team Name</th>
+	<th title="The Rank, or the Placement of the Team. The lower the better.">Rank</th>
+	<th title="The Names of the Players of this Team.">Players</th>
+	<th title="The Mu (μ) Value of the Player.">Mu (μ)</th>
+	<th title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
+	<th
+		title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
+		>Weight</th
+	>
+	<tr />
 
 	{#each currentTeams as team, i}
 		<tr>
@@ -138,9 +159,13 @@
 				<input
 					class="input"
 					type="number"
-					bind:value={team.rank}
-					on:input={() => {
-						refreshCalculations();
+					min="1"
+					max={teamCount}
+					value={team.rank}
+					on:input={(event) => {
+						if (event.target instanceof HTMLInputElement) {
+							updateTeamRanks(i, parseInt(event.target.value));
+						}
 					}}
 				/>
 			</td>
@@ -153,7 +178,7 @@
 							value={player.name}
 							on:input={(event) => {
 								if (event.target instanceof HTMLInputElement) {
-									changePlayerName(i, j, event.target.value);
+									updatePlayerName(i, j, event.target.value);
 								}
 							}}
 						/>
@@ -166,10 +191,11 @@
 						<input
 							class="input"
 							type="number"
+							step="0.1"
 							value={player.rating.mu}
 							on:input={(event) => {
 								if (event.target instanceof HTMLInputElement) {
-									updatePlayerInTeam(i, j, Number(event.target.valueAsNumber), undefined);
+									updatePlayerMuSigma(i, j, Number(event.target.valueAsNumber), undefined);
 								}
 							}}
 						/>
@@ -182,10 +208,30 @@
 						<input
 							class="input"
 							type="number"
+							step="0.01"
 							value={player.rating.sigma}
 							on:input={(event) => {
 								if (event.target instanceof HTMLInputElement) {
-									updatePlayerInTeam(i, j, undefined, Number(event.target.valueAsNumber));
+									updatePlayerMuSigma(i, j, undefined, Number(event.target.valueAsNumber));
+								}
+							}}
+						/>
+					</tr>
+				{/each}
+			</td>
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input
+							class="input"
+							type="number"
+							max="1"
+							min="0"
+							step="0.01"
+							value={player.weight}
+							on:input={(event) => {
+								if (event.target instanceof HTMLInputElement) {
+									updatePlayerWeight(i, j, Number(event.target.valueAsNumber));
 								}
 							}}
 						/>
@@ -217,11 +263,16 @@
 <br />
 <p class="main"><b>Resulting Teams: ({teamCount})</b></p>
 <table class="main-table">
-	<th>Team Name</th>
-	<th>Rank</th>
-	<th>Players</th>
-	<th>Mu (μ)</th>
-	<th>Sigma (σ)</th>
+	<th title="The Name of the Team.">Team Name</th>
+	<th title="The Rank, or the Placement of the Team. The lower the better.">Rank</th>
+	<th title="The Names of the Players of this Team.">Players</th>
+	<th title="The Mu (μ) Value of the Player.">Mu (μ)</th>
+	<th title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
+	<th
+		title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
+		>Weight</th
+	>
+	<tr />
 
 	{#each newTeams as team, i}
 		<tr>
@@ -252,6 +303,13 @@
 					</tr>
 				{/each}
 			</td>
+			<td>
+				{#each team.players as player, j}
+					<tr>
+						<input class="input" type="number" value={player.weight} readonly />
+					</tr>
+				{/each}
+			</td>
 		</tr>
 	{/each}
 </table>
@@ -278,6 +336,7 @@
 	}
 
 	.player-add-button {
+		margin-left: 10px;
 		font-size: 15px;
 		background-color: #95ff8b;
 		text-align: center;
@@ -286,6 +345,7 @@
 	}
 
 	.player-remove-button {
+		margin-left: 10px;
 		font-size: 15px;
 		background-color: #ff8a8a;
 		text-align: center;
@@ -353,11 +413,5 @@
 
 	tr:nth-child(odd) {
 		background-color: #202020;
-	}
-
-	:global(body) {
-		background-color: #161616;
-		font-family: 'Trebuchet MS', Verdana, Tahoma, sans-serif;
-		color: #f2f2f2;
 	}
 </style>

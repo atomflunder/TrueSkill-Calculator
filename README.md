@@ -16,10 +16,11 @@ So, I decided to create my own.
 ## How to use
 
 Add or remove Teams and assign each the correct number of players present in your game.  
-Then assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the better.  
+Then assign each Team the correct **Rank**, meaning Placement in the game. The lower the rank, the better.  
 If two or more Teams draw with each other, assign them the same rank.  
-The expected results will appear in the Resulting Teams section.  
-Also, you can see the Match Quality which is the percent chance of your match ending in a draw. The higher this value, the closer your match will be.
+You can also assign **Weights** between 0 and 1 to each Player. A Weight of 1 means the Player has played the whole match, and values below 1 mean the Player has left the game early.  
+The expected results will appear in the **Resulting Teams** section.  
+Also, you can see the **Match Quality** which is the percent chance of your match ending in a draw. The higher this value, the closer your match will be.
 
 ## Configuration
 

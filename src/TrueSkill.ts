@@ -9,11 +9,10 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 	}
 
 	const weights: number[][] = [];
-	// TODO: Add support for weights
 	for (let i = 0; i < teams.length; i++) {
 		const teamWeights: number[] = [];
 		for (let j = 0; j < teams[i].players.length; j++) {
-			teamWeights.push(1);
+			teamWeights.push(teams[i].players[j].weight);
 		}
 		weights.push(teamWeights);
 	}
@@ -35,7 +34,8 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 		for (let j = 0; j < teams[i].players.length; j++) {
 			const newPlayer = {
 				name: teams[i].players[j].name,
-				rating: newRatings[i][j]
+				rating: newRatings[i][j],
+				weight: teams[i].players[j].weight
 			};
 			newTeamRatings.push(newPlayer);
 		}

@@ -36,6 +36,7 @@
 			<td>
 				<input
 					type="number"
+					step="0.1"
 					bind:value={defaultMu}
 					on:input={() => {
 						refreshCalculations();
@@ -49,6 +50,7 @@
 			<td>
 				<input
 					type="number"
+					step="0.01"
 					bind:value={defaultSigma}
 					on:input={() => {
 						refreshCalculations();
@@ -66,6 +68,7 @@
 			<td>
 				<input
 					type="number"
+					step="0.01"
 					bind:value={betaValue}
 					on:input={() => {
 						refreshCalculations();
@@ -81,6 +84,7 @@
 			<td>
 				<input
 					type="number"
+					step="0.001"
 					bind:value={tauValue}
 					on:input={() => {
 						refreshCalculations();
@@ -94,6 +98,7 @@
 			<td>
 				<input
 					type="number"
+					step="0.01"
 					bind:value={drawProbability}
 					on:input={() => {
 						refreshCalculations();
@@ -128,9 +133,12 @@
 	<p><b>How to use the calculator: </b></p>
 	<p>
 		Add or remove Teams and assign each the correct number of players present in your game.<br
-		/>Then assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the
-		better. <br />
+		/>Then assign each Team the correct <b>Rank</b>, meaning Placement in the game. The lower the
+		rank, the better. <br />
 		If two or more Teams draw with each other, assign them the same rank. <br />
+		You can also assign <b>Weights</b> between 0 and 1 to each Player. A Weight of 1 means the
+		Player has played the whole match, and values below 1 mean the Player has left the game early.
+		<br />
 		The expected results will appear in the <b>Resulting Teams</b> section. <br />
 		Also, you can see the <b>Match Quality</b> which is the percent chance of your match ending in a
 		draw. The higher this value, the closer your match will be.
