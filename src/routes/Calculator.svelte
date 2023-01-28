@@ -418,6 +418,10 @@
 		padding: 8px;
 	}
 
+	.main-table tr:nth-child(odd) {
+		background-color: #202020;
+	}
+
 	.header {
 		margin-left: 400px;
 		font-size: 36px;
@@ -446,9 +450,5 @@
 
 	.copy-team:hover {
 		background-color: #2f2f31;
-	}
-
-	tr:nth-child(odd) {
-		background-color: #202020;
 	}
 </style>
