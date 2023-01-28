@@ -127,9 +127,16 @@
 	bind:newTeams
 	bind:quality
 />
-
-<button class="team-add-button" on:click={() => incrementTeamCount()}> Add New Team </button>
-<button class="team-remove-button" on:click={() => decreaseTeamCount()}> Remove Team </button>
+<table>
+	<tr>
+		<td>
+			<button class="team-add-button" on:click={() => incrementTeamCount()}> Add New Team </button>
+		</td>
+		<td>
+			<button class="team-remove-button" on:click={() => decreaseTeamCount()}> Remove Team </button>
+		</td>
+	</tr>
+</table>
 
 <p class="main"><b>Starting Teams: ({teamCount})</b></p>
 <table class="main-table">
