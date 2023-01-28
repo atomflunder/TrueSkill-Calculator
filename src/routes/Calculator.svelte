@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { TrueSkill, Rating } from 'ts-trueskill';
-	import { getDefaultTeam, getFirstTwoTeams, type Team } from '../Teams';
+	import { getDefaultTeam, getFirstTwoTeams, teamToCsv, type Team } from '../Teams';
 	import { calculateRatings, matchQuality, updateCalculations } from '../TrueSkill';
 	import { getDefaultPlayer } from '../Players';
 	import Sidebar from './Sidebar.svelte';
+	import { copyMessage } from '../Copy';
 
 	let defaultMu = 25;
 	let defaultSigma = 25 / 3;
@@ -310,6 +311,20 @@
 					</tr>
 				{/each}
 			</td>
+			<button
+				title="Copy Team as CSV"
+				class="copy-team"
+				on:click={() => {
+					copyMessage(teamToCsv(newTeams[i]));
+					const button = document.getElementsByClassName('copy-team')[i];
+					button.innerHTML = '✔️';
+					setTimeout(() => {
+						button.innerHTML = '📋';
+					}, 1000);
+				}}
+			>
+				📋
+			</button>
 		</tr>
 	{/each}
 </table>
@@ -409,6 +424,21 @@
 		border: 0px;
 		padding: 6px;
 		border-radius: 4px;
+	}
+
+	.copy-team {
+		background-color: #414244;
+		margin-left: 10px;
+		margin-top: 4px;
+		font-size: large;
+		color: #f2f2f2;
+		border: 0px;
+		padding: 6px;
+		border-radius: 4px;
+	}
+
+	.copy-team:hover {
+		background-color: #2f2f31;
 	}
 
 	tr:nth-child(odd) {

@@ -42,3 +42,11 @@ export const getDefaultTeam = (
 	};
 	return newTeam;
 };
+
+export const teamToCsv = (team: Team): string => {
+	return team.players
+		.map((player) => {
+			return `${team.name},${team.rank},${player.name},${player.rating.mu},${player.rating.sigma},${player.weight}`;
+		})
+		.join('\r');
+};
