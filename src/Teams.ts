@@ -50,3 +50,7 @@ export const teamToCsv = (team: Team): string => {
 		})
 		.join('\r');
 };
+
+export const allTeamsToCsv = (teams: Team[]): string => {
+	return teams.map((team) => teamToCsv(team)).join('\r');
+};

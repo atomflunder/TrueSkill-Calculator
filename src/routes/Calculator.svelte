@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { TrueSkill, Rating } from 'ts-trueskill';
-	import { getDefaultTeam, getFirstTwoTeams, teamToCsv, type Team } from '../Teams';
+	import { getDefaultTeam, getFirstTwoTeams, teamToCsv, allTeamsToCsv, type Team } from '../Teams';
 	import { calculateRatings, matchQuality, updateCalculations } from '../TrueSkill';
 	import { getDefaultPlayer } from '../Players';
 	import Sidebar from './Sidebar.svelte';
@@ -21,7 +21,8 @@
 	export let quality = matchQuality(env, currentTeams);
 
 	const incrementTeamCount = () => {
-		if (teamCount < 50) {
+		// Setting a generous limit. In reality this can be as high as you want.
+		if (teamCount < 128) {
 			teamCount += 1;
 			const newTeam = getDefaultTeam(defaultMu, defaultSigma, teamCount);
 			currentTeams.push(newTeam);
@@ -38,7 +39,7 @@
 	};
 
 	const addPlayerToTeam = (teamIndex: number, playerIndex: number) => {
-		if (currentTeams[teamIndex].players.length < 20) {
+		if (currentTeams[teamIndex].players.length < 256) {
 			currentTeams[teamIndex].players.push(getDefaultPlayer(defaultMu, defaultSigma, playerIndex));
 			refreshCalculations();
 		}
@@ -269,7 +270,24 @@
 </div>
 <hr />
 <br />
-<p class="main"><b>Resulting Teams: ({teamCount})</b></p>
+<p class="main">
+	<b>Resulting Teams: ({teamCount})</b>
+	<button
+		title="Copy All Teams as CSV"
+		class="copy-all-teams"
+		on:click={() => {
+			copyMessage(allTeamsToCsv(newTeams));
+			const button = document.getElementsByClassName('copy-all-teams')[0];
+			button.innerHTML = '✔️';
+			setTimeout(() => {
+				button.innerHTML = '📋';
+			}, 1000);
+		}}
+	>
+		📋
+	</button>
+</p>
+
 <table class="main-table">
 	<th title="The Name of the Team.">Team Name</th>
 	<th title="The Rank, or the Placement of the Team. The lower the better.">Rank</th>
@@ -449,6 +467,21 @@
 	}
 
 	.copy-team:hover {
+		background-color: #2f2f31;
+	}
+
+	.copy-all-teams {
+		background-color: #414244;
+		margin-left: 10px;
+		margin-top: 4px;
+		font-size: large;
+		color: #f2f2f2;
+		border: 0px;
+		padding: 6px;
+		border-radius: 4px;
+	}
+
+	.copy-all-teams:hover {
 		background-color: #2f2f31;
 	}
 </style>
