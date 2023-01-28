@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { updateCalculations } from '../TrueSkill';
+	import { updateConfig } from '../TrueSkill';
 	import { TrueSkill } from 'ts-trueskill';
 	import type { Team } from '../Teams';
 
@@ -13,17 +13,14 @@
 	export let newTeams: Team[] = [];
 	export let quality = '0.00';
 
-	const refreshCalculations = () => {
-		[env, newTeams, quality] = updateCalculations(
+	const refreshConfig = () => {
+		[env, newTeams, quality] = updateConfig(
 			defaultMu,
 			defaultSigma,
 			betaValue,
 			tauValue,
 			drawProbability,
-			currentTeams,
-			env,
-			newTeams,
-			quality
+			currentTeams
 		);
 	};
 </script>
@@ -39,7 +36,7 @@
 					step="0.1"
 					bind:value={defaultMu}
 					on:input={() => {
-						refreshCalculations();
+						refreshConfig();
 					}}
 					class="config-input"
 				/>
@@ -53,7 +50,7 @@
 					step="0.01"
 					bind:value={defaultSigma}
 					on:input={() => {
-						refreshCalculations();
+						refreshConfig();
 					}}
 					class="config-input"
 				/>
@@ -71,7 +68,7 @@
 					step="0.01"
 					bind:value={betaValue}
 					on:input={() => {
-						refreshCalculations();
+						refreshConfig();
 					}}
 					class="config-input"
 				/>
@@ -87,7 +84,7 @@
 					step="0.001"
 					bind:value={tauValue}
 					on:input={() => {
-						refreshCalculations();
+						refreshConfig();
 					}}
 					class="config-input"
 				/>
@@ -101,7 +98,7 @@
 					step="0.01"
 					bind:value={drawProbability}
 					on:input={() => {
-						refreshCalculations();
+						refreshConfig();
 					}}
 					class="config-input"
 				/>

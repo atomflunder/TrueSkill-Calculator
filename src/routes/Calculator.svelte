@@ -101,17 +101,7 @@
 
 	const refreshCalculations = () => {
 		currentTeams = currentTeams;
-		[env, newTeams, quality] = updateCalculations(
-			defaultMu,
-			defaultSigma,
-			betaValue,
-			tauValue,
-			drawProbability,
-			currentTeams,
-			env,
-			newTeams,
-			quality
-		);
+		[newTeams, quality] = updateCalculations(currentTeams, env);
 	};
 </script>
 

@@ -2,81 +2,86 @@ import { TrueSkill, type Rating } from 'ts-trueskill';
 import type { Mutable } from './Players';
 import type { Team } from './Teams';
 
+/**
+ * Calculates the new ratings for the given teams and given TrueSkill environment.
+ *
+ * @param env - The TrueSkill environment
+ * @param teams - The teams to calculate the new ratings for
+ * @returns The new teams with the updated ratings
+ */
 export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[] {
-	const ranks: number[] = [];
-	for (let i = 0; i < teams.length; i++) {
-		ranks.push(teams[i].rank);
-	}
+	const ranks: number[] = teams.map((team) => team.rank);
 
-	const weights: number[][] = [];
-	for (let i = 0; i < teams.length; i++) {
-		const teamWeights: number[] = [];
-		for (let j = 0; j < teams[i].players.length; j++) {
-			teamWeights.push(teams[i].players[j].weight);
-		}
-		weights.push(teamWeights);
-	}
+	const weights: number[][] = teams.map((team) => team.players.map((player) => player.weight));
 
-	const ratings: Mutable<Rating>[][] = [];
-	for (let i = 0; i < teams.length; i++) {
-		const teamRatings: Mutable<Rating>[] = [];
-		for (let j = 0; j < teams[i].players.length; j++) {
-			teamRatings.push(teams[i].players[j].rating);
-		}
-		ratings.push(teamRatings);
-	}
+	const ratings: Mutable<Rating>[][] = teams.map((team) =>
+		team.players.map((player) => player.rating)
+	);
+
 	const newRatings = env.rate(ratings, ranks, weights, 0.0001);
 
-	const newTeams: Team[] = [];
+	const newTeams: Team[] = structuredClone(teams);
 	for (let i = 0; i < teams.length; i++) {
-		const newTeamRatings = [];
-
 		for (let j = 0; j < teams[i].players.length; j++) {
-			const newPlayer = {
-				name: teams[i].players[j].name,
-				rating: newRatings[i][j],
-				weight: teams[i].players[j].weight
-			};
-			newTeamRatings.push(newPlayer);
+			newTeams[i].players[j].rating = newRatings[i][j];
 		}
-
-		const newTeam = {
-			name: teams[i].name,
-			players: newTeamRatings,
-			rank: teams[i].rank
-		};
-		newTeams.push(newTeam);
 	}
 
 	return newTeams;
 };
 
+/**
+ * Calculate the match quality for the given teams and given TrueSkill environment.
+ *
+ * @param env - The TrueSkill environment
+ * @param teams - The teams to calculate the match quality for
+ * @returns The match quality in percent, as a string.
+ */
 export const matchQuality = function (env: TrueSkill, teams: Team[]): string {
-	const ratings: Rating[][] = [];
-	for (let i = 0; i < teams.length; i++) {
-		const teamRatings: Rating[] = [];
-		for (let j = 0; j < teams[i].players.length; j++) {
-			teamRatings.push(teams[i].players[j].rating);
-		}
-		ratings.push(teamRatings);
-	}
-	return `${(env.quality(ratings) * 100).toFixed(2)}%`;
+	const ratings: Rating[][] = teams.map((team) => team.players.map((player) => player.rating));
+	const weights: number[][] = teams.map((team) => team.players.map((player) => player.weight));
+	return `${(env.quality(ratings, weights) * 100).toFixed(2)}%`;
 };
 
+/**
+ * Updates the teams and match quality for the given teams and given TrueSkill environment.
+ *
+ * @param currentTeams - The teams that are currently displayed
+ * @param env - The TrueSkill environment
+ * @returns The new teams with the updated ratings and the match quality
+ */
 export const updateCalculations = function (
+	currentTeams: Team[],
+	env: TrueSkill
+): [Team[], string] {
+	const newTeams = calculateRatings(env, currentTeams);
+	const quality = matchQuality(env, currentTeams);
+
+	return [newTeams, quality];
+};
+
+/**
+ * Updates the TrueSkill environment with the given parameters.
+ *
+ * @param defaultMu - The default mu value
+ * @param defaultSigma - The default sigma value
+ * @param betaValue - The beta value
+ * @param tauValue - The tau value
+ * @param drawProbability - The draw probability
+ * @param currentTeams - The teams that are currently displayed
+ * @returns The new TrueSkill environment, the new teams with the updated ratings and the match quality.
+ */
+export const updateConfig = function (
 	defaultMu: number,
 	defaultSigma: number,
 	betaValue: number,
 	tauValue: number,
 	drawProbability: number,
-	currentTeams: Team[],
-	env: TrueSkill,
-	newTeams: Team[],
-	quality: string
+	currentTeams: Team[]
 ): [TrueSkill, Team[], string] {
-	env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
-	newTeams = calculateRatings(env, currentTeams);
-	quality = matchQuality(env, currentTeams);
+	const env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
+	const newTeams = calculateRatings(env, currentTeams);
+	const quality = matchQuality(env, currentTeams);
 
 	return [env, newTeams, quality];
 };

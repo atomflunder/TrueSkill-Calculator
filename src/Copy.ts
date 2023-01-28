@@ -1,3 +1,8 @@
+/**
+ * Copies a string to the clipboard
+ *
+ * @param item The item to be copied to the clipboard
+ */
 export const copyMessage = (item: string) => {
 	const listener = (e: ClipboardEvent) => {
 		if (e.clipboardData) {
