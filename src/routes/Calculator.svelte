@@ -103,6 +103,12 @@
 		currentTeams = currentTeams;
 		[newTeams, quality] = updateCalculations(currentTeams, env);
 	};
+
+	const resetTeams = () => {
+		teamCount = 2;
+		currentTeams = getFirstTwoTeams(defaultMu, defaultSigma);
+		refreshCalculations();
+	};
 </script>
 
 <title>TrueSkill Calculator</title>
@@ -125,6 +131,9 @@
 		</td>
 		<td>
 			<button class="team-remove-button" on:click={() => decreaseTeamCount()}> Remove Team </button>
+		</td>
+		<td>
+			<button class="team-reset-button" on:click={() => resetTeams()}> Reset Teams </button>
 		</td>
 	</tr>
 </table>
@@ -365,6 +374,16 @@
 		border-radius: 5px;
 	}
 
+	.team-reset-button {
+		margin-left: 50px;
+		font-size: 24px;
+		padding: 8px;
+		background-color: #57a4e4;
+		text-align: center;
+		border: none;
+		border-radius: 5px;
+	}
+
 	.player-add-button {
 		margin-left: 10px;
 		font-size: 15px;
@@ -389,6 +408,10 @@
 
 	.team-remove-button:hover {
 		background-color: #e26767;
+	}
+
+	.team-reset-button:hover {
+		background-color: #3d8bd0;
 	}
 
 	.player-add-button:hover {

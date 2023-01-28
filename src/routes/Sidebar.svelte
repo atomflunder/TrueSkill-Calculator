@@ -23,10 +23,27 @@
 			currentTeams
 		);
 	};
+
+	const resetConfig = () => {
+		defaultMu = 25;
+		defaultSigma = 25 / 3;
+		betaValue = 25 / 6;
+		tauValue = 25 / 300;
+		drawProbability = 0.1;
+		refreshConfig();
+	};
 </script>
 
 <div class="sidenav">
 	<h2>Current Config:</h2>
+	<button
+		class="config-reset-button"
+		on:click={() => {
+			resetConfig();
+		}}>Reset Config</button
+	>
+	<br />
+	<br />
 	<table>
 		<tr>
 			<td title="The default Value of Mu (μ) for new players."> Default Mu (μ):</td>
@@ -176,5 +193,18 @@
 		color: #f2f2f2;
 		border: 0px;
 		padding: 5px;
+	}
+
+	.config-reset-button {
+		font-size: 14px;
+		padding: 8px;
+		background-color: #57a4e4;
+		text-align: center;
+		border: none;
+		border-radius: 5px;
+	}
+
+	.config-reset-button:hover {
+		background-color: #3d8bd0;
 	}
 </style>
