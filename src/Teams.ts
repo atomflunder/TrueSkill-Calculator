@@ -15,7 +15,7 @@ export type Team = {
  * @returns - The first two teams
  */
 export const getFirstTwoTeams = (defaultMu: number, defaultSigma: number): Team[] => {
-	return [
+	const defaultTeams: Team[] = [
 		{
 			name: 'Team 1',
 			players: [
@@ -33,6 +33,8 @@ export const getFirstTwoTeams = (defaultMu: number, defaultSigma: number): Team[
 			rank: 2
 		}
 	];
+
+	return defaultTeams;
 };
 
 /**
@@ -49,7 +51,7 @@ export const getDefaultTeam = (
 	defaultSigma: number,
 	teamCount: number
 ): Team => {
-	const newTeam = {
+	const newTeam: Team = {
 		name: `Team ${teamCount}`,
 		players: [
 			getDefaultPlayer(defaultMu, defaultSigma, 1),
@@ -57,6 +59,7 @@ export const getDefaultTeam = (
 		],
 		rank: teamCount
 	};
+
 	return newTeam;
 };
 

@@ -18,7 +18,7 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 		team.players.map((player) => player.rating)
 	);
 
-	const newRatings = env.rate(ratings, ranks, weights, 0.0001);
+	const newRatings: Rating[][] = env.rate(ratings, ranks, weights, 0.0001);
 
 	const newTeams: Team[] = structuredClone(teams);
 	for (let i = 0; i < teams.length; i++) {
@@ -26,7 +26,6 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 			newTeams[i].players[j].rating = newRatings[i][j];
 		}
 	}
-
 	return newTeams;
 };
 
@@ -54,8 +53,8 @@ export const updateCalculations = function (
 	currentTeams: Team[],
 	env: TrueSkill
 ): [Team[], string] {
-	const newTeams = calculateRatings(env, currentTeams);
-	const quality = matchQuality(env, currentTeams);
+	const newTeams: Team[] = calculateRatings(env, currentTeams);
+	const quality: string = matchQuality(env, currentTeams);
 
 	return [newTeams, quality];
 };
@@ -79,9 +78,15 @@ export const updateConfig = function (
 	drawProbability: number,
 	currentTeams: Team[]
 ): [TrueSkill, Team[], string] {
-	const env = new TrueSkill(defaultMu, defaultSigma, betaValue, tauValue, drawProbability);
-	const newTeams = calculateRatings(env, currentTeams);
-	const quality = matchQuality(env, currentTeams);
+	const env: TrueSkill = new TrueSkill(
+		defaultMu,
+		defaultSigma,
+		betaValue,
+		tauValue,
+		drawProbability
+	);
+	const newTeams: Team[] = calculateRatings(env, currentTeams);
+	const quality: string = matchQuality(env, currentTeams);
 
 	return [env, newTeams, quality];
 };
