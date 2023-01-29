@@ -16,4 +16,7 @@
 	You can also see the <b>Match Quality</b> which is the percent chance of your match ending in a
 	draw. The higher this value, the closer your match will be.<br /> <br />
 	When you're done you can copy the resulting Teams to your clipboard in CSV format all at once or one-by-one.
+	<br />
+	<br />
+	This calculator supports up to 128 Teams with up to 256 players each.
 </ul>
