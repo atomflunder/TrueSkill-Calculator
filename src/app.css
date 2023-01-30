@@ -46,7 +46,7 @@ input[type=number] {
   }
 
   .copy-csv-button {
-    @apply bg-gray-700 hover:bg-gray-700 p-1 m-1 rounded shadow-sm shadow-slate-500;
+    @apply bg-gray-700 hover:bg-gray-600 p-1 m-1 rounded shadow-sm shadow-slate-500;
   }
 
   .modify-player-button {
