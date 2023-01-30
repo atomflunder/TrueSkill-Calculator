@@ -102,425 +102,282 @@
 	};
 </script>
 
-<title>TrueSkill Calculator</title>
-<h1 class="header">TrueSkill Calculator</h1>
-<Sidebar
-	bind:env
-	bind:defaultMu
-	bind:defaultSigma
-	bind:betaValue
-	bind:tauValue
-	bind:drawProbability
-	bind:currentTeams
-	bind:newTeams
-	bind:quality
-/>
-<table>
-	<tr>
-		<td>
-			<button class="team-add-button" on:click={() => incrementTeamCount()}> Add New Team </button>
-		</td>
-		<td>
-			<button class="team-remove-button" on:click={() => decreaseTeamCount()}> Remove Team </button>
-		</td>
-		<td>
-			<button class="team-reset-button" on:click={() => resetTeams()}> Reset Teams </button>
-		</td>
-	</tr>
-</table>
+<body class="bg-gray-900 text-white ml-40 p-2 min-h-screen min-w-min">
+	<title>TrueSkill Calculator</title>
+	<h1 class="text-5xl p-2">TrueSkill Calculator</h1>
+	<Sidebar
+		bind:env
+		bind:defaultMu
+		bind:defaultSigma
+		bind:betaValue
+		bind:tauValue
+		bind:drawProbability
+		bind:currentTeams
+		bind:newTeams
+		bind:quality
+	/>
 
-<br />
+	<br />
 
-<table class="main-table">
-	<td class="main" colspan="6"><b>Starting Teams: ({teamCount})</b></td>
-	<tr />
-	<th title="The Name of the Team.">Team Name</th>
-	<th title="The Rank, or the Placement of the Team. The lower the better.">Rank</th>
-	<th title="The Names of the Players of this Team.">Players</th>
-	<th title="The Mu (μ) Value of the Player.">Mu (μ)</th>
-	<th title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
-	<th
-		title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
-		>Weight</th
-	>
-	<tr />
+	<table class="table-auto border-separate border-spacing-1">
+		<tr>
+			<td colspan="6">
+				<b class="text-3xl">Starting Teams: ({teamCount})</b>
+				<button
+					class="team-button bg-green-300 hover:bg-green-400"
+					on:click={() => incrementTeamCount()}
+				>
+					Add New Team
+				</button>
 
-	{#each currentTeams as team, i}
-		<tr class="team-row">
-			<td>
-				<input
-					class="input"
-					type="text"
-					bind:value={team.name}
-					on:input={() => {
-						refreshCalculations();
-					}}
-				/>
+				<button
+					class="team-button bg-red-300 hover:bg-red-400"
+					on:click={() => decreaseTeamCount()}
+				>
+					Remove Team
+				</button>
+
+				<button class="team-button bg-blue-300 hover:bg-blue-400" on:click={() => resetTeams()}>
+					Reset Teams
+				</button>
 			</td>
-			<td>
-				<input
-					class="input"
-					type="number"
-					min="1"
-					max={teamCount}
-					value={team.rank}
-					on:input={(event) => {
-						if (event.target instanceof HTMLInputElement) {
-							updateTeamRanks(i, parseInt(event.target.value));
-						}
-					}}
-				/>
-			</td>
-			<td>
-				{#each team.players as player, j}
-					<tr class="player-row">
-						<input
-							class="input"
-							type="text"
-							value={player.name}
-							on:input={(event) => {
-								if (event.target instanceof HTMLInputElement) {
-									updatePlayerName(i, j, event.target.value);
-								}
-							}}
-						/>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player, j}
-					<tr class="player-row">
-						<input
-							class="input"
-							type="number"
-							step="0.1"
-							value={player.rating.mu}
-							on:input={(event) => {
-								if (event.target instanceof HTMLInputElement) {
-									updatePlayerMuSigma(
-										i,
-										j,
-										Number(event.target.valueAsNumber),
-										player.rating.sigma
-									);
-								}
-							}}
-						/>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player, j}
-					<tr class="player-row">
-						<input
-							class="input"
-							type="number"
-							step="0.01"
-							value={player.rating.sigma}
-							on:input={(event) => {
-								if (event.target instanceof HTMLInputElement) {
-									updatePlayerMuSigma(i, j, player.rating.mu, Number(event.target.valueAsNumber));
-								}
-							}}
-						/>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player, j}
-					<tr class="player-row">
-						<input
-							class="input"
-							type="number"
-							max="1"
-							min="0"
-							step="0.01"
-							value={player.weight}
-							on:input={(event) => {
-								if (event.target instanceof HTMLInputElement) {
-									updatePlayerWeight(i, j, Number(event.target.valueAsNumber));
-								}
-							}}
-						/>
-					</tr>
-				{/each}
-			</td>
-			<button
-				class="player-add-button"
-				on:click={() => addPlayerToTeam(i, team.players.length + 1)}
-			>
-				Add Player
-			</button>
-			<button class="player-remove-button" on:click={() => removePlayerFromTeam(i)}>
-				Remove Player
-			</button>
 		</tr>
-	{/each}
 
-	<tr>
-		<td> &nbsp; </td>
-	</tr>
+		<tr />
+		<tr />
 
-	<tr class="table-separator" />
-
-	<tr>
-		<td> &nbsp; </td>
-	</tr>
-
-	<td
-		title="The match quality is the chance of a draw occurring in the given game. The higher the value, the closer the game will be."
-		colspan="6"
-	>
-		Match Quality: {quality}
-	</td>
-
-	<tr>
-		<td> &nbsp; </td>
-	</tr>
-
-	<tr class="table-separator" />
-
-	<tr>
-		<td> &nbsp; </td>
-	</tr>
-
-	<td class="main" colspan="6">
-		<b>Resulting Teams: ({teamCount})</b>
-		<button
-			title="Copy All Teams as CSV"
-			class="copy-all-teams"
-			on:click={() => {
-				copyMessage(allTeamsToCsv(newTeams));
-				const button = document.getElementsByClassName('copy-all-teams')[0];
-				button.innerHTML = '✔️';
-				setTimeout(() => {
-					button.innerHTML = '📋';
-				}, 1000);
-			}}
+		<th class="text-2xl" title="The Name of the Team.">Team Name</th>
+		<th class="text-2xl" title="The Rank, or the Placement of the Team. The lower the better."
+			>Rank</th
 		>
-			📋
-		</button>
-	</td>
+		<th class="text-2xl" title="The Names of the Players of this Team.">Players</th>
+		<th class="text-2xl" title="The Mu (μ) Value of the Player.">Mu (μ)</th>
+		<th class="text-2xl" title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
+		<th
+			class="text-2xl"
+			title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
+			>Weight</th
+		>
+		<tr />
 
-	<tr />
-	<tr />
+		{#each currentTeams as team, i}
+			<tr class="odd:bg-gray-800">
+				<td>
+					<input
+						class="team-input"
+						type="text"
+						bind:value={team.name}
+						on:input={() => {
+							refreshCalculations();
+						}}
+					/>
+				</td>
+				<td>
+					<input
+						class="team-input"
+						type="number"
+						min="1"
+						max={teamCount}
+						value={team.rank}
+						on:input={(event) => {
+							if (event.target instanceof HTMLInputElement) {
+								updateTeamRanks(i, parseInt(event.target.value));
+							}
+						}}
+					/>
+				</td>
+				<td>
+					{#each team.players as player, j}
+						<tr>
+							<input
+								class="team-input"
+								type="text"
+								value={player.name}
+								on:input={(event) => {
+									if (event.target instanceof HTMLInputElement) {
+										updatePlayerName(i, j, event.target.value);
+									}
+								}}
+							/>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player, j}
+						<tr>
+							<input
+								class="team-input"
+								type="number"
+								step="0.1"
+								value={player.rating.mu}
+								on:input={(event) => {
+									if (event.target instanceof HTMLInputElement) {
+										updatePlayerMuSigma(
+											i,
+											j,
+											Number(event.target.valueAsNumber),
+											player.rating.sigma
+										);
+									}
+								}}
+							/>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player, j}
+						<tr>
+							<input
+								class="team-input"
+								type="number"
+								step="0.01"
+								value={player.rating.sigma}
+								on:input={(event) => {
+									if (event.target instanceof HTMLInputElement) {
+										updatePlayerMuSigma(i, j, player.rating.mu, Number(event.target.valueAsNumber));
+									}
+								}}
+							/>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player, j}
+						<tr>
+							<input
+								class="team-input"
+								type="number"
+								max="1"
+								min="0"
+								step="0.01"
+								value={player.weight}
+								on:input={(event) => {
+									if (event.target instanceof HTMLInputElement) {
+										updatePlayerWeight(i, j, Number(event.target.valueAsNumber));
+									}
+								}}
+							/>
+						</tr>
+					{/each}
+				</td>
+				<button
+					class="modify-player-button bg-green-300 hover:bg-green-400"
+					on:click={() => addPlayerToTeam(i, team.players.length + 1)}
+				>
+					Add Player
+				</button>
+				<button
+					class="modify-player-button bg-red-300 hover:bg-red-400"
+					on:click={() => removePlayerFromTeam(i)}
+				>
+					Remove Player
+				</button>
+			</tr>
+		{/each}
 
-	<th title="The Name of the Team.">Team Name</th>
-	<th title="The Rank, or the Placement of the Team. The lower the better.">Rank</th>
-	<th title="The Names of the Players of this Team.">Players</th>
-	<th title="The Mu (μ) Value of the Player.">Mu (μ)</th>
-	<th title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
-	<th
-		title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
-		>Weight</th
-	>
-
-	{#each newTeams as team, i}
-		<tr class="team-row">
-			<td>
-				<div class="input">{team.name}</div>
-			</td>
-			<td>
-				<div class="input">{team.rank}</div>
-			</td>
-			<td>
-				{#each team.players as player}
-					<tr class="player-row">
-						<div class="input">{player.name}</div>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player}
-					<tr class="player-row">
-						<div class="input">{player.rating.mu}</div>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player}
-					<tr class="player-row">
-						<div class="input">{player.rating.sigma}</div>
-					</tr>
-				{/each}
-			</td>
-			<td>
-				{#each team.players as player}
-					<tr class="player-row">
-						<div class="input">{player.weight}</div>
-					</tr>
-				{/each}
-			</td>
-			<button
-				title="Copy Team as CSV"
-				class="copy-team"
-				on:click={() => {
-					copyMessage(teamToCsv(newTeams[i]));
-					const button = document.getElementsByClassName('copy-team')[i];
-					button.innerHTML = '✔️';
-					setTimeout(() => {
-						button.innerHTML = '📋';
-					}, 1000);
-				}}
-			>
-				📋
-			</button>
+		<tr>
+			<td> &nbsp; </td>
 		</tr>
-	{/each}
-</table>
 
-<table class="main-table" />
+		<td
+			title="The match quality is the chance of a draw occurring in the given game. The higher the value, the closer the game will be."
+			colspan="3"
+			class="text-3xl text-center p-4 bg-gray-700 rounded border-white border"
+		>
+			Match Quality: {quality}
+		</td>
 
-<style>
-	.team-add-button {
-		margin-left: 420px;
-		font-size: 24px;
-		padding: 8px;
-		background-color: #95ff8b;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
+		<tr>
+			<td> &nbsp; </td>
+		</tr>
 
-	.team-remove-button {
-		margin-left: 50px;
-		font-size: 24px;
-		padding: 8px;
-		background-color: #ff8a8a;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
+		<tr>
+			<td colspan="6">
+				<b class="text-3xl">Resulting Teams: ({teamCount})</b>
+				<button
+					title="Copy All Teams as CSV"
+					class="copy-csv-button ml-4 p-2 m-4"
+					on:click={() => {
+						copyMessage(allTeamsToCsv(newTeams));
+						const button = document.getElementsByClassName('copy-csv-button')[0];
+						button.innerHTML = '✔️ Copied to Clipboard!';
+						setTimeout(() => {
+							button.innerHTML = '📋 Copy All Teams As CSV';
+						}, 1000);
+					}}
+				>
+					📋 Copy All Teams As CSV
+				</button>
+			</td>
+		</tr>
 
-	.team-reset-button {
-		margin-left: 50px;
-		font-size: 24px;
-		padding: 8px;
-		background-color: #57a4e4;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
+		<tr />
+		<tr />
 
-	.player-add-button {
-		margin-left: 10px;
-		font-size: 15px;
-		background-color: #95ff8b;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
+		<th class="text-2xl" title="The Name of the Team.">Team Name</th>
+		<th class="text-2xl" title="The Rank, or the Placement of the Team. The lower the better."
+			>Rank</th
+		>
+		<th class="text-2xl" title="The Names of the Players of this Team.">Players</th>
+		<th class="text-2xl" title="The Mu (μ) Value of the Player.">Mu (μ)</th>
+		<th class="text-2xl" title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
+		<th
+			class="text-2xl"
+			title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
+			>Weight</th
+		>
 
-	.player-remove-button {
-		margin-left: 10px;
-		font-size: 15px;
-		background-color: #ff8a8a;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
-
-	.team-add-button:hover {
-		background-color: #7aee70;
-	}
-
-	.team-remove-button:hover {
-		background-color: #e26767;
-	}
-
-	.team-reset-button:hover {
-		background-color: #3d8bd0;
-	}
-
-	.player-add-button:hover {
-		background-color: #7aee70;
-	}
-
-	.player-remove-button:hover {
-		background-color: #e26767;
-	}
-
-	.main {
-		margin-left: 400px;
-		font-size: 28px;
-		padding: 0 15px;
-	}
-
-	.main-table {
-		margin-left: 400px;
-		width: 1500px;
-		font-size: 26px;
-		border-collapse: collapse;
-	}
-
-	.main-table td {
-		padding: 4px;
-	}
-
-	.main-table tr {
-		padding: 1px;
-	}
-
-	.main-table th {
-		padding: 12px;
-	}
-
-	.team-row:nth-child(odd) {
-		background-color: #202020;
-	}
-
-	.player-row {
-		border: 2px solid transparent;
-	}
-
-	.header {
-		margin-left: 400px;
-		font-size: 36px;
-		padding: 0 15px;
-	}
-
-	.input {
-		background-color: #414244;
-		font-size: 18px;
-		font-family: inherit;
-		color: #f2f2f2;
-		border: 0px;
-		padding: 8px;
-		border-radius: 4px;
-		width: 190px;
-	}
-
-	.table-separator {
-		border-bottom: 1px solid #f2f2f2;
-	}
-
-	.copy-team {
-		background-color: #414244;
-		margin-left: 10px;
-		margin-top: 4px;
-		font-size: large;
-		color: #f2f2f2;
-		border: 0px;
-		padding: 6px;
-		border-radius: 4px;
-	}
-
-	.copy-team:hover {
-		background-color: #2f2f31;
-	}
-
-	.copy-all-teams {
-		background-color: #414244;
-		margin-left: 10px;
-		margin-top: 4px;
-		font-size: large;
-		color: #f2f2f2;
-		border: 0px;
-		padding: 6px;
-		border-radius: 4px;
-	}
-
-	.copy-all-teams:hover {
-		background-color: #2f2f31;
-	}
-</style>
+		{#each newTeams as team, i}
+			<tr class="odd:bg-gray-800">
+				<td>
+					<div class="team-input">{team.name}</div>
+				</td>
+				<td>
+					<div class="team-input">{team.rank}</div>
+				</td>
+				<td>
+					{#each team.players as player}
+						<tr>
+							<div class="team-input">{player.name}</div>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player}
+						<tr>
+							<div class="team-input">{player.rating.mu}</div>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player}
+						<tr>
+							<div class="team-input">{player.rating.sigma}</div>
+						</tr>
+					{/each}
+				</td>
+				<td>
+					{#each team.players as player}
+						<tr>
+							<div class="team-input">{player.weight}</div>
+						</tr>
+					{/each}
+				</td>
+				<button
+					title="Copy Team as CSV"
+					class="copy-csv-button"
+					on:click={() => {
+						copyMessage(teamToCsv(newTeams[i]));
+						const button = document.getElementsByClassName('copy-csv-button')[i + 1];
+						button.innerHTML = '✔️ Copied to Clipboard!';
+						setTimeout(() => {
+							button.innerHTML = '📋 Copy Team As CSV';
+						}, 1000);
+					}}
+				>
+					📋 Copy Team As CSV
+				</button>
+			</tr>
+		{/each}
+	</table>
+</body>
