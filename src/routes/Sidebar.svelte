@@ -37,7 +37,7 @@
 </script>
 
 <div
-	class="fixed overflow-auto scrollbar-hide top-0 left-0 min-h-screen w-80 flex flex-col bg-gray-800 text-white drop-shadow-xl"
+	class="fixed overflow-scroll scrollbar-hide top-0 left-0 h-screen w-80 flex-col bg-gray-800 text-white drop-shadow-xl"
 >
 	<h2 class="text-2xl p-2">Current Config:</h2>
 	<button
