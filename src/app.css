@@ -45,7 +45,7 @@ input[type=number] {
     @apply bg-gray-700 hover:bg-gray-600 p-1 m-1 rounded shadow-md shadow-slate-500 active:bg-gray-800;
   }
 
-  .modify-player-button {
+  .player-button {
     @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-1 m-1 rounded shadow-md active:bg-gray-800;
   }
 

@@ -129,7 +129,7 @@
 	<p class="font-bold text-xl mt-3 -mb-3 mx-2">FAQ:</p>
 	<br />
 
-	<details class="sidebar-button w-72">
+	<details class="sidebar-button ">
 		<summary> What is TrueSkill? </summary>
 		<h3 class="text-xl">The TrueSkill Ranking System:</h3>
 		<br />
@@ -266,6 +266,7 @@
 				whole match, and values below 1 mean the Player has left the game early. A Weight of 0 means
 				the Player has not played at all.
 			</li>
+			<li>Optionally you can name each Team and Player to make it easier to identify them.</li>
 		</ul>
 		<br />
 		The expected results will appear in the <b>Resulting Teams</b> section.

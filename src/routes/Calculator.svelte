@@ -255,15 +255,12 @@
 					{/each}
 				</td>
 				<button
-					class="modify-player-button shadow-green-500"
+					class="player-button shadow-green-500"
 					on:click={() => addPlayerToTeam(i, team.players.length + 1)}
 				>
 					Add Player
 				</button>
-				<button
-					class="modify-player-button shadow-red-500"
-					on:click={() => removePlayerFromTeam(i)}
-				>
+				<button class="player-button shadow-red-500" on:click={() => removePlayerFromTeam(i)}>
 					Remove Player
 				</button>
 			</tr>
