@@ -30,27 +30,23 @@ input[type=number] {
   }
 
   .sidebar-button {
-    @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 my-3 mx-4 rounded w-72;
+    @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 my-3 mx-4 rounded w-72 shadow-md;
   }
 
   .team-button {
-    @apply text-black font-thin p-2 m-4 rounded shadow-sm shadow-slate-50;
+    @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 m-4 rounded shadow-md shadow-slate-50 active:bg-gray-800;
   }
 
   .team-input {
     @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-1 rounded items-stretch w-48;
   }
 
-  .modify-team-button {
-    @apply text-black font-thin p-2 m-4 rounded shadow-sm shadow-slate-500;
-  }
-
   .copy-csv-button {
-    @apply bg-gray-700 hover:bg-gray-600 p-1 m-1 rounded shadow-sm shadow-slate-500;
+    @apply bg-gray-700 hover:bg-gray-600 p-1 m-1 rounded shadow-md shadow-slate-500 active:bg-gray-800;
   }
 
   .modify-player-button {
-    @apply text-black font-thin p-1 m-1 rounded shadow-sm shadow-slate-500;
+    @apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-1 m-1 rounded shadow-md active:bg-gray-800;
   }
 
   .table-border {

@@ -39,7 +39,7 @@ export const calculateRatings = function (env: TrueSkill, teams: Team[]): Team[]
 export const matchQuality = function (env: TrueSkill, teams: Team[]): string {
 	const ratings: Rating[][] = teams.map((team) => team.players.map((player) => player.rating));
 	const weights: number[][] = teams.map((team) => team.players.map((player) => player.weight));
-	return `${(env.quality(ratings, weights) * 100).toFixed(2)}%`;
+	return `${(env.quality(ratings, weights) * 100).toFixed(3)}%`;
 };
 
 /**

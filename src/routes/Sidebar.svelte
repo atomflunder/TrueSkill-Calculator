@@ -41,7 +41,7 @@
 >
 	<h2 class="text-2xl p-2">Current Config:</h2>
 	<button
-		class="sidebar-button text-black bg-blue-300 hover:bg-blue-400"
+		class="sidebar-button shadow-blue-500 active:bg-gray-800 mb-8"
 		on:click={() => {
 			resetConfig();
 		}}>Reset Config</button
@@ -125,9 +125,8 @@
 			</td>
 		</tr>
 	</table>
-	<br />
 	<hr />
-	<p class="font-bold mt-3 mx-2">FAQ:</p>
+	<p class="font-bold text-xl mt-3 -mb-3 mx-2">FAQ:</p>
 	<br />
 
 	<details class="sidebar-button w-72">

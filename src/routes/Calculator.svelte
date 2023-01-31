@@ -123,21 +123,15 @@
 		<tr>
 			<td colspan="6">
 				<b class="text-3xl">Starting Teams: ({teamCount})</b>
-				<button
-					class="team-button bg-green-300 hover:bg-green-400"
-					on:click={() => incrementTeamCount()}
-				>
+				<button class="team-button shadow-green-500" on:click={() => incrementTeamCount()}>
 					Add New Team
 				</button>
 
-				<button
-					class="team-button bg-red-300 hover:bg-red-400"
-					on:click={() => decreaseTeamCount()}
-				>
+				<button class="team-button shadow-red-500" on:click={() => decreaseTeamCount()}>
 					Remove Team
 				</button>
 
-				<button class="team-button bg-blue-300 hover:bg-blue-400" on:click={() => resetTeams()}>
+				<button class="team-button shadow-blue-500" on:click={() => resetTeams()}>
 					Reset Teams
 				</button>
 			</td>
@@ -261,13 +255,13 @@
 					{/each}
 				</td>
 				<button
-					class="modify-player-button bg-green-300 hover:bg-green-400"
+					class="modify-player-button shadow-green-500"
 					on:click={() => addPlayerToTeam(i, team.players.length + 1)}
 				>
 					Add Player
 				</button>
 				<button
-					class="modify-player-button bg-red-300 hover:bg-red-400"
+					class="modify-player-button shadow-red-500"
 					on:click={() => removePlayerFromTeam(i)}
 				>
 					Remove Player
