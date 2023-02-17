@@ -36,7 +36,8 @@ export default defineComponent({
 		'sigma-value',
 		'beta-value',
 		'tau-value',
-		'draw-probability'
+		'draw-probability',
+		'toggle-live-updates'
 	]
 });
 </script>
@@ -140,6 +141,18 @@ export default defineComponent({
 						class="sidebar-input"
 					/>
 				</td>
+			</tr>
+			<tr>
+				<td
+					title="Disable Live Updates. Use this for large amount of teams in order to reduce lag."
+				>
+					Disable Live Updates:
+				</td>
+				<input
+					type="checkbox"
+					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 checked:bg-blue-800 checked:hover:bg-blue-700 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+					@click="$emit('toggle-live-updates')"
+				/>
 			</tr>
 		</table>
 		<hr />
@@ -267,6 +280,15 @@ export default defineComponent({
 				set this to a lower value. You can also set this to 0 if draws are impossible.<br />
 				<b class="font-semibold">By default set to 0.1</b>.
 			</p>
+			<br />
+
+			<h3 class="text-lg underline"><b class="font-semibold">Disable Live Updates:</b></h3>
+			<p>
+				You can choose to disable updating the new teams on the fly in order to reduce lag
+				when calculating with a lot of teams and players. If you have more than ~40 teams it
+				is recommended to disable live updates.<br />
+				<b class="font-semibold">By default set to false</b>.
+			</p>
 		</details>
 
 		<details class="sidebar-button">
@@ -323,3 +345,18 @@ export default defineComponent({
 		</p>
 	</div>
 </template>
+
+<style scoped>
+input[type='checkbox']:checked:after {
+	content: '\2713';
+	color: rgb(209 213 219);
+	font-size: 1.5rem;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+</style>

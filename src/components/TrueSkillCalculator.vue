@@ -27,6 +27,7 @@ export default defineComponent({
 			teamCount: 2,
 			currentTeams: this.getFirstTwoTeams() as Team[],
 			newTeams: [] as Team[],
+			liveUpdates: true,
 			quality: '',
 			copyAllMessage: '📋 Copy All Teams As CSV',
 			copyTeamMessage: '📋 Copy Team As CSV',
@@ -38,6 +39,10 @@ export default defineComponent({
 			this.env = new TrueSkill();
 			this.refreshCalculations();
 		},
+		toggleLiveUpdates(): void {
+			console.log('Toggling live updates.');
+			this.liveUpdates = !this.liveUpdates;
+		},
 		resetTeams(): void {
 			this.teamCount = 2;
 			this.currentTeams = this.getFirstTwoTeams();
@@ -45,13 +50,14 @@ export default defineComponent({
 		},
 		refreshCalculations(): void {
 			// Just a shortcut to calling both functions.
-			this.newTeams = this.calculateRatings();
-			this.quality = this.matchQuality();
+			if (this.liveUpdates) {
+				this.newTeams = this.calculateRatings();
+				this.quality = this.matchQuality();
+			}
 		},
 		incrementTeamCount(): void {
 			// Limit to 128 teams.
 			// In reality, it starts to lag at around ~50-60 teams because of the calculations taking quite a long time.
-			// TODO: Maybe implement a disable live updates button and let the user refresh manually?
 			if (this.teamCount < 128) {
 				this.teamCount++;
 				const newTeam = this.getDefaultTeam(this.teamCount);
@@ -280,6 +286,7 @@ export default defineComponent({
 				refreshCalculations();
 			"
 			@reset-config="resetConfig"
+			@toggle-live-updates="liveUpdates = !liveUpdates"
 		/>
 
 		<br />
@@ -422,6 +429,25 @@ export default defineComponent({
 				<button class="player-button shadow-red-500" @click="removePlayerFromTeam(j)">
 					Remove Player
 				</button>
+			</tr>
+
+			<tr v-show="!liveUpdates">
+				<td>&nbsp;</td>
+			</tr>
+
+			<tr v-show="!liveUpdates">
+				<td
+					colspan="3"
+					class="text-2xl text-center p-4 bg-gray-700 rounded border-white border hover:bg-gray-600 active:bg-gray-800 cursor-pointer shadow-md shadow-gray-500"
+					@click="
+						{
+							newTeams = calculateRatings();
+							quality = matchQuality();
+						}
+					"
+				>
+					<button>Calculate New Ratings</button>
+				</td>
 			</tr>
 
 			<tr>
