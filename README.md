@@ -1,7 +1,7 @@
 # TrueSkill Calculator
 
 A simple and fast Online TrueSkill calculator.  
-[Link to the calculator](https://trueskill-calc.vercel.app/)
+[Link to the calculator](https://trueskill-calculator.vercel.app/)
 
 ## What is TrueSkill?
 
