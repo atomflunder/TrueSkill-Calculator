@@ -95,5 +95,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Packages used
 
--   [Svelte](https://svelte.dev/)
+-   [Vue](https://vuejs.org/)
 -   [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
