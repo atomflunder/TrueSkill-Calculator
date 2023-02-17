@@ -16,7 +16,7 @@ the player's uncertainty about their skill, called Sigma (σ). The higher the st
 the more uncertain the player is about their skill. This means that the real skill of a player is
 somewhere within μ±3σ, with a 99% confidence.
 
-![](./static/trueskill-skilldia.jpg)
+![](./src/assets/trueskill-skilldia.jpg)
 
 The TrueSkill algorithm is very good at asserting the skill of a player <i>quickly</i>. Here is
 a table of the minimum amount of games needed to roughly determine a player's skill.
@@ -42,12 +42,12 @@ So, I decided to create my own.
 
 ## How to use
 
-- Add or remove Teams and assign each the correct number
-- Assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the better.  
-  If two or more Teams draw with each other, assign them the same rank.
-- Assign Weights between 0 and 1 to each Player.  
-   A Weight of 1 means the Player has played the whole match, and values below 1 mean the Player has left the game early. A Weight of 0 means the Player has not played at all.
-- Optionally you can name each Team and Player to make it easier to identify them.
+-   Add or remove Teams and assign each the correct number
+-   Assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the better.  
+    If two or more Teams draw with each other, assign them the same rank.
+-   Assign Weights between 0 and 1 to each Player.  
+     A Weight of 1 means the Player has played the whole match, and values below 1 mean the Player has left the game early. A Weight of 0 means the Player has not played at all.
+-   Optionally you can name each Team and Player to make it easier to identify them.
 
 The expected results will appear in the Resulting Teams section.
 
@@ -63,16 +63,16 @@ This calculator supports up to 128 Teams with up to 256 players each.
 
 You can configure the following settings to adjust the algorithm to your needs:
 
-- **Default Mu (μ):** The default Value of Mu (μ) for new players. This is the rating value that new players will start with.  
-   By default set to 25.
-- **Default Sigma (σ):** The default Value of Sigma (σ) for new players. This is the rating uncertainty that new players will start with.  
-  By default set to 25/3 ≈ 8.333.
-- **Beta (β):** The distance in rating points to guarantee about a 76% chance of winning for the higher rated player. If your game is more luck based, set this to a higher value. If your game is more reliant on pure skill, set this to a lower value.  
-   By default set to 25/6 ≈ 4.167.
-- **Tau (τ):** The additive dynamics factor, the higher the value, the more dynamic the ratings will be. This means the winner will gain more rating, and the loser will lose more rating.  
-  By default set to 25/300 ≈ 0.083.
-- **Draw Probability:** The probability of a draw occurring. If your game has a high chance of ending in a draw set this to a higher value. If your game has a low chance of ending in a draw set this to a lower value. You can also set this to 0 if draws are impossible.  
-  By default set to 0.1, meaning a 10% chance of a draw ocurring.
+-   **Default Mu (μ):** The default Value of Mu (μ) for new players. This is the rating value that new players will start with.  
+     By default set to 25.
+-   **Default Sigma (σ):** The default Value of Sigma (σ) for new players. This is the rating uncertainty that new players will start with.  
+    By default set to 25/3 ≈ 8.333.
+-   **Beta (β):** The distance in rating points to guarantee about a 76% chance of winning for the higher rated player. If your game is more luck based, set this to a higher value. If your game is more reliant on pure skill, set this to a lower value.  
+     By default set to 25/6 ≈ 4.167.
+-   **Tau (τ):** The additive dynamics factor, the higher the value, the more dynamic the ratings will be. This means the winner will gain more rating, and the loser will lose more rating.  
+    By default set to 25/300 ≈ 0.083.
+-   **Draw Probability:** The probability of a draw occurring. If your game has a high chance of ending in a draw set this to a higher value. If your game has a low chance of ending in a draw set this to a lower value. You can also set this to 0 if draws are impossible.  
+    By default set to 0.1, meaning a 10% chance of a draw ocurring.
 
 ## Contributing
 
@@ -95,5 +95,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Packages used
 
-- [Svelte](https://svelte.dev/)
-- [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
+-   [Svelte](https://svelte.dev/)
+-   [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
