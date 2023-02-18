@@ -255,7 +255,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<body class="bg-gray-900 text-white ml-80 p-2 min-h-screen min-w-min">
+	<div>
 		<title>TrueSkill Calculator</title>
 		<h1 class="text-5xl p-2">TrueSkill Calculator</h1>
 
@@ -535,5 +535,5 @@ export default defineComponent({
 				</button>
 			</tr>
 		</table>
-	</body>
+	</div>
 </template>

@@ -44,7 +44,7 @@ export default defineComponent({
 
 <template>
 	<div
-		class="fixed overflow-scroll scrollbar-hide top-0 left-0 h-screen w-80 flex-col bg-gray-800 text-white drop-shadow-xl"
+		class="fixed overflow-scroll scrollbar-hide top-0 left-0 h-screen min-h-full w-80 flex-col bg-gray-800 text-white drop-shadow-xl"
 	>
 		<h2 class="text-2xl p-2">Current Config:</h2>
 		<button class="sidebar-button shadow-blue-500 active:bg-gray-800 mb-8" @click="resetConfig">
@@ -150,7 +150,7 @@ export default defineComponent({
 				</td>
 				<input
 					type="checkbox"
-					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 checked:bg-blue-800 checked:hover:bg-blue-700 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
 					@click="$emit('toggle-live-updates')"
 				/>
 			</tr>
@@ -280,15 +280,6 @@ export default defineComponent({
 				set this to a lower value. You can also set this to 0 if draws are impossible.<br />
 				<b class="font-semibold">By default set to 0.1</b>.
 			</p>
-			<br />
-
-			<h3 class="text-lg underline"><b class="font-semibold">Disable Live Updates:</b></h3>
-			<p>
-				You can choose to disable updating the new teams on the fly in order to reduce lag
-				when calculating with a lot of teams and players. If you have more than ~40 teams it
-				is recommended to disable live updates.<br />
-				<b class="font-semibold">By default set to false</b>.
-			</p>
 		</details>
 
 		<details class="sidebar-button">
@@ -319,6 +310,10 @@ export default defineComponent({
 			<br />
 			You can also see the <b>Match Quality</b> which is the percent chance of your match
 			ending in a draw. The higher this value, the closer your match will be.<br />
+			<br />
+			If you have a lot of Teams and Players, You may want to disable updating the new teams
+			on the fly by checking the Disable Live Updates Button on the Sidebar.
+			<br />
 			<br />
 			When you're done you can copy the resulting Teams to your clipboard in CSV format all at
 			once or one-by-one.
