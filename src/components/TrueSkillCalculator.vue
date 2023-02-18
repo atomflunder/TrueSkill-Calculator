@@ -1,23 +1,11 @@
 <script lang="ts">
 import { copyMessage } from '@/helpers/copy';
-import { Rating, TrueSkill } from 'ts-trueskill';
+import { TrueSkill } from 'ts-trueskill';
 import { defineComponent } from 'vue';
 import ConfigSidebar from '@/components/ConfigSidebar.vue';
-
-type Player = {
-	name: string;
-	// We could just use a Rating object here,
-	// but I guess it is good practice to use a tuple and convert to Rating on calculation.
-	// At least we get warnings otherwise. Might be a performance loss though?
-	rating: [number, number];
-	weight: number;
-};
-
-type Team = {
-	name: string;
-	players: Player[];
-	rank: number;
-};
+import { getDefaultPlayer, type Player } from '@/helpers/players';
+import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
+import { calculateRatings, matchQuality } from '@/helpers/trueskill';
 
 export default defineComponent({
 	name: 'TrueskillCalculator',
@@ -25,7 +13,7 @@ export default defineComponent({
 		return {
 			env: new TrueSkill() as TrueSkill,
 			teamCount: 2,
-			currentTeams: this.getFirstTwoTeams() as Team[],
+			currentTeams: getFirstTwoTeams() as Team[],
 			newTeams: [] as Team[],
 			liveUpdates: true,
 			quality: '',
@@ -37,32 +25,27 @@ export default defineComponent({
 	methods: {
 		resetConfig(): void {
 			this.env = new TrueSkill();
-			this.refreshCalculations();
 		},
 		toggleLiveUpdates(): void {
-			console.log('Toggling live updates.');
 			this.liveUpdates = !this.liveUpdates;
 		},
 		resetTeams(): void {
 			this.teamCount = 2;
-			this.currentTeams = this.getFirstTwoTeams();
-			this.refreshCalculations();
+			this.currentTeams = getFirstTwoTeams();
 		},
-		refreshCalculations(): void {
+		refreshCalculations(forceRefresh: boolean = false): void {
 			// Just a shortcut to calling both functions.
-			if (this.liveUpdates) {
-				this.newTeams = this.calculateRatings();
-				this.quality = this.matchQuality();
+			if (this.liveUpdates || forceRefresh) {
+				this.newTeams = calculateRatings(this.env as TrueSkill, this.currentTeams);
+				this.quality = matchQuality(this.env as TrueSkill, this.currentTeams);
 			}
 		},
 		incrementTeamCount(): void {
-			// Limit to 128 teams.
-			// In reality, it starts to lag at around ~50-60 teams because of the calculations taking quite a long time.
-			if (this.teamCount < 128) {
+			// The limit is kind of arbitrary.
+			if (this.teamCount < 256) {
 				this.teamCount++;
-				const newTeam = this.getDefaultTeam(this.teamCount);
+				const newTeam = getDefaultTeam(this.teamCount, this.env.mu, this.env.sigma);
 				this.currentTeams.push(newTeam);
-				this.refreshCalculations();
 			}
 		},
 		decrementTeamCount(): void {
@@ -70,30 +53,20 @@ export default defineComponent({
 			if (this.teamCount > 2) {
 				this.teamCount--;
 				this.currentTeams.pop();
-				this.refreshCalculations();
 			}
 		},
-		addPlayerToTeam(teamIndex: number, playerIndex: number): void {
-			// Limit to 256 players per team.
-			// Same as for the teams, but the players do not lag as much.
-			if (this.currentTeams[teamIndex].players.length < 256) {
-				this.currentTeams[teamIndex].players.push(this.getDefaultPlayer(playerIndex));
-				this.refreshCalculations();
+		addPlayerToTeam(team: Team, playerIndex: number): void {
+			if (team.players.length < 256) {
+				team.players.push(getDefaultPlayer(playerIndex, this.env.mu, this.env.sigma));
 			}
 		},
-		removePlayerFromTeam(teamIndex: number): void {
+		removePlayerFromTeam(team: Team): void {
 			// Have to have at least 1 player per team.
-			if (this.currentTeams[teamIndex].players.length > 1) {
-				this.currentTeams[teamIndex].players.pop();
-				this.refreshCalculations();
+			if (team.players.length > 1) {
+				team.players.pop();
 			}
 		},
-		updatePlayerMuSigma(
-			teamIndex: number,
-			playerIndex: number,
-			newMu: number,
-			newSigma: number
-		): void {
+		updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
 			if (!newMu) {
 				newMu = 0;
 			}
@@ -101,11 +74,10 @@ export default defineComponent({
 			// The sigma value could be positive or negative, but just not 0.
 			// The mu value can be whatever.
 			if (newSigma) {
-				this.currentTeams[teamIndex].players[playerIndex].rating = [newMu, newSigma];
-				this.refreshCalculations();
+				player.rating = [newMu, newSigma];
 			}
 		},
-		updatePlayerWeight(teamIndex: number, playerIndex: number, newWeight: number): void {
+		updatePlayerWeight(player: Player, newWeight: number): void {
 			// The weight needs to be between 0 and 1.
 			if (newWeight < 0 || !newWeight) {
 				newWeight = 0;
@@ -113,10 +85,9 @@ export default defineComponent({
 				newWeight = 1;
 			}
 
-			this.currentTeams[teamIndex].players[playerIndex].weight = newWeight;
-			this.refreshCalculations();
+			player.weight = newWeight;
 		},
-		updateTeamRanks(teamIndex: number, newRank: number): void {
+		updateTeamRanks(team: Team, newRank: number): void {
 			// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
 			// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
 			// But to keep it simple and to avoid confusion, we limit the ranks to be between 0 and the number of teams.
@@ -126,93 +97,7 @@ export default defineComponent({
 				newRank = this.teamCount;
 			}
 
-			this.currentTeams[teamIndex].rank = newRank;
-			this.refreshCalculations();
-		},
-		getDefaultPlayer(playerNumber: number): Player {
-			const playerRating: [number, number] = [this.env.mu, this.env.sigma];
-			const player = {
-				name: `Player ${playerNumber}`,
-				rating: playerRating,
-				weight: 1
-			};
-			return player;
-		},
-		getDefaultTeam(teamNumber: number): Team {
-			const team = {
-				name: `Team ${teamNumber}`,
-				players: [this.getDefaultPlayer(1), this.getDefaultPlayer(2)],
-				rank: teamNumber
-			};
-			return team;
-		},
-		getFirstTwoTeams(): Team[] {
-			// Need a different function for the data above.
-			const team1 = {
-				name: 'Team 1',
-				players: [
-					{
-						name: 'Player 1',
-						rating: [25, 25 / 3] as [number, number],
-						weight: 1
-					},
-					{
-						name: 'Player 2',
-						rating: [25, 25 / 3] as [number, number],
-						weight: 1
-					}
-				],
-				rank: 1
-			};
-			const team2 = {
-				name: 'Team 2',
-				players: [
-					{
-						name: 'Player 1',
-						rating: [25, 25 / 3] as [number, number],
-						weight: 1
-					},
-					{
-						name: 'Player 2',
-						rating: [25, 25 / 3] as [number, number],
-						weight: 1
-					}
-				],
-				rank: 2
-			};
-			return [team1, team2];
-		},
-		calculateRatings(): Team[] {
-			const ranks = this.currentTeams.map((team) => team.rank);
-			const weights: number[][] = this.currentTeams.map((team) =>
-				team.players.map((player) => player.weight)
-			);
-			const ratings: Rating[][] = this.currentTeams.map((team) =>
-				team.players.map((player) => new Rating(player.rating[0], player.rating[1]))
-			);
-
-			const newRatings: Rating[][] = this.env.rate(ratings, ranks, weights);
-
-			const newTeams: Team[] = [];
-			for (let i = 0; i < this.currentTeams.length; i++) {
-				newTeams.push({ ...this.currentTeams[i], players: [] });
-				for (let j = 0; j < this.currentTeams[i].players.length; j++) {
-					newTeams[i].players.push({
-						...this.currentTeams[i].players[j],
-						rating: [newRatings[i][j].mu, newRatings[i][j].sigma] as [number, number]
-					});
-				}
-			}
-			return newTeams;
-		},
-		matchQuality(): string {
-			const ratings: Rating[][] = this.currentTeams.map((team) =>
-				team.players.map((player) => new Rating(player.rating[0], player.rating[1]))
-			);
-			const weights: number[][] = this.currentTeams.map((team) =>
-				team.players.map((player) => player.weight)
-			);
-			return `${(this.env.quality(ratings, weights) * 100).toFixed(3)}%`;
+			team.rank = newRank;
 		},
 		teamToCsv(team: Team): string {
 			return team.players
@@ -249,7 +134,10 @@ export default defineComponent({
 		ConfigSidebar
 	},
 	mounted() {
-		this.refreshCalculations();
+		this.refreshCalculations(false);
+	},
+	beforeUpdate() {
+		this.refreshCalculations(false);
 	}
 });
 </script>
@@ -265,26 +153,11 @@ export default defineComponent({
 			:beta-value="env.beta"
 			:tau-value="env.tau"
 			:draw-probability="env.drawProbability"
-			@mu-value="
-				env.mu = $event;
-				refreshCalculations();
-			"
-			@sigma-value="
-				env.sigma = $event;
-				refreshCalculations();
-			"
-			@beta-value="
-				env.beta = $event;
-				refreshCalculations();
-			"
-			@tau-value="
-				env.tau = $event;
-				refreshCalculations();
-			"
-			@draw-probability="
-				env.drawProbability = $event;
-				refreshCalculations();
-			"
+			@mu-value="env.mu = $event"
+			@sigma-value="env.sigma = $event"
+			@beta-value="env.beta = $event"
+			@tau-value="env.tau = $event"
+			@draw-probability="env.drawProbability = $event"
 			@reset-config="resetConfig"
 			@toggle-live-updates="liveUpdates = !liveUpdates"
 		/>
@@ -332,12 +205,7 @@ export default defineComponent({
 
 			<tr class="odd:bg-gray-800" v-for="(team, j) in currentTeams" :key="j">
 				<td>
-					<input
-						class="team-input"
-						type="text"
-						v-model="team.name"
-						@input="refreshCalculations"
-					/>
+					<input class="team-input" type="text" v-model="team.name" />
 				</td>
 				<td>
 					<input
@@ -347,19 +215,13 @@ export default defineComponent({
 						:max="teamCount"
 						v-model.number.lazy="team.rank"
 						@input="
-							updateTeamRanks(j, ($event.target as HTMLInputElement).valueAsNumber);
-							refreshCalculations();
+							updateTeamRanks(team, ($event.target as HTMLInputElement).valueAsNumber)
 						"
 					/>
 				</td>
 				<td>
 					<tr v-for="(player, i) in team.players" :key="i">
-						<input
-							class="team-input"
-							type="text"
-							v-model="player.name"
-							@input="refreshCalculations"
-						/>
+						<input class="team-input" type="text" v-model="player.name" />
 					</tr>
 				</td>
 				<td>
@@ -371,12 +233,10 @@ export default defineComponent({
 							v-model.number.lazy="player.rating[0]"
 							@input="
 								updatePlayerMuSigma(
-									j,
-									i,
+									player,
 									($event.target as HTMLInputElement).valueAsNumber,
 									player.rating[1]
-								);
-								refreshCalculations();
+								)
 							"
 						/>
 					</tr>
@@ -390,12 +250,10 @@ export default defineComponent({
 							v-model.number.lazy="player.rating[1]"
 							@input="
 								updatePlayerMuSigma(
-									j,
-									i,
+									player,
 									player.rating[0],
 									($event.target as HTMLInputElement).valueAsNumber
-								);
-								refreshCalculations();
+								)
 							"
 						/>
 					</tr>
@@ -411,22 +269,20 @@ export default defineComponent({
 							v-model.number.lazy="player.weight"
 							@input="
 								updatePlayerWeight(
-									j,
-									i,
+									player,
 									($event.target as HTMLInputElement).valueAsNumber
-								);
-								refreshCalculations();
+								)
 							"
 						/>
 					</tr>
 				</td>
 				<button
 					class="player-button shadow-green-500"
-					@click="addPlayerToTeam(j, team.players.length + 1)"
+					@click="addPlayerToTeam(team, team.players.length + 1)"
 				>
 					Add Player
 				</button>
-				<button class="player-button shadow-red-500" @click="removePlayerFromTeam(j)">
+				<button class="player-button shadow-red-500" @click="removePlayerFromTeam(team)">
 					Remove Player
 				</button>
 			</tr>
@@ -439,12 +295,7 @@ export default defineComponent({
 				<td
 					colspan="3"
 					class="text-2xl text-center p-4 bg-gray-700 rounded border-white border hover:bg-gray-600 active:bg-gray-800 cursor-pointer shadow-md shadow-gray-500"
-					@click="
-						{
-							newTeams = calculateRatings();
-							quality = matchQuality();
-						}
-					"
+					@click="refreshCalculations(true)"
 				>
 					<button>Calculate New Ratings</button>
 				</td>
@@ -468,7 +319,7 @@ export default defineComponent({
 
 			<tr>
 				<td colspan="6">
-					<b class="text-3xl">Resulting Teams: ({{ teamCount }})</b>
+					<b class="text-3xl">Resulting Teams: ({{ newTeams.length }})</b>
 					<button
 						title="Copy All Teams as CSV"
 						class="copy-csv-button ml-4 p-2 m-4"
