@@ -12,7 +12,6 @@ export default defineComponent({
 	data() {
 		return {
 			env: new TrueSkill() as TrueSkill,
-			teamCount: 2,
 			currentTeams: getFirstTwoTeams() as Team[],
 			newTeams: [] as Team[],
 			liveUpdates: true,
@@ -30,7 +29,6 @@ export default defineComponent({
 			this.liveUpdates = !this.liveUpdates;
 		},
 		resetTeams(): void {
-			this.teamCount = 2;
 			this.currentTeams = getFirstTwoTeams();
 		},
 		refreshCalculations(forceRefresh: boolean = false): void {
@@ -42,22 +40,24 @@ export default defineComponent({
 		},
 		incrementTeamCount(): void {
 			// The limit is kind of arbitrary.
-			if (this.teamCount < 256) {
-				this.teamCount++;
-				const newTeam = getDefaultTeam(this.teamCount, this.env.mu, this.env.sigma);
+			if (this.currentTeams.length < 256) {
+				const newTeam = getDefaultTeam(
+					this.currentTeams.length + 1,
+					this.env.mu,
+					this.env.sigma
+				);
 				this.currentTeams.push(newTeam);
 			}
 		},
 		decrementTeamCount(): void {
 			// Have to have at least 2 teams.
-			if (this.teamCount > 2) {
-				this.teamCount--;
+			if (this.currentTeams.length > 2) {
 				this.currentTeams.pop();
 			}
 		},
 		addPlayerToTeam(team: Team, playerIndex: number): void {
 			if (team.players.length < 256) {
-				team.players.push(getDefaultPlayer(playerIndex, this.env.mu, this.env.sigma));
+				team.players.push(getDefaultPlayer(playerIndex + 1, this.env.mu, this.env.sigma));
 			}
 		},
 		removePlayerFromTeam(team: Team): void {
@@ -90,11 +90,11 @@ export default defineComponent({
 		updateTeamRanks(team: Team, newRank: number): void {
 			// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
 			// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
-			// But to keep it simple and to avoid confusion, we limit the ranks to be between 0 and the number of teams.
+			// But to keep it simple and to avoid confusion, we limit the ranks to be between 1 and the number of teams.
 			if (newRank < 1 || !newRank) {
 				newRank = 1;
-			} else if (newRank > this.teamCount) {
-				newRank = this.teamCount;
+			} else if (newRank > this.currentTeams.length) {
+				newRank = this.currentTeams.length;
 			}
 
 			team.rank = newRank;
@@ -167,7 +167,7 @@ export default defineComponent({
 		<table class="table-auto border-separate border-spacing-1">
 			<tr>
 				<td colspan="6">
-					<b class="text-3xl">Starting Teams: ({{ teamCount }})</b>
+					<b class="text-3xl">Starting Teams: ({{ currentTeams.length }})</b>
 					<button class="team-button shadow-green-500" @click="incrementTeamCount">
 						Add New Team
 					</button>
@@ -212,7 +212,7 @@ export default defineComponent({
 						class="team-input"
 						type="number"
 						min="1"
-						:max="teamCount"
+						:max="currentTeams.length"
 						v-model.number.lazy="team.rank"
 						@input="
 							updateTeamRanks(team, ($event.target as HTMLInputElement).valueAsNumber)
@@ -278,7 +278,7 @@ export default defineComponent({
 				</td>
 				<button
 					class="player-button shadow-green-500"
-					@click="addPlayerToTeam(team, team.players.length + 1)"
+					@click="addPlayerToTeam(team, team.players.length)"
 				>
 					Add Player
 				</button>
