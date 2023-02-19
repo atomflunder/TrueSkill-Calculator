@@ -162,7 +162,7 @@ function resetConfig(): void {
 		<p class="font-bold text-xl mt-3 -mb-3 mx-2">FAQ:</p>
 		<br />
 
-		<details class="sidebar-button">
+		<details class="sidebar-details details-animated">
 			<summary>What is TrueSkill?</summary>
 			<h3 class="text-xl">The TrueSkill Ranking System:</h3>
 			<br />
@@ -182,7 +182,11 @@ function resetConfig(): void {
 			means that the real skill of a player is somewhere within μ±3σ, with a 99% confidence.
 			<br />
 			<br />
-			<img src="../assets/trueskill-skilldia.jpg" alt="An example of a Player's Rating." />
+			<img
+				src="../assets/trueskill-skilldia.jpg"
+				alt="An example of a Player's Rating."
+				class="justify-center mx-auto"
+			/>
 			<br />
 			<br />
 			The TrueSkill algorithm is very good at asserting the skill of a player <i>quickly</i>.
@@ -237,7 +241,7 @@ function resetConfig(): void {
 			>
 		</details>
 
-		<details class="sidebar-button">
+		<details class="sidebar-details details-animated">
 			<summary>What do these Config Values mean?</summary>
 
 			<h3 class="text-xl">Config Values Explained:</h3>
@@ -301,7 +305,7 @@ function resetConfig(): void {
 			</p>
 		</details>
 
-		<details class="sidebar-button">
+		<details class="sidebar-details details-animated">
 			<summary>How do I use this Calculator?</summary>
 			<h3 class="text-xl">How to use this calculator:</h3>
 			<br />
@@ -374,5 +378,24 @@ input[type='checkbox']:checked:after {
 	-moz-transform: translate(-50%, -50%);
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
+}
+
+@keyframes fadeInDown {
+	0% {
+		opacity: 0;
+		transform: translateY(-1.25em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.details-animated[open] {
+	animation-name: fadeInDown;
+	animation-duration: 0.5s;
+}
+
+.details-animated {
+	transition: height 1s ease;
 }
 </style>

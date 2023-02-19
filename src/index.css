@@ -37,6 +37,14 @@ input[type='number'] {
 		@apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 my-3 mx-4 rounded w-72 shadow-md;
 	}
 
+	.sidebar-details {
+		@apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 my-3 mx-4 rounded w-72 shadow-md;
+	}
+
+	.sidebar-details summary {
+		@apply cursor-pointer;
+	}
+
 	.team-button {
 		@apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-2 m-4 rounded shadow-md shadow-slate-50 active:bg-gray-800;
 	}
