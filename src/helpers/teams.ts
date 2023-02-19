@@ -6,13 +6,21 @@ export type Team = {
 	rank: number;
 };
 
-export function getDefaultTeam(teamNumber: number, defaultMu: number, defaultSigma: number): Team {
+export function getDefaultTeam(
+	teamNumber: number,
+	teamSize: number,
+	defaultMu: number,
+	defaultSigma: number
+): Team {
+	const players = [];
+
+	for (let i = 0; i < teamSize; i++) {
+		players.push(getDefaultPlayer(i + 1, defaultMu, defaultSigma));
+	}
+
 	const team = {
 		name: `Team ${teamNumber}`,
-		players: [
-			getDefaultPlayer(1, defaultMu, defaultSigma),
-			getDefaultPlayer(2, defaultMu, defaultSigma)
-		],
+		players: players,
 		rank: teamNumber
 	};
 	return team;

@@ -6,12 +6,14 @@ import ConfigSidebar from '@/components/ConfigSidebar.vue';
 import { getDefaultPlayer, type Player } from '@/helpers/players';
 import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
 import { calculateRatings, matchQuality } from '@/helpers/trueskill';
+import Consts from '@/helpers/consts';
 
 export default defineComponent({
 	name: 'TrueskillCalculator',
 	data() {
 		return {
 			env: new TrueSkill() as TrueSkill,
+			teamSize: 2,
 			currentTeams: getFirstTwoTeams() as Team[],
 			newTeams: [] as Team[],
 			liveUpdates: true,
@@ -24,6 +26,7 @@ export default defineComponent({
 	methods: {
 		resetConfig(): void {
 			this.env = new TrueSkill();
+			this.teamSize = 2;
 		},
 		toggleLiveUpdates(): void {
 			this.liveUpdates = !this.liveUpdates;
@@ -40,9 +43,10 @@ export default defineComponent({
 		},
 		incrementTeamCount(): void {
 			// The limit is kind of arbitrary.
-			if (this.currentTeams.length < 256) {
+			if (this.currentTeams.length < Consts.MAX_AMOUNT_TEAMS) {
 				const newTeam = getDefaultTeam(
 					this.currentTeams.length + 1,
+					this.teamSize,
 					this.env.mu,
 					this.env.sigma
 				);
@@ -50,19 +54,28 @@ export default defineComponent({
 			}
 		},
 		decrementTeamCount(): void {
-			// Have to have at least 2 teams.
-			if (this.currentTeams.length > 2) {
+			if (this.currentTeams.length > Consts.MIN_AMOUNT_TEAMS) {
 				this.currentTeams.pop();
 			}
 		},
+		increaseTeamSize(i: number): void {
+			if (i > Consts.MAX_AMOUNT_PLAYERS) {
+				i = Consts.MAX_AMOUNT_PLAYERS;
+			}
+
+			if (i < Consts.MIN_AMOUNT_PLAYERS || !i) {
+				i = Consts.MIN_AMOUNT_PLAYERS;
+			}
+
+			this.teamSize = i;
+		},
 		addPlayerToTeam(team: Team, playerIndex: number): void {
-			if (team.players.length < 256) {
+			if (team.players.length < Consts.MAX_AMOUNT_PLAYERS) {
 				team.players.push(getDefaultPlayer(playerIndex + 1, this.env.mu, this.env.sigma));
 			}
 		},
 		removePlayerFromTeam(team: Team): void {
-			// Have to have at least 1 player per team.
-			if (team.players.length > 1) {
+			if (team.players.length > Consts.MIN_AMOUNT_PLAYERS) {
 				team.players.pop();
 			}
 		},
@@ -137,7 +150,11 @@ export default defineComponent({
 		this.refreshCalculations(false);
 	},
 	beforeUpdate() {
-		this.refreshCalculations(false);
+		try {
+			this.refreshCalculations(false);
+		} catch (e) {
+			console.error(e);
+		}
 	}
 });
 </script>
@@ -150,11 +167,13 @@ export default defineComponent({
 		<ConfigSidebar
 			:mu-value="env.mu"
 			:sigma-value="env.sigma"
+			:team-size-value="teamSize"
 			:beta-value="env.beta"
 			:tau-value="env.tau"
 			:draw-probability="env.drawProbability"
 			@mu-value="env.mu = $event"
 			@sigma-value="env.sigma = $event"
+			@team-size-value="increaseTeamSize($event)"
 			@beta-value="env.beta = $event"
 			@tau-value="env.tau = $event"
 			@draw-probability="env.drawProbability = $event"

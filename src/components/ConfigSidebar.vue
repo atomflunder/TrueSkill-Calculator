@@ -17,6 +17,10 @@ export default defineComponent({
 			type: Number,
 			default: 25 / 3
 		},
+		teamSizeValue: {
+			type: Number,
+			default: 2
+		},
 		betaValue: {
 			type: Number,
 			default: 25 / 6
@@ -34,6 +38,7 @@ export default defineComponent({
 		'reset-config',
 		'mu-value',
 		'sigma-value',
+		'team-size-value',
 		'beta-value',
 		'tau-value',
 		'draw-probability',
@@ -77,6 +82,25 @@ export default defineComponent({
 							$emit(
 								'sigma-value',
 								parseFloat(($event.target as HTMLInputElement).value)
+							)
+						"
+						class="sidebar-input"
+					/>
+				</td>
+			</tr>
+			<tr>
+				<td title="The default amount of players for new teams.">Default Team Size:</td>
+				<td>
+					<input
+						type="number"
+						step="1"
+						min="1"
+						max="1024"
+						:value="teamSizeValue"
+						@input="
+							$emit(
+								'team-size-value',
+								parseInt(($event.target as HTMLInputElement).value)
 							)
 						"
 						class="sidebar-input"
@@ -255,6 +279,13 @@ export default defineComponent({
 			</p>
 			<br />
 
+			<h3 class="text-lg underline"><b class="font-semibold">Default Team Size:</b></h3>
+			<p>
+				The default number of players per team.<br />
+				<b class="font-semibold">By default set to 2</b>.
+			</p>
+			<br />
+
 			<h3 class="text-lg underline"><b class="font-semibold">Beta (β):</b></h3>
 			<p>
 				The distance in rating points to guarantee about a 76% chance of winning for the
@@ -311,15 +342,17 @@ export default defineComponent({
 			You can also see the <b>Match Quality</b> which is the percent chance of your match
 			ending in a draw. The higher this value, the closer your match will be.<br />
 			<br />
-			If you have a lot of Teams and Players, You may want to disable updating the new teams
-			on the fly by checking the Disable Live Updates Button on the Sidebar.
+			If you have a lot of Teams and/or Players, it is recommended to disable updating the new
+			teams on the fly by checking the Disable Live Updates Button on the Sidebar in order to
+			reduce lag.
 			<br />
 			<br />
 			When you're done you can copy the resulting Teams to your clipboard in CSV format all at
 			once or one-by-one.
 			<br />
 			<br />
-			This calculator supports up to 128 Teams with up to 256 players each.
+			This calculator supports up to 256 Teams with up to 128 players each theoretically,
+			although you might run into floating point errors when having a lot of players.
 		</details>
 
 		<br />
