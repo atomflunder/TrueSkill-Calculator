@@ -96,4 +96,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Packages used
 
 -   [Vue](https://vuejs.org/)
+-   [Vite](https://vitejs.dev/)
+-   [Tailwind](https://tailwindcss.com/)
 -   [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
