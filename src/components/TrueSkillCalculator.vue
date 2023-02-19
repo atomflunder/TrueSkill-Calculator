@@ -16,7 +16,7 @@ export default defineComponent({
 			teamSize: 2,
 			currentTeams: getFirstTwoTeams() as Team[],
 			newTeams: [] as Team[],
-			liveUpdates: true,
+			disableLiveUpdates: false,
 			quality: '',
 			copyAllMessage: '📋 Copy All Teams As CSV',
 			copyTeamMessage: '📋 Copy Team As CSV',
@@ -27,16 +27,17 @@ export default defineComponent({
 		resetConfig(): void {
 			this.env = new TrueSkill();
 			this.teamSize = 2;
+			this.disableLiveUpdates = false;
 		},
 		toggleLiveUpdates(): void {
-			this.liveUpdates = !this.liveUpdates;
+			this.disableLiveUpdates = !this.disableLiveUpdates;
 		},
 		resetTeams(): void {
 			this.currentTeams = getFirstTwoTeams();
 		},
 		refreshCalculations(forceRefresh: boolean = false): void {
 			// Just a shortcut to calling both functions.
-			if (this.liveUpdates || forceRefresh) {
+			if (!this.disableLiveUpdates || forceRefresh) {
 				this.newTeams = calculateRatings(this.env as TrueSkill, this.currentTeams);
 				this.quality = matchQuality(this.env as TrueSkill, this.currentTeams);
 			}
@@ -171,6 +172,7 @@ export default defineComponent({
 			:beta-value="env.beta"
 			:tau-value="env.tau"
 			:draw-probability="env.drawProbability"
+			:disable-live-updates="disableLiveUpdates"
 			@mu-value="env.mu = $event"
 			@sigma-value="env.sigma = $event"
 			@team-size-value="increaseTeamSize($event)"
@@ -178,7 +180,7 @@ export default defineComponent({
 			@tau-value="env.tau = $event"
 			@draw-probability="env.drawProbability = $event"
 			@reset-config="resetConfig"
-			@toggle-live-updates="liveUpdates = !liveUpdates"
+			@toggle-live-updates="toggleLiveUpdates"
 		/>
 
 		<br />
@@ -306,11 +308,11 @@ export default defineComponent({
 				</button>
 			</tr>
 
-			<tr v-show="!liveUpdates">
+			<tr v-show="disableLiveUpdates">
 				<td>&nbsp;</td>
 			</tr>
 
-			<tr v-show="!liveUpdates">
+			<tr v-show="disableLiveUpdates">
 				<td
 					colspan="3"
 					class="text-2xl text-center p-4 bg-gray-700 rounded border-white border hover:bg-gray-600 active:bg-gray-800 cursor-pointer shadow-md shadow-gray-500"

@@ -32,6 +32,10 @@ export default defineComponent({
 		drawProbability: {
 			type: Number,
 			default: 0.1
+		},
+		disableLiveUpdates: {
+			type: Boolean,
+			default: false
 		}
 	},
 	emits: [
@@ -174,8 +178,9 @@ export default defineComponent({
 				</td>
 				<input
 					type="checkbox"
-					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+					:checked="disableLiveUpdates"
 					@click="$emit('toggle-live-updates')"
+					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
 				/>
 			</tr>
 		</table>
@@ -310,6 +315,15 @@ export default defineComponent({
 				draw set this to a higher value. If your game has a low chance of ending in a draw
 				set this to a lower value. You can also set this to 0 if draws are impossible.<br />
 				<b class="font-semibold">By default set to 0.1</b>.
+			</p>
+			<br />
+
+			<h3 class="text-lg underline"><b class="font-semibold">Disable Live Updates:</b></h3>
+			<p>
+				If you want to disable updating the teams on the fly. If you select this, you need
+				to manually update the teams. Recommended if you have a lot of Teams and/or Players
+				in order to reduce lag.<br />
+				<b class="font-semibold">By default set to false</b>.
 			</p>
 		</details>
 
