@@ -1,161 +1,169 @@
-<script lang="ts">
+<script setup lang="ts">
 import { copyMessage } from '@/helpers/copy';
 import { TrueSkill } from 'ts-trueskill';
-import { defineComponent } from 'vue';
 import ConfigSidebar from '@/components/ConfigSidebar.vue';
 import { getDefaultPlayer, type Player } from '@/helpers/players';
 import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
 import { calculateRatings, matchQuality } from '@/helpers/trueskill';
 import Consts from '@/helpers/consts';
+import { ref, onMounted, onBeforeUpdate } from 'vue';
 
-export default defineComponent({
-	name: 'TrueskillCalculator',
-	data() {
-		return {
-			env: new TrueSkill() as TrueSkill,
-			teamSize: 2,
-			currentTeams: getFirstTwoTeams() as Team[],
-			newTeams: [] as Team[],
-			disableLiveUpdates: false,
-			quality: '',
-			copyAllMessage: '📋 Copy All Teams As CSV',
-			copyTeamMessage: '📋 Copy Team As CSV',
-			copiedMessage: '✔️ Copied to Clipboard!'
-		};
-	},
-	methods: {
-		resetConfig(): void {
-			this.env = new TrueSkill();
-			this.teamSize = 2;
-			this.disableLiveUpdates = false;
-		},
-		toggleLiveUpdates(): void {
-			this.disableLiveUpdates = !this.disableLiveUpdates;
-		},
-		resetTeams(): void {
-			this.currentTeams = getFirstTwoTeams();
-		},
-		refreshCalculations(forceRefresh: boolean = false): void {
-			// Just a shortcut to calling both functions.
-			if (!this.disableLiveUpdates || forceRefresh) {
-				this.newTeams = calculateRatings(this.env as TrueSkill, this.currentTeams);
-				this.quality = matchQuality(this.env as TrueSkill, this.currentTeams);
-			}
-		},
-		incrementTeamCount(): void {
-			// The limit is kind of arbitrary.
-			if (this.currentTeams.length < Consts.MAX_AMOUNT_TEAMS) {
-				const newTeam = getDefaultTeam(
-					this.currentTeams.length + 1,
-					this.teamSize,
-					this.env.mu,
-					this.env.sigma
-				);
-				this.currentTeams.push(newTeam);
-			}
-		},
-		decrementTeamCount(): void {
-			if (this.currentTeams.length > Consts.MIN_AMOUNT_TEAMS) {
-				this.currentTeams.pop();
-			}
-		},
-		increaseTeamSize(i: number): void {
-			if (i > Consts.MAX_AMOUNT_PLAYERS) {
-				i = Consts.MAX_AMOUNT_PLAYERS;
-			}
+const env = ref(new TrueSkill());
+const teamSize = ref(2);
+const currentTeams = ref(getFirstTwoTeams());
+const newTeams = ref([] as Team[]);
+const quality = ref('');
 
-			if (i < Consts.MIN_AMOUNT_PLAYERS || !i) {
-				i = Consts.MIN_AMOUNT_PLAYERS;
-			}
+function resetConfig(): void {
+	env.value = new TrueSkill();
+	teamSize.value = 2;
+	disableLiveUpdates.value = false;
+}
 
-			this.teamSize = i;
-		},
-		addPlayerToTeam(team: Team, playerIndex: number): void {
-			if (team.players.length < Consts.MAX_AMOUNT_PLAYERS) {
-				team.players.push(getDefaultPlayer(playerIndex + 1, this.env.mu, this.env.sigma));
-			}
-		},
-		removePlayerFromTeam(team: Team): void {
-			if (team.players.length > Consts.MIN_AMOUNT_PLAYERS) {
-				team.players.pop();
-			}
-		},
-		updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
-			if (!newMu) {
-				newMu = 0;
-			}
+function resetTeams(): void {
+	currentTeams.value = getFirstTwoTeams();
+}
 
-			// The sigma value could be positive or negative, but just not 0.
-			// The mu value can be whatever.
-			if (newSigma) {
-				player.rating = [newMu, newSigma];
-			}
-		},
-		updatePlayerWeight(player: Player, newWeight: number): void {
-			// The weight needs to be between 0 and 1.
-			if (newWeight < 0 || !newWeight) {
-				newWeight = 0;
-			} else if (newWeight > 1) {
-				newWeight = 1;
-			}
+function refreshCalculations(forceRefresh: boolean = false): void {
+	// Just a shortcut to calling both functions.
+	if (!disableLiveUpdates.value || forceRefresh) {
+		newTeams.value = calculateRatings(env.value as TrueSkill, currentTeams.value);
+		quality.value = matchQuality(env.value as TrueSkill, currentTeams.value);
+	}
+}
 
-			player.weight = newWeight;
-		},
-		updateTeamRanks(team: Team, newRank: number): void {
-			// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
-			// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
-			// But to keep it simple and to avoid confusion, we limit the ranks to be between 1 and the number of teams.
-			if (newRank < 1 || !newRank) {
-				newRank = 1;
-			} else if (newRank > this.currentTeams.length) {
-				newRank = this.currentTeams.length;
-			}
+function incrementTeamCount(): void {
+	// The limit is kind of arbitrary.
+	if (currentTeams.value.length < Consts.MAX_AMOUNT_TEAMS) {
+		const newTeam = getDefaultTeam(
+			currentTeams.value.length + 1,
+			teamSize.value,
+			env.value.mu,
+			env.value.sigma
+		);
+		currentTeams.value.push(newTeam);
+	}
+}
 
-			team.rank = newRank;
-		},
-		teamToCsv(team: Team): string {
-			return team.players
-				.map((player) => {
-					return `${team.name},${team.rank},${player.name},${player.rating[0]},${player.rating[1]},${player.weight}`;
-				})
-				.join('\r');
-		},
-		allTeamsToCsv(teams: Team[]): string {
-			return teams
-				.map((team) => {
-					return this.teamToCsv(team);
-				})
-				.join('\r');
-		},
-		copyAllTeamsButton(): void {
-			copyMessage(this.allTeamsToCsv(this.newTeams));
-			const oldMessage = this.copyAllMessage;
-			this.copyAllMessage = this.copiedMessage;
-			setTimeout(() => {
-				this.copyAllMessage = oldMessage;
-			}, 1000);
-		},
-		copyOneTeamButton(i: number): void {
-			copyMessage(this.teamToCsv(this.newTeams[i]));
-			const button = document.getElementsByClassName('copy-csv-button')[i + 1];
-			button.innerHTML = this.copiedMessage;
-			setTimeout(() => {
-				button.innerHTML = this.copyTeamMessage;
-			}, 1000);
-		}
-	},
-	components: {
-		ConfigSidebar
-	},
-	mounted() {
-		this.refreshCalculations(false);
-	},
-	beforeUpdate() {
-		try {
-			this.refreshCalculations(false);
-		} catch (e) {
-			console.error(e);
-		}
+function decrementTeamCount(): void {
+	if (currentTeams.value.length > Consts.MIN_AMOUNT_TEAMS) {
+		currentTeams.value.pop();
+	}
+}
+
+function increaseTeamSize(i: number): void {
+	if (i > Consts.MAX_AMOUNT_PLAYERS) {
+		i = Consts.MAX_AMOUNT_PLAYERS;
+	}
+
+	if (i < Consts.MIN_AMOUNT_PLAYERS || !i) {
+		i = Consts.MIN_AMOUNT_PLAYERS;
+	}
+
+	teamSize.value = i;
+}
+
+function addPlayerToTeam(team: Team, playerIndex: number): void {
+	if (team.players.length < Consts.MAX_AMOUNT_PLAYERS) {
+		team.players.push(getDefaultPlayer(playerIndex + 1, env.value.mu, env.value.sigma));
+	}
+}
+
+function removePlayerFromTeam(team: Team): void {
+	if (team.players.length > Consts.MIN_AMOUNT_PLAYERS) {
+		team.players.pop();
+	}
+}
+
+function updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
+	if (!newMu) {
+		newMu = 0;
+	}
+
+	// The sigma value could be positive or negative, but just not 0.
+	// The mu value can be whatever.
+	if (newSigma) {
+		player.rating = [newMu, newSigma];
+	}
+}
+
+function updatePlayerWeight(player: Player, newWeight: number): void {
+	// The weight needs to be between 0 and 1.
+	if (newWeight < 0 || !newWeight) {
+		newWeight = 0;
+	} else if (newWeight > 1) {
+		newWeight = 1;
+	}
+
+	player.weight = newWeight;
+}
+
+function updateTeamRanks(team: Team, newRank: number): void {
+	// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
+	// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
+	// But to keep it simple and to avoid confusion, we limit the ranks to be between 1 and the number of teams.
+	if (newRank < 1 || !newRank) {
+		newRank = 1;
+	} else if (newRank > currentTeams.value.length) {
+		newRank = currentTeams.value.length;
+	}
+
+	team.rank = newRank;
+}
+
+const copyAllMessage = ref('📋 Copy All Teams As CSV');
+const copyTeamMessage = ref('📋 Copy Team As CSV');
+const copiedMessage = ref('✔️ Copied to Clipboard!');
+
+function teamToCsv(team: Team): string {
+	return team.players
+		.map((player) => {
+			return `${team.name},${team.rank},${player.name},${player.rating[0]},${player.rating[1]},${player.weight}`;
+		})
+		.join('\r');
+}
+
+function allTeamsToCsv(teams: Team[]): string {
+	return teams
+		.map((team) => {
+			return teamToCsv(team);
+		})
+		.join('\r');
+}
+
+function copyAllTeamsButton(): void {
+	copyMessage(allTeamsToCsv(newTeams.value));
+	const oldMessage = copyAllMessage.value;
+	copyAllMessage.value = copiedMessage.value;
+	setTimeout(() => {
+		copyAllMessage.value = oldMessage;
+	}, 1000);
+}
+
+function copyOneTeamButton(i: number): void {
+	copyMessage(teamToCsv(newTeams.value[i]));
+	const button = document.getElementsByClassName('copy-csv-button')[i + 1];
+	button.innerHTML = copiedMessage.value;
+	setTimeout(() => {
+		button.innerHTML = copyTeamMessage.value;
+	}, 1000);
+}
+
+const disableLiveUpdates = ref(false);
+
+function toggleLiveUpdates(): void {
+	disableLiveUpdates.value = !disableLiveUpdates.value;
+}
+
+onMounted(() => {
+	refreshCalculations(false);
+});
+
+onBeforeUpdate(() => {
+	try {
+		refreshCalculations(false);
+	} catch (e) {
+		console.error(e);
 	}
 });
 </script>

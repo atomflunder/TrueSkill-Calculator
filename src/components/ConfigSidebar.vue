@@ -1,54 +1,28 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-	name: 'ConfigSidebar',
-	methods: {
-		resetConfig(): void {
-			this.$emit('reset-config');
-		}
-	},
-	props: {
-		muValue: {
-			type: Number,
-			default: 25
-		},
-		sigmaValue: {
-			type: Number,
-			default: 25 / 3
-		},
-		teamSizeValue: {
-			type: Number,
-			default: 2
-		},
-		betaValue: {
-			type: Number,
-			default: 25 / 6
-		},
-		tauValue: {
-			type: Number,
-			default: 25 / 300
-		},
-		drawProbability: {
-			type: Number,
-			default: 0.1
-		},
-		disableLiveUpdates: {
-			type: Boolean,
-			default: false
-		}
-	},
-	emits: [
-		'reset-config',
-		'mu-value',
-		'sigma-value',
-		'team-size-value',
-		'beta-value',
-		'tau-value',
-		'draw-probability',
-		'toggle-live-updates'
-	]
+<script setup lang="ts">
+defineProps({
+	muValue: Number,
+	sigmaValue: Number,
+	teamSizeValue: Number,
+	betaValue: Number,
+	tauValue: Number,
+	drawProbability: Number,
+	disableLiveUpdates: Boolean
 });
+
+const emit = defineEmits([
+	'reset-config',
+	'mu-value',
+	'sigma-value',
+	'team-size-value',
+	'beta-value',
+	'tau-value',
+	'draw-probability',
+	'toggle-live-updates'
+]);
+
+function resetConfig(): void {
+	emit('reset-config');
+}
 </script>
 
 <template>
