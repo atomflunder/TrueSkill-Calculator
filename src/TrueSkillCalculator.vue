@@ -157,10 +157,7 @@ function copyOneTeamButton(i: number): void {
 }
 
 const disableLiveUpdates = ref(false);
-
-function toggleLiveUpdates(): void {
-	disableLiveUpdates.value = !disableLiveUpdates.value;
-}
+const showSidebar = ref(true);
 
 onMounted(() => {
 	refreshCalculations(false);
@@ -176,11 +173,20 @@ onBeforeUpdate(() => {
 </script>
 
 <template>
-	<div>
+	<button v-if="!showSidebar" @click="showSidebar = !showSidebar" class="text-4xl float-left">
+		&gt;
+	</button>
+	<div
+		:class="{
+			'ml-80': showSidebar,
+			'ml-8': !showSidebar
+		}"
+	>
 		<title>TrueSkill Calculator</title>
 		<h1 class="text-5xl p-2">TrueSkill Calculator</h1>
 
 		<ConfigSidebar
+			v-if="showSidebar"
 			:mu-value="env.mu"
 			:sigma-value="env.sigma"
 			:team-size-value="teamSize"
@@ -195,7 +201,8 @@ onBeforeUpdate(() => {
 			@tau-value="env.tau = $event"
 			@draw-probability="env.drawProbability = $event"
 			@reset-config="resetConfig"
-			@toggle-live-updates="toggleLiveUpdates"
+			@toggle-live-updates="disableLiveUpdates = !disableLiveUpdates"
+			@toggle-sidebar="showSidebar = !showSidebar"
 		/>
 
 		<br />

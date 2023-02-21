@@ -17,7 +17,8 @@ const emit = defineEmits([
 	'beta-value',
 	'tau-value',
 	'draw-probability',
-	'toggle-live-updates'
+	'toggle-live-updates',
+	'toggle-sidebar'
 ]);
 
 function resetConfig(): void {
@@ -29,7 +30,12 @@ function resetConfig(): void {
 	<div
 		class="fixed overflow-scroll scrollbar-hide top-0 left-0 h-screen min-h-full w-80 flex-col bg-gray-800 text-white drop-shadow-xl"
 	>
-		<h2 class="text-2xl p-2">Current Config:</h2>
+		<h2 class="text-3xl p-2">
+			Current Config:<button @click="$emit('toggle-sidebar')" class="float-right text-4xl">
+				&lt;
+			</button>
+		</h2>
+
 		<button class="sidebar-button shadow-blue-500 active:bg-gray-800 mb-8" @click="resetConfig">
 			Reset Config
 		</button>
