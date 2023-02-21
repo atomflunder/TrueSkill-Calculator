@@ -1,13 +1,13 @@
 <script setup lang="ts">
-defineProps({
-	muValue: Number,
-	sigmaValue: Number,
-	teamSizeValue: Number,
-	betaValue: Number,
-	tauValue: Number,
-	drawProbability: Number,
-	disableLiveUpdates: Boolean
-});
+defineProps<{
+	muValue: number;
+	sigmaValue: number;
+	teamSizeValue: number;
+	betaValue: number;
+	tauValue: number;
+	drawProbability: number;
+	disableLiveUpdates: boolean;
+}>();
 
 const emit = defineEmits([
 	'reset-config',

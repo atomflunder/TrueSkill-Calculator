@@ -5,5 +5,3 @@ import Calculator from '@/components/TrueSkillCalculator.vue';
 <template>
 	<Calculator />
 </template>
-
-<style scoped></style>

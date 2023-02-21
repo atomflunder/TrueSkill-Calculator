@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { copyMessage } from '@/helpers/copy';
+import { ref, onMounted, onBeforeUpdate } from 'vue';
 import { TrueSkill } from 'ts-trueskill';
-import ConfigSidebar from '@/components/ConfigSidebar.vue';
+
+import Consts from '@/helpers/consts';
+import { copyMessage } from '@/helpers/copy';
 import { getDefaultPlayer, type Player } from '@/helpers/players';
 import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
 import { calculateRatings, matchQuality } from '@/helpers/trueskill';
-import Consts from '@/helpers/consts';
-import { ref, onMounted, onBeforeUpdate } from 'vue';
+
+import ConfigSidebar from '@/components/ConfigSidebar.vue';
+import OutputTeam from './OutputTeam.vue';
 
 const env = ref(new TrueSkill());
 const teamSize = ref(2);
@@ -242,7 +245,7 @@ onBeforeUpdate(() => {
 						type="number"
 						min="1"
 						:max="currentTeams.length"
-						v-model.number.lazy="team.rank"
+						v-model.lazy="team.rank"
 						@input="
 							updateTeamRanks(team, ($event.target as HTMLInputElement).valueAsNumber)
 						"
@@ -259,7 +262,7 @@ onBeforeUpdate(() => {
 							class="team-input"
 							type="number"
 							step="0.1"
-							v-model.number.lazy="player.rating[0]"
+							v-model.lazy="player.rating[0]"
 							@input="
 								updatePlayerMuSigma(
 									player,
@@ -276,7 +279,7 @@ onBeforeUpdate(() => {
 							class="team-input"
 							type="number"
 							step="0.01"
-							v-model.number.lazy="player.rating[1]"
+							v-model.lazy="player.rating[1]"
 							@input="
 								updatePlayerMuSigma(
 									player,
@@ -295,7 +298,7 @@ onBeforeUpdate(() => {
 							max="1"
 							min="0"
 							step="0.01"
-							v-model.number.lazy="player.weight"
+							v-model.lazy="player.weight"
 							@input="
 								updatePlayerWeight(
 									player,
@@ -380,32 +383,7 @@ onBeforeUpdate(() => {
 			</th>
 
 			<tr class="odd:bg-gray-800" v-for="(team, i) in newTeams" :key="i">
-				<td>
-					<div class="team-input">{{ team.name }}</div>
-				</td>
-				<td>
-					<div class="team-input">{{ team.rank }}</div>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<div class="team-input">{{ player.name }}</div>
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<div class="team-input">{{ player.rating[0] }}</div>
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<div class="team-input">{{ player.rating[1] }}</div>
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<div class="team-input">{{ player.weight }}</div>
-					</tr>
-				</td>
+				<OutputTeam :team="team" />
 				<button
 					title="Copy Team as CSV"
 					class="copy-csv-button"
