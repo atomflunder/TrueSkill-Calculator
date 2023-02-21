@@ -185,25 +185,27 @@ onBeforeUpdate(() => {
 		<title>TrueSkill Calculator</title>
 		<h1 class="text-5xl p-2">TrueSkill Calculator</h1>
 
-		<ConfigSidebar
-			v-if="showSidebar"
-			:mu-value="env.mu"
-			:sigma-value="env.sigma"
-			:team-size-value="teamSize"
-			:beta-value="env.beta"
-			:tau-value="env.tau"
-			:draw-probability="env.drawProbability"
-			:disable-live-updates="disableLiveUpdates"
-			@mu-value="env.mu = $event"
-			@sigma-value="env.sigma = $event"
-			@team-size-value="increaseTeamSize($event)"
-			@beta-value="env.beta = $event"
-			@tau-value="env.tau = $event"
-			@draw-probability="env.drawProbability = $event"
-			@reset-config="resetConfig"
-			@toggle-live-updates="disableLiveUpdates = !disableLiveUpdates"
-			@toggle-sidebar="showSidebar = !showSidebar"
-		/>
+		<Transition name="slide">
+			<ConfigSidebar
+				v-if="showSidebar"
+				:mu-value="env.mu"
+				:sigma-value="env.sigma"
+				:team-size-value="teamSize"
+				:beta-value="env.beta"
+				:tau-value="env.tau"
+				:draw-probability="env.drawProbability"
+				:disable-live-updates="disableLiveUpdates"
+				@mu-value="env.mu = $event"
+				@sigma-value="env.sigma = $event"
+				@team-size-value="increaseTeamSize($event)"
+				@beta-value="env.beta = $event"
+				@tau-value="env.tau = $event"
+				@draw-probability="env.drawProbability = $event"
+				@reset-config="resetConfig"
+				@toggle-live-updates="disableLiveUpdates = !disableLiveUpdates"
+				@toggle-sidebar="showSidebar = !showSidebar"
+			/>
+		</Transition>
 
 		<br />
 
@@ -337,3 +339,16 @@ onBeforeUpdate(() => {
 		</table>
 	</div>
 </template>
+
+<style scoped>
+.slide-leave-active,
+.slide-enter-active {
+	transition: 0.2s;
+}
+.slide-enter-from {
+	transform: translate(-100%, 0);
+}
+.slide-leave-to {
+	transform: translate(-100%, 0);
+}
+</style>
