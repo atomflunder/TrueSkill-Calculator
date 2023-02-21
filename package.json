@@ -23,6 +23,7 @@
 		"@types/jsdom": "^20.0.1",
 		"@types/node": "^18.11.12",
 		"@vitejs/plugin-vue": "^4.0.0",
+		"@vitest/coverage-c8": "^0.28.5",
 		"@vue/eslint-config-prettier": "^7.0.0",
 		"@vue/eslint-config-typescript": "^11.0.0",
 		"@vue/test-utils": "^2.2.6",
