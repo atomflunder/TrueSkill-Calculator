@@ -10,6 +10,10 @@ import { calculateRatings, matchQuality } from '@/helpers/trueskill';
 
 import ConfigSidebar from '@/components/ConfigSidebar.vue';
 import OutputTeam from './OutputTeam.vue';
+import TeamButtons from './TeamButtons.vue';
+import TableHeaders from './TableHeaders.vue';
+import MatchQuality from './MatchQuality.vue';
+import CalculateRatings from './CalculateRatings.vue';
 
 const env = ref(new TrueSkill());
 const teamSize = ref(2);
@@ -197,42 +201,15 @@ onBeforeUpdate(() => {
 		<br />
 
 		<table class="table-auto border-separate border-spacing-1">
-			<tr>
-				<td colspan="6">
-					<b class="text-3xl">Starting Teams: ({{ currentTeams.length }})</b>
-					<button class="team-button shadow-green-500" @click="incrementTeamCount">
-						Add New Team
-					</button>
+			<TeamButtons
+				:team-amount="currentTeams.length"
+				@increment-teams="incrementTeamCount"
+				@decrement-teams="decrementTeamCount"
+				@reset-teams="resetTeams"
+			/>
 
-					<button class="team-button shadow-red-500" @click="decrementTeamCount">
-						Remove Team
-					</button>
+			<TableHeaders />
 
-					<button class="team-button shadow-blue-500" @click="resetTeams">
-						Reset Teams
-					</button>
-				</td>
-			</tr>
-
-			<tr></tr>
-			<tr></tr>
-
-			<th class="text-2xl" title="The Name of the Team.">Team Name</th>
-			<th
-				class="text-2xl"
-				title="The Rank, or the Placement of the Team. The lower the better."
-			>
-				Rank
-			</th>
-			<th class="text-2xl" title="The Names of the Players of this Team.">Players</th>
-			<th class="text-2xl" title="The Mu (μ) Value of the Player.">Mu (μ)</th>
-			<th class="text-2xl" title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
-			<th
-				class="text-2xl"
-				title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
-			>
-				Weight
-			</th>
 			<tr></tr>
 
 			<tr class="odd:bg-gray-800" v-for="(team, j) in currentTeams" :key="j">
@@ -319,35 +296,11 @@ onBeforeUpdate(() => {
 				</button>
 			</tr>
 
-			<tr v-show="disableLiveUpdates">
-				<td>&nbsp;</td>
-			</tr>
-
-			<tr v-show="disableLiveUpdates">
-				<td
-					colspan="3"
-					class="text-2xl text-center p-4 bg-gray-700 rounded border-white border hover:bg-gray-600 active:bg-gray-800 cursor-pointer shadow-md shadow-gray-500"
-					@click="refreshCalculations(true)"
-				>
-					<button>Calculate New Ratings</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
-
-			<td
-				title="The match quality is the chance of a draw occurring in the given game. The higher the value, the closer the game will be."
-				colspan="3"
-				class="text-3xl text-center p-4 bg-gray-700 rounded border-white border"
-			>
-				Match Quality: {{ quality }}
-			</td>
-
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
+			<CalculateRatings
+				:disable-live-updates="disableLiveUpdates"
+				@refresh-calculations="refreshCalculations(true)"
+			/>
+			<MatchQuality :quality="quality" />
 
 			<tr>
 				<td colspan="6">
@@ -362,25 +315,7 @@ onBeforeUpdate(() => {
 				</td>
 			</tr>
 
-			<tr></tr>
-			<tr></tr>
-
-			<th class="text-2xl" title="The Name of the Team.">Team Name</th>
-			<th
-				class="text-2xl"
-				title="The Rank, or the Placement of the Team. The lower the better."
-			>
-				Rank
-			</th>
-			<th class="text-2xl" title="The Names of the Players of this Team.">Players</th>
-			<th class="text-2xl" title="The Mu (μ) Value of the Player.">Mu (μ)</th>
-			<th class="text-2xl" title="The Sigma (σ) Value of the Player.">Sigma (σ)</th>
-			<th
-				class="text-2xl"
-				title="How much of the Match the Player completed. 0 = Did not play at all, 1 = Played the whole Match."
-			>
-				Weight
-			</th>
+			<TableHeaders />
 
 			<tr class="odd:bg-gray-800" v-for="(team, i) in newTeams" :key="i">
 				<OutputTeam :team="team" />
