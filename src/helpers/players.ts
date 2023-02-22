@@ -7,6 +7,29 @@ export type Player = {
 	weight: number;
 };
 
+export function updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
+	if (!newMu) {
+		newMu = 0;
+	}
+
+	// The sigma value could be positive or negative, but just not 0.
+	// The mu value can be whatever.
+	if (newSigma) {
+		player.rating = [newMu, newSigma];
+	}
+}
+
+export function updatePlayerWeight(player: Player, newWeight: number): void {
+	// The weight needs to be between 0 and 1.
+	if (newWeight < 0 || !newWeight) {
+		newWeight = 0;
+	} else if (newWeight > 1) {
+		newWeight = 1;
+	}
+
+	player.weight = newWeight;
+}
+
 export function getDefaultPlayer(
 	playerNumber: number,
 	defaultMu: number,

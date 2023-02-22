@@ -4,7 +4,18 @@ import { TrueSkill } from 'ts-trueskill';
 
 import Consts from '@/helpers/consts';
 import { copyMessage } from '@/helpers/copy';
-import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
+import {
+	incrementTeamCount,
+	decrementTeamCount,
+	getFirstTwoTeams,
+	addPlayerToTeam,
+	removePlayerFromTeam,
+	updateTeamRanks,
+	teamToCsv,
+	allTeamsToCsv,
+	type Team
+} from '@/helpers/teams';
+import { updatePlayerMuSigma, updatePlayerWeight } from './helpers/players';
 import { calculateRatings, matchQuality } from '@/helpers/trueskill';
 
 import ConfigSidebar from '@/components/ConfigSidebar.vue';
@@ -14,13 +25,15 @@ import TeamButtons from '@/components/TeamButtons.vue';
 import TableHeaders from '@/components/TableHeaders.vue';
 import MatchQuality from '@/components/MatchQuality.vue';
 import CalculateRatings from '@/components/CalculateRatings.vue';
-import { getDefaultPlayer, type Player } from './helpers/players';
 
 const env = ref(new TrueSkill());
 const teamSize = ref(2);
 const currentTeams = ref(getFirstTwoTeams());
 const newTeams = ref([] as Team[]);
 const quality = ref('');
+
+const disableLiveUpdates = ref(false);
+const showSidebar = ref(true);
 
 function resetConfig(): void {
 	env.value = new TrueSkill();
@@ -30,33 +43,6 @@ function resetConfig(): void {
 
 function resetTeams(): void {
 	currentTeams.value = getFirstTwoTeams();
-}
-
-function refreshCalculations(forceRefresh: boolean = false): void {
-	// Just a shortcut to calling both functions.
-	if (!disableLiveUpdates.value || forceRefresh) {
-		newTeams.value = calculateRatings(env.value as TrueSkill, currentTeams.value);
-		quality.value = matchQuality(env.value as TrueSkill, currentTeams.value);
-	}
-}
-
-function incrementTeamCount(): void {
-	// The limit is kind of arbitrary.
-	if (currentTeams.value.length < Consts.MAX_AMOUNT_TEAMS) {
-		const newTeam = getDefaultTeam(
-			currentTeams.value.length + 1,
-			teamSize.value,
-			env.value.mu,
-			env.value.sigma
-		);
-		currentTeams.value.push(newTeam);
-	}
-}
-
-function decrementTeamCount(): void {
-	if (currentTeams.value.length > Consts.MIN_AMOUNT_TEAMS) {
-		currentTeams.value.pop();
-	}
 }
 
 function increaseTeamSize(i: number): void {
@@ -71,73 +57,17 @@ function increaseTeamSize(i: number): void {
 	teamSize.value = i;
 }
 
-function addPlayerToTeam(env: TrueSkill, team: Team, playerIndex: number): void {
-	if (team.players.length < Consts.MAX_AMOUNT_PLAYERS) {
-		team.players.push(getDefaultPlayer(playerIndex + 1, env.mu, env.sigma));
+function refreshCalculations(forceRefresh: boolean = false): void {
+	// Just a shortcut to calling both functions.
+	if (!disableLiveUpdates.value || forceRefresh) {
+		newTeams.value = calculateRatings(env.value as TrueSkill, currentTeams.value);
+		quality.value = matchQuality(env.value as TrueSkill, currentTeams.value);
 	}
-}
-
-function removePlayerFromTeam(team: Team): void {
-	if (team.players.length > Consts.MIN_AMOUNT_PLAYERS) {
-		team.players.pop();
-	}
-}
-
-function updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
-	if (!newMu) {
-		newMu = 0;
-	}
-
-	// The sigma value could be positive or negative, but just not 0.
-	// The mu value can be whatever.
-	if (newSigma) {
-		player.rating = [newMu, newSigma];
-	}
-}
-
-function updatePlayerWeight(player: Player, newWeight: number): void {
-	// The weight needs to be between 0 and 1.
-	if (newWeight < 0 || !newWeight) {
-		newWeight = 0;
-	} else if (newWeight > 1) {
-		newWeight = 1;
-	}
-
-	player.weight = newWeight;
-}
-
-function updateTeamRanks(team: Team, currentTeamsLength: number, newRank: number): void {
-	// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
-	// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
-	// But to keep it simple and to avoid confusion, we limit the ranks to be between 1 and the number of teams.
-	if (newRank < 1 || !newRank) {
-		newRank = 1;
-	} else if (newRank > currentTeamsLength) {
-		newRank = currentTeamsLength;
-	}
-
-	team.rank = newRank;
 }
 
 const copyAllMessage = ref('📋 Copy All Teams As CSV');
 const copyTeamMessage = ref('📋 Copy Team As CSV');
 const copiedMessage = ref('✔️ Copied to Clipboard!');
-
-function teamToCsv(team: Team): string {
-	return team.players
-		.map((player) => {
-			return `${team.name},${team.rank},${player.name},${player.rating[0]},${player.rating[1]},${player.weight}`;
-		})
-		.join('\r');
-}
-
-function allTeamsToCsv(teams: Team[]): string {
-	return teams
-		.map((team) => {
-			return teamToCsv(team);
-		})
-		.join('\r');
-}
 
 function copyAllTeamsButton(): void {
 	copyMessage(allTeamsToCsv(newTeams.value));
@@ -156,9 +86,6 @@ function copyOneTeamButton(teamIndex: number): void {
 		button.innerHTML = copyTeamMessage.value;
 	}, 1000);
 }
-
-const disableLiveUpdates = ref(false);
-const showSidebar = ref(true);
 
 onMounted(() => {
 	refreshCalculations(false);
@@ -214,8 +141,8 @@ onBeforeUpdate(() => {
 		<table class="table-auto border-separate border-spacing-1">
 			<TeamButtons
 				:team-amount="currentTeams.length"
-				@increment-teams="incrementTeamCount"
-				@decrement-teams="decrementTeamCount"
+				@increment-teams="incrementTeamCount(currentTeams, env.mu, env.sigma, teamSize)"
+				@decrement-teams="decrementTeamCount(currentTeams)"
 				@reset-teams="resetTeams"
 			/>
 
@@ -228,7 +155,7 @@ onBeforeUpdate(() => {
 					:team="team"
 					:current-teams="currentTeams"
 					@add-player-to-team="
-						addPlayerToTeam(env as TrueSkill, team, team.players.length)
+						addPlayerToTeam(team, team.players.length, env.mu, env.sigma)
 					"
 					@remove-player-from-team="removePlayerFromTeam(team)"
 					@update-team-name="

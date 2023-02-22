@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Team } from '@/helpers/teams';
 import { onBeforeUpdate } from 'vue';
+import type { Team } from '@/helpers/teams';
 
 defineProps<{
 	team: Team;
