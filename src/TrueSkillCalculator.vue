@@ -4,16 +4,17 @@ import { TrueSkill } from 'ts-trueskill';
 
 import Consts from '@/helpers/consts';
 import { copyMessage } from '@/helpers/copy';
-import { getDefaultPlayer, type Player } from '@/helpers/players';
 import { getDefaultTeam, getFirstTwoTeams, type Team } from '@/helpers/teams';
 import { calculateRatings, matchQuality } from '@/helpers/trueskill';
 
 import ConfigSidebar from '@/components/ConfigSidebar.vue';
+import InputTeam from '@/components/InputTeam.vue';
 import OutputTeam from '@/components/OutputTeam.vue';
 import TeamButtons from '@/components/TeamButtons.vue';
 import TableHeaders from '@/components/TableHeaders.vue';
 import MatchQuality from '@/components/MatchQuality.vue';
 import CalculateRatings from '@/components/CalculateRatings.vue';
+import { getDefaultPlayer, type Player } from './helpers/players';
 
 const env = ref(new TrueSkill());
 const teamSize = ref(2);
@@ -70,9 +71,9 @@ function increaseTeamSize(i: number): void {
 	teamSize.value = i;
 }
 
-function addPlayerToTeam(team: Team, playerIndex: number): void {
+function addPlayerToTeam(env: TrueSkill, team: Team, playerIndex: number): void {
 	if (team.players.length < Consts.MAX_AMOUNT_PLAYERS) {
-		team.players.push(getDefaultPlayer(playerIndex + 1, env.value.mu, env.value.sigma));
+		team.players.push(getDefaultPlayer(playerIndex + 1, env.mu, env.sigma));
 	}
 }
 
@@ -105,14 +106,14 @@ function updatePlayerWeight(player: Player, newWeight: number): void {
 	player.weight = newWeight;
 }
 
-function updateTeamRanks(team: Team, newRank: number): void {
+function updateTeamRanks(team: Team, currentTeamsLength: number, newRank: number): void {
 	// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
 	// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
 	// But to keep it simple and to avoid confusion, we limit the ranks to be between 1 and the number of teams.
 	if (newRank < 1 || !newRank) {
 		newRank = 1;
-	} else if (newRank > currentTeams.value.length) {
-		newRank = currentTeams.value.length;
+	} else if (newRank > currentTeamsLength) {
+		newRank = currentTeamsLength;
 	}
 
 	team.rank = newRank;
@@ -147,9 +148,9 @@ function copyAllTeamsButton(): void {
 	}, 1000);
 }
 
-function copyOneTeamButton(i: number): void {
-	copyMessage(teamToCsv(newTeams.value[i]));
-	const button = document.getElementsByClassName('copy-csv-button')[i + 1];
+function copyOneTeamButton(teamIndex: number): void {
+	copyMessage(teamToCsv(newTeams.value[teamIndex]));
+	const button = document.getElementsByClassName('copy-csv-button')[teamIndex + 1];
 	button.innerHTML = copiedMessage.value;
 	setTimeout(() => {
 		button.innerHTML = copyTeamMessage.value;
@@ -222,87 +223,45 @@ onBeforeUpdate(() => {
 			<tr></tr>
 
 			<tr class="odd:bg-gray-800" v-for="(team, j) in currentTeams" :key="j">
-				<td>
-					<input class="team-input" type="text" v-model="team.name" />
-				</td>
-				<td>
-					<input
-						class="team-input"
-						type="number"
-						min="1"
-						:max="currentTeams.length"
-						v-model.lazy="team.rank"
-						@input="
-							updateTeamRanks(team, ($event.target as HTMLInputElement).valueAsNumber)
-						"
-					/>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<input class="team-input" type="text" v-model="player.name" />
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<input
-							class="team-input"
-							type="number"
-							step="0.1"
-							v-model.lazy="player.rating[0]"
-							@input="
-								updatePlayerMuSigma(
-									player,
-									($event.target as HTMLInputElement).valueAsNumber,
-									player.rating[1]
-								)
-							"
-						/>
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<input
-							class="team-input"
-							type="number"
-							step="0.01"
-							v-model.lazy="player.rating[1]"
-							@input="
-								updatePlayerMuSigma(
-									player,
-									player.rating[0],
-									($event.target as HTMLInputElement).valueAsNumber
-								)
-							"
-						/>
-					</tr>
-				</td>
-				<td>
-					<tr v-for="(player, i) in team.players" :key="i">
-						<input
-							class="team-input"
-							type="number"
-							max="1"
-							min="0"
-							step="0.01"
-							v-model.lazy="player.weight"
-							@input="
-								updatePlayerWeight(
-									player,
-									($event.target as HTMLInputElement).valueAsNumber
-								)
-							"
-						/>
-					</tr>
-				</td>
-				<button
-					class="player-button shadow-green-500"
-					@click="addPlayerToTeam(team, team.players.length)"
-				>
-					Add Player
-				</button>
-				<button class="player-button shadow-red-500" @click="removePlayerFromTeam(team)">
-					Remove Player
-				</button>
+				<InputTeam
+					:team="team"
+					:current-teams="currentTeams"
+					@add-player-to-team="
+						addPlayerToTeam(env as TrueSkill, team, team.players.length)
+					"
+					@remove-player-from-team="removePlayerFromTeam(team)"
+					@update-team-name="
+						(teamName) => {
+							team.name = teamName;
+						}
+					"
+					@update-team-rank="
+						(teamRank) => {
+							updateTeamRanks(team, currentTeams.length, teamRank);
+						}
+					"
+					@update-player-name="
+						(player, playerName) => {
+							player.name = playerName;
+						}
+					"
+					@update-player-mu="
+						(player, playerMu) => {
+							updatePlayerMuSigma(player, playerMu, player.rating[1]);
+						}
+					"
+					@update-player-sigma="
+						(player, playerSigma) => {
+							updatePlayerMuSigma(player, player.rating[0], playerSigma);
+						}
+					"
+					@update-player-weight="
+						(player, playerWeight) => {
+							updatePlayerWeight(player, playerWeight);
+						}
+					"
+					@update-calculations="refreshCalculations(false)"
+				/>
 			</tr>
 
 			<CalculateRatings
@@ -327,14 +286,11 @@ onBeforeUpdate(() => {
 			<TableHeaders />
 
 			<tr class="odd:bg-gray-800" v-for="(team, i) in newTeams" :key="i">
-				<OutputTeam :team="team" />
-				<button
-					title="Copy Team as CSV"
-					class="copy-csv-button"
-					@click="copyOneTeamButton(i)"
-				>
-					{{ copyTeamMessage }}
-				</button>
+				<OutputTeam
+					:team="team"
+					:copy-team-message="copyTeamMessage"
+					@copy-team="copyOneTeamButton(i)"
+				/>
 			</tr>
 		</table>
 	</div>

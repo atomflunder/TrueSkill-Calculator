@@ -3,7 +3,10 @@ import type { Team } from '@/helpers/teams';
 
 defineProps<{
 	team: Team;
+	copyTeamMessage: string;
 }>();
+
+defineEmits(['copy-team']);
 </script>
 
 <template>
@@ -33,4 +36,7 @@ defineProps<{
 			<div class="team-input">{{ player.weight }}</div>
 		</tr>
 	</td>
+	<button title="Copy Team as CSV" class="copy-csv-button" @click="$emit('copy-team')">
+		{{ copyTeamMessage }}
+	</button>
 </template>
