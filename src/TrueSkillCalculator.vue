@@ -205,6 +205,7 @@ onBeforeUpdate(() => {
 				@reset-config="resetConfig"
 				@toggle-live-updates="disableLiveUpdates = !disableLiveUpdates"
 				@toggle-sidebar="showSidebar = !showSidebar"
+				@refresh-calculations="refreshCalculations(false)"
 			/>
 		</Transition>
 

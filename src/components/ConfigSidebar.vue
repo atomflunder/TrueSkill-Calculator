@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onBeforeUpdate } from 'vue';
+
 defineProps<{
 	muValue: number;
 	sigmaValue: number;
@@ -18,12 +20,17 @@ const emit = defineEmits([
 	'tau-value',
 	'draw-probability',
 	'toggle-live-updates',
-	'toggle-sidebar'
+	'toggle-sidebar',
+	'refresh-calculations'
 ]);
 
 function resetConfig(): void {
 	emit('reset-config');
 }
+
+onBeforeUpdate(() => {
+	emit('refresh-calculations');
+});
 </script>
 
 <template>
