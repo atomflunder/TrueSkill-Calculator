@@ -157,7 +157,6 @@ export function getFirstTwoTeams(): Team[] {
 		],
 		rank: 2
 	};
-	console.log(allTeamsToCsv([team1, team2]));
 	return [team1, team2];
 }
 
