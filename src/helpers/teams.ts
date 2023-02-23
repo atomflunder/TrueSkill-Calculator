@@ -7,6 +7,14 @@ export type Team = {
 	rank: number;
 };
 
+/**
+ * Increments the teams by 1 and adds the new team to the list of current teams.
+ *
+ * @param currentTeams The current teams.
+ * @param defaultMu The default mu.
+ * @param defaultSigma The default sigma.
+ * @param teamSize The size of the teams.
+ */
 export function incrementTeamCount(
 	currentTeams: Team[],
 	defaultMu: number,
@@ -20,12 +28,25 @@ export function incrementTeamCount(
 	}
 }
 
+/**
+ * Decrements the teams by 1 and removes the last team from the list of current teams.
+ *
+ * @param currentTeams The current teams.
+ */
 export function decrementTeamCount(currentTeams: Team[]): void {
 	if (currentTeams.length > Consts.MIN_AMOUNT_TEAMS) {
 		currentTeams.pop();
 	}
 }
 
+/**
+ * Adds a default player to the team.
+ *
+ * @param team The team to add the player to.
+ * @param playerIndex The index of the player.
+ * @param defaultMu The default mu.
+ * @param defaultSigma The default sigma.
+ */
 export function addPlayerToTeam(
 	team: Team,
 	playerIndex: number,
@@ -37,12 +58,25 @@ export function addPlayerToTeam(
 	}
 }
 
+/**
+ * Removes the last player from the team.
+ *
+ * @param team The team to remove the player from.
+ */
 export function removePlayerFromTeam(team: Team): void {
 	if (team.players.length > Consts.MIN_AMOUNT_PLAYERS) {
 		team.players.pop();
 	}
 }
 
+/**
+ * Updates the ranks of the teams.
+ * The rank should be between 1 and the number of teams.
+ *
+ * @param team The team to update the rank of.
+ * @param currentTeamsLength The current number of teams.
+ * @param newRank The new rank.
+ */
 export function updateTeamRanks(team: Team, currentTeamsLength: number, newRank: number): void {
 	// In reality, if Team A has a rank of 1, it does not matter if Team B's rank is 2 or 300.
 	// Similarly, Team A's rank could also be -129, it just checks if it is lower/higher than the other Team.
@@ -56,6 +90,15 @@ export function updateTeamRanks(team: Team, currentTeamsLength: number, newRank:
 	team.rank = newRank;
 }
 
+/**
+ * Gets a default team.
+ *
+ * @param teamNumber The number of the team.
+ * @param teamSize The size of the team.
+ * @param defaultMu The default mu.
+ * @param defaultSigma The default sigma.
+ * @returns The generated team.
+ */
 export function getDefaultTeam(
 	teamNumber: number,
 	teamSize: number,
@@ -76,6 +119,11 @@ export function getDefaultTeam(
 	return team;
 }
 
+/**
+ * Gets the first two default teams to populate the calculator at the start.
+ *
+ * @returns The first two teams.
+ */
 export function getFirstTwoTeams(): Team[] {
 	const team1 = {
 		name: 'Team 1',
@@ -113,6 +161,12 @@ export function getFirstTwoTeams(): Team[] {
 	return [team1, team2];
 }
 
+/**
+ * Converts a team to a CSV string.
+ *
+ * @param team The team to convert to CSV.
+ * @returns The CSV string.
+ */
 export function teamToCsv(team: Team): string {
 	return team.players
 		.map((player) => {
@@ -121,6 +175,12 @@ export function teamToCsv(team: Team): string {
 		.join('\r');
 }
 
+/**
+ * Converts multiple teams to a CSV string.
+ *
+ * @param teams The teams to convert to CSV.
+ * @returns The CSV string.
+ */
 export function allTeamsToCsv(teams: Team[]): string {
 	return teams
 		.map((team) => {

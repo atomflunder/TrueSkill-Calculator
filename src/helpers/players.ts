@@ -7,6 +7,14 @@ export type Player = {
 	weight: number;
 };
 
+/**
+ * Updates the mu and sigma values of a player.
+ * The sigma value cannot equal 0.
+ *
+ * @param player The player to update.
+ * @param newMu The new mu value.
+ * @param newSigma The new sigma value.
+ */
 export function updatePlayerMuSigma(player: Player, newMu: number, newSigma: number): void {
 	if (!newMu) {
 		newMu = 0;
@@ -19,6 +27,13 @@ export function updatePlayerMuSigma(player: Player, newMu: number, newSigma: num
 	}
 }
 
+/**
+ * Updates the weight of a player.
+ * The weight needs to be between 0 and 1.
+ *
+ * @param player The player to update.
+ * @param newWeight The new weight value.
+ */
 export function updatePlayerWeight(player: Player, newWeight: number): void {
 	// The weight needs to be between 0 and 1.
 	if (newWeight < 0 || !newWeight) {
@@ -30,6 +45,14 @@ export function updatePlayerWeight(player: Player, newWeight: number): void {
 	player.weight = newWeight;
 }
 
+/**
+ * Gets a default player object.
+ *
+ * @param playerNumber The number of the players in the existing team.
+ * @param defaultMu The default mu value.
+ * @param defaultSigma The default sigma value.
+ * @returns The default player object.
+ */
 export function getDefaultPlayer(
 	playerNumber: number,
 	defaultMu: number,
