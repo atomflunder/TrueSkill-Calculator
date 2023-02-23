@@ -188,7 +188,7 @@ onBeforeUpdate(() => {
 							updatePlayerWeight(player, playerWeight);
 						}
 					"
-					@update-calculations="refreshCalculations(false)"
+					@refresh-calculations="refreshCalculations(false)"
 				/>
 			</tr>
 

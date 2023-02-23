@@ -16,11 +16,11 @@ const emit = defineEmits([
 	'update-player-weight',
 	'add-player-to-team',
 	'remove-player-from-team',
-	'update-calculations'
+	'refresh-calculations'
 ]);
 
 onBeforeUpdate(() => {
-	emit('update-calculations');
+	emit('refresh-calculations');
 });
 </script>
 
