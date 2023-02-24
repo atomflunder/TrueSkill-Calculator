@@ -139,12 +139,19 @@ onBeforeUpdate(() => {
 		<br />
 
 		<table class="table-auto border-separate border-spacing-1">
-			<TeamButtons
-				:team-amount="currentTeams.length"
-				@increment-teams="incrementTeamCount(currentTeams, env.mu, env.sigma, teamSize)"
-				@decrement-teams="decrementTeamCount(currentTeams)"
-				@reset-teams="resetTeams"
-			/>
+			<tr>
+				<td colspan="6">
+					<b class="text-3xl">Starting Teams: ({{ currentTeams.length }})</b>
+					<TeamButtons
+						:team-amount="currentTeams.length"
+						@increment-teams="
+							incrementTeamCount(currentTeams, env.mu, env.sigma, teamSize)
+						"
+						@decrement-teams="decrementTeamCount(currentTeams)"
+						@reset-teams="resetTeams"
+					/>
+				</td>
+			</tr>
 
 			<TableHeaders />
 
