@@ -98,6 +98,12 @@ onBeforeUpdate(() => {
 		console.error(e);
 	}
 });
+
+onkeydown = (e: KeyboardEvent) => {
+	if (e.key === 'Enter') {
+		refreshCalculations(true);
+	}
+};
 </script>
 
 <template>
