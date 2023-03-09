@@ -28,6 +28,18 @@ input[type='number'] {
 	scrollbar-width: none; /* Firefox */
 }
 
+/* This is to hide the redundant labels, but still have them work for screen readers. */
+.only-screen-reader {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
 @layer components {
 	.sidebar-input {
 		@apply bg-gray-700 hover:bg-gray-600 text-white font-thin p-1 rounded;

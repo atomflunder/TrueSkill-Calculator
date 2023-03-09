@@ -49,7 +49,9 @@ onBeforeUpdate(() => {
 		<hr />
 		<table class="table-auto border-separate border-spacing-2">
 			<tr>
-				<td title="The default Value of Mu (μ) for new players.">Default Mu (μ):</td>
+				<td title="The default Value of Mu (μ) for new players.">
+					<label for="default-mu">Default Mu (μ):</label>
+				</td>
 				<td>
 					<input
 						type="number"
@@ -59,11 +61,15 @@ onBeforeUpdate(() => {
 							$emit('mu-value', parseFloat(($event.target as HTMLInputElement).value))
 						"
 						class="sidebar-input"
+						name="default-mu"
+						id="default-mu"
 					/>
 				</td>
 			</tr>
 			<tr>
-				<td title="The default Value of Sigma (σ) for new players.">Default Sigma (σ):</td>
+				<td title="The default Value of Sigma (σ) for new players.">
+					<label for="default-sigma">Default Sigma (σ):</label>
+				</td>
 				<td>
 					<input
 						type="number"
@@ -76,11 +82,15 @@ onBeforeUpdate(() => {
 							)
 						"
 						class="sidebar-input"
+						name="default-sigma"
+						id="default-sigma"
 					/>
 				</td>
 			</tr>
 			<tr>
-				<td title="The default amount of players for new teams.">Default Team Size:</td>
+				<td title="The default amount of players for new teams.">
+					<label for="default-team-size">Default Team Size:</label>
+				</td>
 				<td>
 					<input
 						type="number"
@@ -95,6 +105,8 @@ onBeforeUpdate(() => {
 							)
 						"
 						class="sidebar-input"
+						name="default-team-size"
+						id="default-team-size"
 					/>
 				</td>
 			</tr>
@@ -102,7 +114,7 @@ onBeforeUpdate(() => {
 				<td
 					title="The distance in rating points to guarantee about a 76% chance of winning for the higher rated player."
 				>
-					Beta (β):
+					<label for="default-beta">Beta (β):</label>
 				</td>
 				<td>
 					<input
@@ -116,6 +128,8 @@ onBeforeUpdate(() => {
 							)
 						"
 						class="sidebar-input"
+						name="default-beta"
+						id="default-beta"
 					/>
 				</td>
 			</tr>
@@ -123,7 +137,7 @@ onBeforeUpdate(() => {
 				<td
 					title="The additive dynamics factor, the higher the value, the more dynamic the ratings."
 				>
-					Tau (τ):
+					<label for="default-tau">Tau (τ):</label>
 				</td>
 				<td>
 					<input
@@ -137,11 +151,15 @@ onBeforeUpdate(() => {
 							)
 						"
 						class="sidebar-input"
+						name="default-tau"
+						id="default-tau"
 					/>
 				</td>
 			</tr>
 			<tr>
-				<td title="The chance of a draw occurring in your game.">Draw Probability:</td>
+				<td title="The chance of a draw occurring in your game.">
+					<label for="default-draw-probability">Draw Probability:</label>
+				</td>
 				<td>
 					<input
 						type="number"
@@ -154,6 +172,8 @@ onBeforeUpdate(() => {
 							)
 						"
 						class="sidebar-input"
+						name="default-draw-probability"
+						id="default-draw-probability"
 					/>
 				</td>
 			</tr>
@@ -161,13 +181,15 @@ onBeforeUpdate(() => {
 				<td
 					title="Disable Live Updates. Use this for large amount of teams in order to reduce lag."
 				>
-					Disable Live Updates:
+					<label for="disable-live-updates">Disable Live Updates:</label>
 				</td>
 				<input
 					type="checkbox"
 					:checked="disableLiveUpdates"
 					@click="$emit('toggle-live-updates')"
 					class="appearance-none relative h-8 w-8 border border-gray-300 rounded-sm bg-gray-700 hover:bg-gray-600 focus:outline-none transition duration-200 mt-2 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+					name="disable-live-updates"
+					id="disable-live-updates"
 				/>
 			</tr>
 		</table>
@@ -197,6 +219,8 @@ onBeforeUpdate(() => {
 			<br />
 			<img
 				src="../assets/trueskill-skilldia.jpg"
+				width="228"
+				height="200"
 				alt="An example of a Player's Rating."
 				class="justify-center mx-auto"
 			/>
