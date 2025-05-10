@@ -1,20 +1,23 @@
-name: CI
+name: Bun Project CI
 
 on: [push, pull_request]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
 
-    runs-on: ubuntu-latest
+            - name: Install Dependencies
+              run: bun install
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+            - name: Build Nuxt Project
+              run: bun run build
 
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-              npm ci
-              npm run build
-              npm run lint
-              npm run test
+            - name: Lint Project
+              run: bun run lint
+
+            - name: Test Project
+              run: bun run test
+
