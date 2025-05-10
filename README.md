@@ -5,18 +5,18 @@ A simple and fast Online TrueSkill calculator.
 
 ## Table of Contents
 
--   [What is TrueSkill?](#what-is-trueskill)
--   [Why?](#why)
--   [Usage](#usage)
-    -   [Website](#website)
-    -   [API](#api)
--   [Configuration](#configuration)
-    -   [Config Settings](#config-settings)
-    -   [Website Settings](#website-settings)
--   [Contributing](#contributing)
--   [Running locally](#running-locally)
--   [License](#license)
--   [Packages used](#packages-used)
+- [What is TrueSkill?](#what-is-trueskill)
+- [Why?](#why)
+- [Usage](#usage)
+    - [Website](#website)
+    - [API](#api)
+- [Configuration](#configuration)
+    - [Config Settings](#config-settings)
+    - [Website Settings](#website-settings)
+- [Contributing](#contributing)
+- [Running locally](#running-locally)
+- [License](#license)
+- [Packages used](#packages-used)
 
 ## What is TrueSkill?
 
@@ -72,13 +72,13 @@ Instead of using the website directly, you can also use the provided API to calc
 <details>
 <summary>Sample Request Body:</summary>
 
-```json
+```jsonc
 {
     // config param is optional
     "config": {
         "beta": 4.166666666666667,
         "tau": 0.08333333333333333,
-        "drawProbability": 0.1
+        "drawProbability": 0.1,
     },
     "teams": [
         {
@@ -88,15 +88,15 @@ Instead of using the website directly, you can also use the provided API to calc
                 {
                     "name": "Pep",
                     "rating": [25.0, 8.33],
-                    "weight": 1.0
+                    "weight": 1.0,
                 },
                 {
                     "name": "Pep 2",
                     "rating": [25.0, 8.33],
-                    "weight": 1.0
-                }
+                    "weight": 1.0,
+                },
                 // more players ...
-            ]
+            ],
         },
         {
             "name": "Team 2",
@@ -105,18 +105,18 @@ Instead of using the website directly, you can also use the provided API to calc
                 {
                     "name": "Pep 3",
                     "rating": [25.0, 8.33],
-                    "weight": 1.0
+                    "weight": 1.0,
                 },
                 {
                     "name": "Pep 4",
                     "rating": [25.0, 8.33],
-                    "weight": 1.0
-                }
+                    "weight": 1.0,
+                },
                 // more players ...
-            ]
-        }
+            ],
+        },
         // more teams ...
-    ]
+    ],
 }
 ```
 
@@ -125,8 +125,50 @@ Instead of using the website directly, you can also use the provided API to calc
 <details>
 <summary>Sample Response Body:</summary>
 
-```json
-TODO: Response body
+```jsonc
+{
+    "teams": [
+        {
+            "name": "Team 1",
+            "rank": 1,
+            "players": [
+                {
+                    "name": "Pep",
+                    "rating": [28.106874248258354, 7.771343226309424],
+                    "weight": 1,
+                    "ratingChanges": [3.1068742482583502, -0.5586567736905756],
+                },
+                {
+                    "name": "Pep 2",
+                    "rating": [28.106874248258354, 7.771343226309424],
+                    "weight": 1,
+                    "ratingChanges": [3.1068742482583502, -0.5586567736905756],
+                },
+            ],
+            "expectedScore": 0.5,
+        },
+        {
+            "name": "Team 2",
+            "rank": 2,
+            "players": [
+                {
+                    "name": "Pep 3",
+                    "rating": [21.893125751741643, 7.771343226309424],
+                    "weight": 1,
+                    "ratingChanges": [-3.106874248258361, -0.5586567736905756],
+                },
+                {
+                    "name": "Pep 4",
+                    "rating": [21.893125751741643, 7.771343226309424],
+                    "weight": 1,
+                    "ratingChanges": [-3.106874248258361, -0.5586567736905756],
+                },
+            ],
+            "expectedScore": 0.5,
+        },
+    ],
+    "matchQuality": 44.73567439300163,
+}
 ```
 
 </details>
@@ -177,7 +219,6 @@ However, please keep in mind that TrueSkill itself is patented for _commercial p
 
 ## Packages used
 
--   [Vue](https://vuejs.org/)
--   [Nuxt](https://vitejs.dev/)
--   [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
-
+- [Vue](https://vuejs.org/)
+- [Nuxt](https://vitejs.dev/)
+- [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)
