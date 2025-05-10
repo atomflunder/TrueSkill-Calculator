@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: TrueSkill Rating API
+  version: 1.0.0
+  description: API for calculating TrueSkill ratings for multiple teams and players (e.g., 3v3v3).
+
+paths:
+  /api/trueskill:
+    post:
+      summary: Calculate new TrueSkill ratings and match quality
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrueSkillBody'
+            example:
+              config:
+                beta: 4.166666666666667
+                tau: 0.08333333333333333
+                drawProbability: 0.1
+              teams:
+                - name: "Team Red"
+                  rank: 1
+                  players:
+                    - name: "Alice"
+                      rating: [25.0, 8.333]
+                      weight: 1.0
+                    - name: "Bob"
+                      rating: [26.5, 8.1]
+                      weight: 1.0
+                    - name: "Charlie"
+                      rating: [24.5, 8.0]
+                      weight: 1.0
+                - name: "Team Blue"
+                  rank: 2
+                  players:
+                    - name: "Dana"
+                      rating: [23.0, 8.5]
+                      weight: 1.0
+                    - name: "Eli"
+                      rating: [22.0, 8.4]
+                      weight: 1.0
+                    - name: "Frank"
+                      rating: [24.0, 8.3]
+                      weight: 1.0
+                - name: "Team Green"
+                  rank: 3
+                  players:
+                    - name: "Grace"
+                      rating: [20.0, 8.7]
+                      weight: 1.0
+                    - name: "Hannah"
+                      rating: [21.0, 8.6]
+                      weight: 1.0
+                    - name: "Ian"
+                      rating: [22.0, 8.5]
+                      weight: 1.0
+      responses:
+        '200':
+          description: Ratings calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrueSkillResult'
+              example:
+                matchQuality: 0.79
+                teams:
+                  - name: "Team Red"
+                    rank: 1
+                    expectedScore: 0.52
+                    players:
+                      - name: "Alice"
+                        rating: [26.2, 8.1]
+                        weight: 1.0
+                        ratingChanges: [1.2, -0.233]
+                      - name: "Bob"
+                        rating: [27.4, 7.9]
+                        weight: 1.0
+                        ratingChanges: [0.9, -0.2]
+                      - name: "Charlie"
+                        rating: [25.3, 7.9]
+                        weight: 1.0
+                        ratingChanges: [0.8, -0.1]
+                  - name: "Team Blue"
+                    rank: 2
+                    expectedScore: 0.33
+                    players:
+                      - name: "Dana"
+                        rating: [22.7, 8.4]
+                        weight: 1.0
+                        ratingChanges: [-0.3, -0.1]
+                      - name: "Eli"
+                        rating: [21.4, 8.3]
+                        weight: 1.0
+                        ratingChanges: [-0.6, -0.1]
+                      - name: "Frank"
+                        rating: [23.7, 8.2]
+                        weight: 1.0
+                        ratingChanges: [-0.3, -0.1]
+                  - name: "Team Green"
+                    rank: 3
+                    expectedScore: 0.15
+                    players:
+                      - name: "Grace"
+                        rating: [19.0, 8.6]
+                        weight: 1.0
+                        ratingChanges: [-1.0, -0.1]
+                      - name: "Hannah"
+                        rating: [20.0, 8.5]
+                        weight: 1.0
+                        ratingChanges: [-1.0, -0.1]
+                      - name: "Ian"
+                        rating: [21.0, 8.4]
+                        weight: 1.0
+                        ratingChanges: [-1.0, -0.1]
+        '400':
+          description: Bad Request - missing or invalid teams
+
+components:
+  schemas:
+    TrueSkillConfig:
+      type: object
+      properties:
+        beta:
+          type: number
+        tau:
+          type: number
+        drawProbability:
+          type: number
+
+    InitialPlayer:
+      type: object
+      required: [name, rating, weight]
+      properties:
+        name:
+          type: string
+        rating:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+        weight:
+          type: number
+
+    ResultingPlayer:
+      allOf:
+        - $ref: '#/components/schemas/InitialPlayer'
+        - type: object
+          required: [ratingChanges]
+          properties:
+            ratingChanges:
+              type: array
+              items:
+                type: number
+              minItems: 2
+              maxItems: 2
+
+    InitialTeam:
+      type: object
+      required: [name, rank, players]
+      properties:
+        name:
+          type: string
+        rank:
+          type: integer
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/InitialPlayer'
+
+    ResultingTeam:
+      allOf:
+        - $ref: '#/components/schemas/InitialTeam'
+        - type: object
+          required: [expectedScore, players]
+          properties:
+            expectedScore:
+              type: number
+            players:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResultingPlayer'
+
+    TrueSkillBody:
+      type: object
+      required: [teams]
+      properties:
+        config:
+          $ref: '#/components/schemas/TrueSkillConfig'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/InitialTeam'
+
+    TrueSkillResult:
+      type: object
+      required: [teams, matchQuality]
+      properties:
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResultingTeam'
+        matchQuality:
+          type: number

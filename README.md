@@ -173,7 +173,7 @@ Instead of using the website directly, you can also use the provided API to calc
 
 </details>
 
-TODO: OpenAPI Spec
+See also the OpenAPI Spec: [openapi.yml](./openapi.yml)
 
 ## Configuration
 
