@@ -1,29 +1,29 @@
-import { describe, it, expect } from "vitest";
-import { calculateExpectedScores } from "@/utils/trueskill";
-import type { TrueSkillConfig } from "@/utils/config";
-import type { Team } from "@/utils/teams";
+import { describe, it, expect } from 'vitest';
+import { calculateExpectedScores } from '@/utils/trueskill';
+import type { TrueSkillConfig } from '@/utils/config';
+import type { InitialTeam } from '~/types/trueskill';
 
-describe("calculateExpectedScores", () => {
+describe('calculateExpectedScores', () => {
     const defaultConfig: TrueSkillConfig = {
         beta: 4.166666666666667,
         tau: 0.08333333333333333,
         drawProbability: 0.1,
     };
 
-    it("should give 50/50 expected score for equal ratings", () => {
-        const teamOne: Team = {
+    it('should give 50/50 expected score for equal ratings', () => {
+        const teamOne: InitialTeam = {
             rank: 0,
-            name: "hi!",
+            name: 'hi!',
             players: [
-                { name: "hi!", rating: [25.0, 8.333333333333334], weight: 1 },
+                { name: 'hi!', rating: [25.0, 8.333333333333334], weight: 1 },
             ],
         };
 
-        const teamTwo: Team = {
+        const teamTwo: InitialTeam = {
             rank: 0,
-            name: "hi!",
+            name: 'hi!',
             players: [
-                { name: "hi!", rating: [25.0, 8.333333333333334], weight: 1 },
+                { name: 'hi!', rating: [25.0, 8.333333333333334], weight: 1 },
             ],
         };
 
@@ -36,23 +36,27 @@ describe("calculateExpectedScores", () => {
         expect(Math.round(exp2 * 100)).toBeCloseTo(50, 0);
     });
 
-    it("should favor higher rated team in expected score", () => {
+    it('should favor higher rated team in expected score', () => {
         const betterPlayer = {
-            name: "hi!",
+            name: 'hi!',
             rating: [44.0, 3.0] as [number, number],
             weight: 1,
         };
         const worsePlayer = {
-            name: "hi!",
+            name: 'hi!',
             rating: [38.0, 3.0] as [number, number],
             weight: 1,
         };
 
-        const teamOne: Team = { rank: 0, name: "hi!", players: [betterPlayer] };
-
-        const teamTwo: Team = {
+        const teamOne: InitialTeam = {
             rank: 0,
-            name: "hi!",
+            name: 'hi!',
+            players: [betterPlayer],
+        };
+
+        const teamTwo: InitialTeam = {
+            rank: 0,
+            name: 'hi!',
             players: [worsePlayer],
         };
 
@@ -68,17 +72,17 @@ describe("calculateExpectedScores", () => {
         expect(Math.round(exp1 * 100 + exp2 * 100)).toBeCloseTo(100, 0);
     });
 
-    it("should produce the same score via different team groupings", () => {
-        const teamOne: Team = {
+    it('should produce the same score via different team groupings', () => {
+        const teamOne: InitialTeam = {
             rank: 0,
-            name: "hi!",
-            players: [{ name: "hi!", rating: [44.0, 3.0], weight: 1 }],
+            name: 'hi!',
+            players: [{ name: 'hi!', rating: [44.0, 3.0], weight: 1 }],
         };
 
-        const teamTwo: Team = {
+        const teamTwo: InitialTeam = {
             rank: 0,
-            name: "hi!",
-            players: [{ name: "hi!", rating: [38.0, 3.0], weight: 1 }],
+            name: 'hi!',
+            players: [{ name: 'hi!', rating: [38.0, 3.0], weight: 1 }],
         };
 
         const expectedScores = calculateExpectedScores(defaultConfig, [
@@ -94,4 +98,3 @@ describe("calculateExpectedScores", () => {
         expect(expectedScores[1]).toBeCloseTo(reverseExpectedScores[1], 6);
     });
 });
-

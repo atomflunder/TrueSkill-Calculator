@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { calculateRatings } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
-import type { Team } from '@/utils/teams';
+import type { InitialTeam } from '~/types/trueskill';
 
 const config: TrueSkillConfig = {
     beta: 25 / 6,
@@ -11,7 +11,7 @@ const config: TrueSkillConfig = {
 
 describe('calculateRatings', () => {
     it('handles multi-team updates (Rust parity)', () => {
-        const teams: Team[] = [
+        const teams: InitialTeam[] = [
             {
                 name: 'Team 1',
                 rank: 0,
@@ -66,7 +66,7 @@ describe('calculateRatings', () => {
     });
 
     it('handles free-for-all match results', () => {
-        const teams: Team[] = [
+        const teams: InitialTeam[] = [
             {
                 name: 'Player 1',
                 rank: 1,
@@ -96,7 +96,7 @@ describe('calculateRatings', () => {
     });
 
     it('handles unlikely outcomes gracefully', () => {
-        const teams: Team[] = [
+        const teams: InitialTeam[] = [
             {
                 name: 'Underdog',
                 rank: 1,
@@ -137,7 +137,7 @@ describe('calculateRatings', () => {
 
         expect(results).toHaveLength(0);
 
-        const teams: Team[] = [
+        const teams: InitialTeam[] = [
             {
                 name: 'One Player',
                 rank: 1,
