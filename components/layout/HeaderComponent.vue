@@ -27,7 +27,10 @@
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                    <ExportTeamsTabs :output-teams="outputTeams" />
+                    <ExportTeamsTabs
+                        :output-teams="outputTeams"
+                        @teams-exported="$emit('teamsExported')"
+                    />
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
@@ -120,5 +123,6 @@ defineProps<{
 
 defineEmits<{
     (e: 'teamsImported', newTeams: InitialTeam[]): void;
+    (e: 'teamsExported'): void;
 }>();
 </script>

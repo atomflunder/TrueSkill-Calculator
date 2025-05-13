@@ -235,4 +235,5 @@ However, please keep in mind that TrueSkill itself is patented for _commercial p
 
 - [Vue](https://vuejs.org/)
 - [Nuxt](https://vitejs.dev/)
+- [shadcn/vue](https://www.shadcn-vue.com)
 - [ts-trueskill](https://www.npmjs.com/package/ts-trueskill)

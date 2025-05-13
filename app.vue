@@ -5,17 +5,22 @@
             @reset-config="resetConfig"
         />
 
-        <main>
+        <main class="w-full">
             <slot>
                 <LayoutHeaderComponent
                     :output-teams="resultingTeams?.teams || []"
                     @teams-imported="initialTeams = $event"
+                    @teams-exported="calculateTeams"
                 />
 
-                <TeamCard v-for="(team, i) in initialTeams" :key="i" />
-                {{ initialTeams }}
-                {{ resultingTeams }}
+                <CardsInitialTeam v-for="(team, i) in initialTeams" :key="i" />
+
                 <Button @click="calculateTeams">Calc</Button>
+
+                <CardsResultingTeam
+                    v-for="(team, i) in resultingTeams"
+                    :key="i"
+                />
             </slot>
         </main>
     </SidebarProvider>
