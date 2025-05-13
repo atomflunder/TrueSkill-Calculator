@@ -30,6 +30,7 @@ export function calculateRatings(
                     rating: p.rating,
                     weight: p.weight,
                     ratingChanges: [0, 0] as [number, number],
+                    suggestedRank: p.rating[0] - p.rating[1] * 3,
                 })),
                 expectedScore: expectedScores[i],
                 rank: team.rank,
@@ -78,6 +79,7 @@ export function calculateRatings(
                     newRatings[i][j].mu - ratings[i][j].mu,
                     newRatings[i][j].sigma - ratings[i][j].sigma,
                 ] as [number, number],
+                suggestedRank: newRatings[i][j].mu - newRatings[i][j].sigma * 3,
             });
         }
     }
@@ -120,7 +122,7 @@ export function calculateMatchQuality(
     const weights: number[][] = currentTeams.map((team) =>
         team.players.map((player) => player.weight)
     );
-    return env.quality(ratings, weights) * 100;
+    return env.quality(ratings, weights);
 }
 
 /**

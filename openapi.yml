@@ -74,14 +74,17 @@ paths:
                         rating: [26.2, 8.1]
                         weight: 1.0
                         ratingChanges: [1.2, -0.233]
+                        suggestedRank: 0.8
                       - name: "Bob"
                         rating: [27.4, 7.9]
                         weight: 1.0
                         ratingChanges: [0.9, -0.2]
+                        suggestedRank: 0.8
                       - name: "Charlie"
                         rating: [25.3, 7.9]
                         weight: 1.0
                         ratingChanges: [0.8, -0.1]
+                        suggestedRank: 0.8
                   - name: "Team Blue"
                     rank: 2
                     expectedScore: 0.33
@@ -90,14 +93,17 @@ paths:
                         rating: [22.7, 8.4]
                         weight: 1.0
                         ratingChanges: [-0.3, -0.1]
+                        suggestedRank: 0.8
                       - name: "Eli"
                         rating: [21.4, 8.3]
                         weight: 1.0
                         ratingChanges: [-0.6, -0.1]
+                        suggestedRank: 0.8
                       - name: "Frank"
                         rating: [23.7, 8.2]
                         weight: 1.0
                         ratingChanges: [-0.3, -0.1]
+                        suggestedRank: 0.8
                   - name: "Team Green"
                     rank: 3
                     expectedScore: 0.15
@@ -106,14 +112,17 @@ paths:
                         rating: [19.0, 8.6]
                         weight: 1.0
                         ratingChanges: [-1.0, -0.1]
+                        suggestedRank: 0.8
                       - name: "Hannah"
                         rating: [20.0, 8.5]
                         weight: 1.0
                         ratingChanges: [-1.0, -0.1]
+                        suggestedRank: 0.8
                       - name: "Ian"
                         rating: [21.0, 8.4]
                         weight: 1.0
                         ratingChanges: [-1.0, -0.1]
+                        suggestedRank: 0.8
         '400':
           description: Bad Request - missing or invalid teams
 
@@ -156,6 +165,8 @@ components:
                 type: number
               minItems: 2
               maxItems: 2
+            suggestedRank:
+              type: number
 
     InitialTeam:
       type: object

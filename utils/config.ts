@@ -16,6 +16,22 @@ export type TrueSkillSettings = TrueSkillConfig & {
     defaultTeamSize: number;
 };
 
+/**
+ * Gets a TrueSkillSettings object with sane defaults.
+ *
+ * @returns The TrueSkillSettings object.
+ */
+export function getDefaultConfig(): TrueSkillSettings {
+    return {
+        beta: 25 / 6,
+        tau: 25 / 300,
+        drawProbability: 0.1,
+        defaultMu: 25,
+        defaultSigma: 25 / 6,
+        defaultTeamSize: 2,
+    };
+}
+
 export const MIN_AMOUNT_TEAMS = 2;
 export const MAX_AMOUNT_TEAMS = 256;
 export const MIN_AMOUNT_PLAYERS = 1;

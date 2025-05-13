@@ -1,4 +1,5 @@
 import type { TrueSkillBody, TrueSkillResult } from '~/types/trueskill';
+import { getDefaultConfig } from '~/utils/config';
 import { calculateRatings, calculateMatchQuality } from '~/utils/trueskill';
 
 export default defineEventHandler(
@@ -17,11 +18,7 @@ export default defineEventHandler(
 
         let config = body.config;
         if (!config) {
-            config = {
-                beta: 25 / 6,
-                tau: 25 / 300,
-                drawProbability: 0.1,
-            };
+            config = getDefaultConfig();
         }
 
         const teams = calculateRatings(config, body.teams);

@@ -31,7 +31,7 @@ the player's uncertainty about their skill, called Sigma (σ). The higher the st
 the more uncertain the player is about their skill. This means that the real skill of a player is
 somewhere within μ±3σ, with a 99% confidence.
 
-![](./assets/trueskill-skilldia.jpg)
+![](./public/trueskill-skilldia.jpg)
 
 The TrueSkill algorithm is very good at asserting the skill of a player <i>quickly</i>. Here is
 a table of the minimum amount of games needed to roughly determine a player's skill.
@@ -61,7 +61,17 @@ You can use this calculator via the website, or via the provided, 100% free, API
 
 ### Website
 
-TODO: Explain the website
+- Add or remove Teams and Players and assign each the correct number
+- Assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the better. If two or more Teams draw with each other, assign them the same rank.
+- Assign Weights between 0 and 1 to each Player. A Weight of 1 means the Player has played the whole match, and values below 1 mean the Player has left the game early. A Weight of 0 means the Player has not played at all.
+- Optionally you can name each Team and Player to make it easier to identify them.
+- Calculate the new ratings!
+
+The expected results will appear in the Resulting Teams section. The teams will be updated with the new ranks, the difference from before the match, and their expected score.
+
+You can also see the Match Quality which is the percent chance of your match ending in a draw. The higher this value, the closer your match will be.
+
+You can also import and export the teams as CSV or JSON for ease of use.
 
 ### API
 
@@ -137,12 +147,14 @@ Instead of using the website directly, you can also use the provided API to calc
                     "rating": [28.106874248258354, 7.771343226309424],
                     "weight": 1,
                     "ratingChanges": [3.1068742482583502, -0.5586567736905756],
+                    "suggestedRank": 4.792844569330082,
                 },
                 {
                     "name": "Pep 2",
                     "rating": [28.106874248258354, 7.771343226309424],
                     "weight": 1,
                     "ratingChanges": [3.1068742482583502, -0.5586567736905756],
+                    "suggestedRank": 4.792844569330082,
                 },
             ],
             "expectedScore": 0.5,
@@ -156,18 +168,20 @@ Instead of using the website directly, you can also use the provided API to calc
                     "rating": [21.893125751741643, 7.771343226309424],
                     "weight": 1,
                     "ratingChanges": [-3.106874248258361, -0.5586567736905756],
+                    "suggestedRank": -1.4209039271866288,
                 },
                 {
                     "name": "Pep 4",
                     "rating": [21.893125751741643, 7.771343226309424],
                     "weight": 1,
                     "ratingChanges": [-3.106874248258361, -0.5586567736905756],
+                    "suggestedRank": -1.4209039271866288,
                 },
             ],
             "expectedScore": 0.5,
         },
     ],
-    "matchQuality": 44.73567439300163,
+    "matchQuality": 0.4473567439300163,
 }
 ```
 
@@ -184,7 +198,7 @@ The TrueSkill algorithm allows you to freely set these config parameters to twea
 | Parameter            | Description                                                                                                                                                         | Default Value    |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | **Beta (β)**         | The distance in rating points to guarantee about a 76% chance of winning for the higher-rated player. Set higher for luck-based games, lower for skill-based games. | 25/6 ≈ 4.167     |
-| **Tau (τ)**          | The additive dynamics factor. Higher values make ratings more dynamic—winners gain more, losers lose more.                                                          | 25/300 ≈ 0.083   |
+| **Tau (τ)**          | The additive dynamics factor. Higher values make ratings more dynamic. Winners gain more, losers lose more.                                                         | 25/300 ≈ 0.083   |
 | **Draw Probability** | The probability of a draw occurring. Set higher for draw-prone games, lower for decisive games. Can be set to 0 if draws are impossible.                            | 0.1 (10% chance) |
 
 ### Website Settings
