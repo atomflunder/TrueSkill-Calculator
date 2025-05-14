@@ -1,7 +1,9 @@
 # TrueSkill Calculator
 
 A simple and fast Online TrueSkill calculator.  
-[Link to the calculator](https://trueskill-calculator.vercel.app/)
+Link to the calculator: https://trueskill-calculator.vercel.app/
+
+_Note: This calculator has undergone a redesign. To access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/_
 
 ## Table of Contents
 

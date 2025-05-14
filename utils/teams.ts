@@ -1,4 +1,4 @@
-import type { Team } from '~/types/trueskill';
+import type { InitialTeam } from '~/types/trueskill';
 import {
     MAX_AMOUNT_PLAYERS,
     MAX_AMOUNT_TEAMS,
@@ -18,7 +18,7 @@ import { getDefaultPlayer } from './players';
 export function getDefaultTeam(
     settings: TrueSkillSettings,
     teamIndex: number
-): Team {
+): InitialTeam {
     const players = [];
 
     for (let i = 0; i < settings.defaultTeamSize; i++) {
@@ -38,18 +38,24 @@ export function getDefaultTeam(
  *
  * @returns The first two teams.
  */
-export function getFirstTwoTeams(): Team[] {
+export function getFirstTwoTeams(settings: TrueSkillSettings): InitialTeam[] {
     const team1 = {
         name: 'Team 1',
         players: [
             {
                 name: 'Player 1',
-                rating: [25, 25 / 3] as [number, number],
+                rating: [settings.defaultMu, settings.defaultSigma] as [
+                    number,
+                    number,
+                ],
                 weight: 1,
             },
             {
                 name: 'Player 2',
-                rating: [25, 25 / 3] as [number, number],
+                rating: [settings.defaultMu, settings.defaultSigma] as [
+                    number,
+                    number,
+                ],
                 weight: 1,
             },
         ],
@@ -60,12 +66,18 @@ export function getFirstTwoTeams(): Team[] {
         players: [
             {
                 name: 'Player 1',
-                rating: [25, 25 / 3] as [number, number],
+                rating: [settings.defaultMu, settings.defaultSigma] as [
+                    number,
+                    number,
+                ],
                 weight: 1,
             },
             {
                 name: 'Player 2',
-                rating: [25, 25 / 3] as [number, number],
+                rating: [settings.defaultMu, settings.defaultSigma] as [
+                    number,
+                    number,
+                ],
                 weight: 1,
             },
         ],
@@ -82,7 +94,7 @@ export function getFirstTwoTeams(): Team[] {
  */
 export function addTeam(
     settings: TrueSkillSettings,
-    currentTeams: Team[]
+    currentTeams: InitialTeam[]
 ): void {
     if (currentTeams.length < MAX_AMOUNT_TEAMS) {
         const newTeam = getDefaultTeam(settings, currentTeams.length + 1);
@@ -96,7 +108,8 @@ export function addTeam(
  * @param currentTeams The current team list.
  * @param index The index of the team to remove.
  */
-export function removeTeam(currentTeams: Team[], index: number): void {
+export function removeTeam(currentTeams: InitialTeam[], index: number): void {
+    console.log(currentTeams, index);
     if (currentTeams.length > MIN_AMOUNT_TEAMS) {
         currentTeams.splice(index, 1);
     }
@@ -108,7 +121,10 @@ export function removeTeam(currentTeams: Team[], index: number): void {
  * @param settings The TrueSkill settings, used for default team size and default rating values.
  * @param team The team to add the player to.
  */
-export function addPlayerToTeam(settings: TrueSkillSettings, team: Team): void {
+export function addPlayerToTeam(
+    settings: TrueSkillSettings,
+    team: InitialTeam
+): void {
     if (team.players.length < MAX_AMOUNT_PLAYERS) {
         team.players.push(getDefaultPlayer(settings, team.players.length + 1));
     }
@@ -120,7 +136,7 @@ export function addPlayerToTeam(settings: TrueSkillSettings, team: Team): void {
  * @param team The team to remove the player from.
  * @param index The index of the player to remove.
  */
-export function removePlayerFromTeam(team: Team, index: number): void {
+export function removePlayerFromTeam(team: InitialTeam, index: number): void {
     if (team.players.length > MIN_AMOUNT_PLAYERS) {
         team.players.splice(index, 1);
     }
@@ -134,7 +150,7 @@ export function removePlayerFromTeam(team: Team, index: number): void {
  * @param newRank The new desired rank.
  */
 export function updateTeamRanks(
-    team: Team,
+    team: InitialTeam,
     currentTeamsLength: number,
     newRank: number
 ): void {

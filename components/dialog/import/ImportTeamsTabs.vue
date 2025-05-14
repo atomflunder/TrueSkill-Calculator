@@ -38,8 +38,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TeamsJson from './TeamsJson.vue';
 import TeamsCsv from './TeamsCsv.vue';
 
-// TODO: Make sure the input also parses the output schema without issue
-
 defineEmits<{
     (e: 'teamsImported', newTeams: InitialTeam[]): void;
 }>();

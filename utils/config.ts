@@ -27,7 +27,7 @@ export function getDefaultConfig(): TrueSkillSettings {
         tau: 25 / 300,
         drawProbability: 0.1,
         defaultMu: 25,
-        defaultSigma: 25 / 6,
+        defaultSigma: 25 / 3,
         defaultTeamSize: 2,
     };
 }

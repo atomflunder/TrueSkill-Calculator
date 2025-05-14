@@ -108,7 +108,9 @@ function parseCSV() {
 
     for (let i = 1; i < rows.length; i++) {
         const cells = rows[i].split(',').map((c) => c.trim());
-        if (cells.length !== 6) continue;
+        if (cells.length < 6) {
+            continue;
+        }
 
         const rowData = {
             team_name: cells[0],
@@ -120,6 +122,7 @@ function parseCSV() {
         };
 
         const result = v.safeParse(InitialPlayerCSVSchema, rowData);
+
         if (!result.success) {
             message.value = {
                 text: `CSV validation failed on row ${i + 1}: ${JSON.stringify(result.issues.map((m) => m.message))}`,
@@ -153,7 +156,7 @@ function parseCSV() {
 
     if (teams.length < 2) {
         message.value = {
-            text: 'Need at least 2 teams!',
+            text: 'Need at least 2 valid teams! Check if they are not malformed.',
             state: 'error',
         };
         return;

@@ -13,14 +13,64 @@
                     @teams-exported="calculateTeams"
                 />
 
-                <CardsInitialTeam v-for="(team, i) in initialTeams" :key="i" />
+                <div
+                    class="p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
+                >
+                    <CardsInitialTeam
+                        v-for="(team, i) in initialTeams"
+                        :key="i"
+                        :team="team"
+                        :index="i"
+                        @team-removed="removeTeam(initialTeams, i)"
+                        @team-renamed="(newName) => (team.name = newName)"
+                        @player-added="addPlayerToTeam(trueskillSettings, team)"
+                        @player-removed="
+                            (index) => removePlayerFromTeam(team, index)
+                        "
+                        @player-updated="
+                            (index, newPlayer) =>
+                                (team.players[index] = newPlayer)
+                        "
+                    />
+                </div>
 
-                <Button @click="calculateTeams">Calc</Button>
+                <div class="flex flex-col sm:flex-row gap-4 p-4 sm:p-8">
+                    <Button
+                        class="hover:cursor-pointer w-full sm:w-auto"
+                        variant="secondary"
+                        @click="addTeam(trueskillSettings, initialTeams)"
+                    >
+                        Add New Team
+                    </Button>
 
-                <CardsResultingTeam
-                    v-for="(team, i) in resultingTeams"
-                    :key="i"
-                />
+                    <Button
+                        class="hover:cursor-pointer w-full sm:w-auto"
+                        variant="secondary"
+                        @click="
+                            initialTeams = getFirstTwoTeams(trueskillSettings)
+                        "
+                    >
+                        Reset Teams
+                    </Button>
+
+                    <Button
+                        class="hover:cursor-pointer w-full sm:w-auto"
+                        @click="calculateTeams"
+                    >
+                        Calculate Result
+                    </Button>
+                </div>
+
+                <div
+                    v-if="resultingTeams"
+                    class="p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
+                >
+                    <CardsResultingTeam
+                        v-for="(team, i) in resultingTeams.teams"
+                        :key="i"
+                        :team="team"
+                    />
+                </div>
             </slot>
         </main>
     </SidebarProvider>
@@ -39,7 +89,9 @@ function resetConfig() {
     trueskillSettings.value = getDefaultConfig();
 }
 
-const initialTeams = ref<InitialTeam[]>(getFirstTwoTeams());
+const initialTeams = ref<InitialTeam[]>(
+    getFirstTwoTeams(trueskillSettings.value)
+);
 const resultingTeams = ref<TrueSkillResult>();
 
 async function calculateTeams() {
@@ -60,4 +112,6 @@ async function calculateTeams() {
         resultingTeams.value = data.value;
     }
 }
+
+await calculateTeams();
 </script>

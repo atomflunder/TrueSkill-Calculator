@@ -36,7 +36,7 @@
                                 type="number"
                                 step="0.1"
                                 min="0"
-                                max="1"
+                                max="0.99"
                                 placeholder="Draw Probability"
                             />
                         </SidebarMenuItem>
@@ -93,6 +93,7 @@
                 <SidebarMenuItem class="p-2">
                     <Button
                         class="hover:cursor-pointer"
+                        variant="secondary"
                         @click="$emit('resetConfig')"
                     >
                         Reset Config to Default
@@ -114,6 +115,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 const trueskillSettings = defineModel<TrueSkillSettings>('trueskillSettings', {
     required: true,
