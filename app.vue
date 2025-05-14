@@ -23,6 +23,14 @@
                         :index="i"
                         @team-removed="removeTeam(initialTeams, i)"
                         @team-renamed="(newName) => (team.name = newName)"
+                        @team-rank-updated="
+                            (newRank) =>
+                                updateTeamRanks(
+                                    team,
+                                    initialTeams.length,
+                                    newRank
+                                )
+                        "
                         @player-added="addPlayerToTeam(trueskillSettings, team)"
                         @player-removed="
                             (index) => removePlayerFromTeam(team, index)

@@ -5,10 +5,19 @@
                 <Icon icon="lucide:users" class="mr-2 w-5 h-5 inline" />
                 {{ team.name }}
             </CardTitle>
-            <p class="text-sm text-muted-foreground mt-1">
-                <Icon icon="lucide:star" class="mr-1 w-4 h-4 inline" />
-                Expected Score: {{ team.expectedScore.toFixed(2) }}
-            </p>
+
+            <CardDescription>
+                <div>
+                    <p class="text-sm text-muted-foreground mt-1">
+                        <Icon icon="lucide:star" class="mr-1 w-4 h-4 inline" />
+                        Expected Score: {{ team.expectedScore.toFixed(4) }}
+                    </p>
+                    <p class="text-sm text-muted-foreground mt-1">
+                        <Icon icon="lucide:medal" class="mr-1 w-4 h-4 inline" />
+                        Placement: {{ team.rank }}
+                    </p>
+                </div>
+            </CardDescription>
         </CardHeader>
 
         <CardContent class="space-y-6">
@@ -41,7 +50,7 @@
                                 icon="lucide:trophy"
                                 class="mr-2 w-5 h-5 inline"
                             />
-                            Rank
+                            Player Rank
                         </Label>
                         <Input
                             class="font-normal border-muted-foreground"

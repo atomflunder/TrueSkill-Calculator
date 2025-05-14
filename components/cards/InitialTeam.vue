@@ -3,19 +3,47 @@
         <CardHeader>
             <CardTitle class="flex justify-between items-center gap-2">
                 <div class="flex items-center gap-2 w-full">
-                    <Icon
-                        icon="lucide:users"
-                        class="w-5 h-5 text-muted-foreground"
-                    />
-                    <Input
-                        class="font-semibold text-lg flex-1 border-muted-foreground"
-                        :model-value="team.name"
-                        type="text"
-                        placeholder="Enter team name"
-                        @update:model-value="
-                            $emit('teamRenamed', $event.toString())
-                        "
-                    />
+                    <div>
+                        <Label
+                            class="text-sm text-muted-foreground flex items-center gap-1"
+                        >
+                            <Icon
+                                icon="lucide:users"
+                                class="w-5 h-5 text-muted-foreground"
+                            />
+                            Team Name
+                        </Label>
+
+                        <Input
+                            class="font-semibold text-lg flex-1 border-muted-foreground"
+                            :model-value="team.name"
+                            type="text"
+                            placeholder="Enter team name"
+                            @update:model-value="
+                                $emit('teamRenamed', $event.toString())
+                            "
+                        />
+                    </div>
+
+                    <div>
+                        <Label
+                            class="text-sm text-muted-foreground flex items-center gap-1"
+                        >
+                            <Icon icon="lucide:medal" class="w-4 h-4" />
+                            Placement
+                        </Label>
+                        <Input
+                            class="font-semibold text-lg flex-1 border-muted-foreground"
+                            :model-value="team.rank"
+                            type="number"
+                            min="1"
+                            max="999"
+                            placeholder="Enter team placement"
+                            @update:model-value="
+                                $emit('teamRankUpdated', Number($event))
+                            "
+                        />
+                    </div>
                 </div>
 
                 <Button
@@ -177,6 +205,8 @@ defineEmits<{
     (e: 'playerUpdated', playerIndex: number, newPlayer: InitialPlayer): void;
     (e: 'playerAdded'): void;
     (e: 'playerRemoved', index: number): void;
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
+    (e: 'teamRankUpdated', newRank: number): void;
     (e: 'teamRenamed', newName: string): void;
     // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'teamRemoved'): void;
