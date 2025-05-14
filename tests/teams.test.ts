@@ -24,7 +24,7 @@ const settings: TrueSkillSettings = {
 
 describe('incrementTeamCount', () => {
     test('Increments the team count', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         addTeam(settings, teams);
         expect(teams.length).toEqual(3);
@@ -33,7 +33,7 @@ describe('incrementTeamCount', () => {
 
 describe('decrementTeamCount', () => {
     test('Decrements the team count', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         removeTeam(teams, teams.length - 1);
         expect(teams.length).toEqual(2);
@@ -46,7 +46,7 @@ describe('decrementTeamCount', () => {
 
 describe('addPlayerToTeam', () => {
     test('Adds a player to a team', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         expect(teams[0].players.length).toEqual(2);
         expect(teams[1].players.length).toEqual(2);
@@ -58,7 +58,7 @@ describe('addPlayerToTeam', () => {
 
 describe('removePlayerFromTeam', () => {
     test('Removes a player from a team', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         expect(teams[0].players.length).toEqual(2);
         expect(teams[1].players.length).toEqual(2);
@@ -70,7 +70,7 @@ describe('removePlayerFromTeam', () => {
 
 describe('updateTeamRanks', () => {
     test('Updates the team ranks', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         expect(teams[0].rank).toEqual(1);
         expect(teams[1].rank).toEqual(2);
@@ -108,7 +108,7 @@ describe('getDefaultTeam', () => {
 
 describe('getFirstTwoTeams', () => {
     test('Gets the first two teams', () => {
-        const teams = getFirstTwoTeams();
+        const teams = getFirstTwoTeams(settings);
         expect(teams.length).toEqual(2);
         expect(teams[0].players.length).toEqual(2);
         expect(teams[1].players.length).toEqual(2);
