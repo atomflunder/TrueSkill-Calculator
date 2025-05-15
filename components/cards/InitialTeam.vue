@@ -15,7 +15,7 @@
                         </Label>
 
                         <Input
-                            class="font-semibold text-lg flex-1 border-muted-foreground"
+                            class="font-normal text-lg flex-1 border-muted-foreground"
                             :model-value="team.name"
                             type="text"
                             placeholder="Enter team name"
@@ -33,7 +33,7 @@
                             Placement
                         </Label>
                         <Input
-                            class="font-semibold text-lg flex-1 border-muted-foreground"
+                            class="font-normal text-lg flex-1 border-muted-foreground"
                             :model-value="team.rank"
                             type="number"
                             min="1"
@@ -64,23 +64,30 @@
             >
                 <div class="flex justify-between items-center gap-2">
                     <div class="flex items-center gap-2 flex-1">
-                        <Icon
-                            icon="lucide:user"
-                            class="w-5 h-5 text-muted-foreground"
-                        />
-                        <Input
-                            class="font-normal flex-1 border-muted-foreground"
-                            :model-value="player.name"
-                            type="text"
-                            placeholder="Player name"
-                            @update:model-value="
-                                $emit('playerUpdated', i, {
-                                    name: $event.toString(),
-                                    rating: player.rating,
-                                    weight: player.weight,
-                                })
-                            "
-                        />
+                        <div>
+                            <Label
+                                class="text-sm text-muted-foreground flex items-center gap-1"
+                            >
+                                <Icon
+                                    icon="lucide:user"
+                                    class="w-4 h-4 text-muted-foreground"
+                                />
+                                Player Name
+                            </Label>
+                            <Input
+                                class="font-normal flex-1 border-muted-foreground"
+                                :model-value="player.name"
+                                type="text"
+                                placeholder="Player name"
+                                @update:model-value="
+                                    $emit('playerUpdated', i, {
+                                        name: $event.toString(),
+                                        rating: player.rating,
+                                        weight: player.weight,
+                                    })
+                                "
+                            />
+                        </div>
                     </div>
 
                     <Button

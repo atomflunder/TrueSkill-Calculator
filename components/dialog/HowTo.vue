@@ -2,6 +2,7 @@
     <Dialog>
         <DialogTrigger>
             <Button variant="secondary" class="hover:cursor-pointer text-xs">
+                <Icon icon="lucide:message-circle-question" class="w-4 h-4" />
                 FAQ
             </Button>
         </DialogTrigger>
@@ -28,12 +29,14 @@
                             <NuxtLink
                                 to="https://en.wikipedia.org/wiki/Elo_rating_system"
                                 :external="true"
+                                class="hover:cursor-pointer underline"
                                 >Elo</NuxtLink
                             >
                             and
                             <NuxtLink
                                 to="https://en.wikipedia.org/wiki/Glicko_rating_system"
                                 :external="true"
+                                class="hover:cursor-pointer underline"
                                 >Glicko-2</NuxtLink
                             >.
                         </p>
@@ -145,6 +148,7 @@
                             <NuxtLink
                                 to="https://www.microsoft.com/en-us/research/wp-content/uploads/2007/01/NIPS2006_0688.pdf"
                                 :external="true"
+                                class="hover:cursor-pointer underline"
                             >
                                 TrueSkill(TM): A Bayesian Skill Rating System
                             </NuxtLink>
@@ -348,7 +352,8 @@
                         <p>
                             The API is completely free, just make a POST Request
                             to /api/trueskill with the same request body schema
-                            as the JSON import:
+                            as the JSON import, with an additional, optional
+                            config parameter:
                         </p>
                         <div class="bg-muted rounded p-4 mt-4 text-xs">
                             <pre><code>{
@@ -414,7 +419,7 @@
 
                 <AccordionItem value="suggestedrank">
                     <AccordionTrigger class="font-bold"
-                        >What is the suggested rank?
+                        >What is the player rank?
                     </AccordionTrigger>
                     <AccordionContent>
                         <p>
@@ -427,7 +432,35 @@
                             values, the initial rank of a player is 0.
                             <i>25 - (3 * 25/3) = 0</i>. <br />
                             If you have played Halo 2 or 3, this scale will be
-                            familiar to you.
+                            familiar to you, as it is used in the competitive
+                            multiplayer ranks, 0-50.
+                        </p>
+                    </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="expectedscore">
+                    <AccordionTrigger class="font-bold"
+                        >What is the expected score?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        <p>
+                            The expected score of a team is the chance of a team
+                            to win the match, between 0 and 1. <br />
+                            A value of 0 means a certain loss and a value of 1
+                            means a certain win. Values near
+                            <i>1 / (Team Count)</i> means draws are likely to
+                            occur, resulting in a relatively even matchup (see
+                            also: Match Quality).
+                            <br />
+                            This is not originally part of the TrueSkill
+                            algorithm, but taken and adapted from here:
+                            <NuxtLink
+                                to="https://github.com/sublee/trueskill/issues/1#issuecomment-149762508"
+                                :external="true"
+                                class="hover:cursor-pointer underline"
+                            >
+                                sublee/trueskill/issues#1
+                            </NuxtLink>
                         </p>
                     </AccordionContent>
                 </AccordionItem>
@@ -444,7 +477,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-
+import { Icon } from '@iconify/vue';
 import {
     Accordion,
     AccordionContent,

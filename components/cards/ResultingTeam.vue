@@ -1,23 +1,33 @@
 <template>
     <Card class="rounded-2xl shadow-md border border-gray-200">
         <CardHeader>
-            <CardTitle class="text-lg font-semibold">
-                <Icon icon="lucide:users" class="mr-2 w-5 h-5 inline" />
-                {{ team.name }}
-            </CardTitle>
-
-            <CardDescription>
+            <div>
                 <div>
-                    <p class="text-sm text-muted-foreground mt-1">
-                        <Icon icon="lucide:star" class="mr-1 w-4 h-4 inline" />
-                        Expected Score: {{ team.expectedScore.toFixed(4) }}
-                    </p>
-                    <p class="text-sm text-muted-foreground mt-1">
-                        <Icon icon="lucide:medal" class="mr-1 w-4 h-4 inline" />
+                    <CardTitle
+                        class="text-lg font-semibold flex items-center gap-2"
+                    >
+                        <Icon icon="lucide:users" class="w-5 h-5" />
+                        {{ team.name.slice(0, 13) || 'Unnamed Team' }}
+                    </CardTitle>
+                    <p
+                        class="text-md text-muted-foreground flex items-center gap-2"
+                    >
+                        <Icon icon="lucide:medal" class="w-4 h-4" />
                         Placement: {{ team.rank }}
                     </p>
                 </div>
-            </CardDescription>
+
+                <div class="text-xs text-muted-foreground mt-2">
+                    <p class="flex items-center gap-1">
+                        <Icon icon="lucide:activity" class="w-4 h-4" />
+                        Match Quality: {{ (matchQuality * 100).toFixed(4) }}%
+                    </p>
+                    <p class="flex items-center gap-1">
+                        <Icon icon="lucide:star" class="w-4 h-4" />
+                        Expected Score: {{ team.expectedScore.toFixed(4) }}
+                    </p>
+                </div>
+            </div>
         </CardHeader>
 
         <CardContent class="space-y-6">
@@ -31,10 +41,8 @@
                 >
                     <div>
                         <Label class="text-sm text-muted-foreground">
-                            <Icon
-                                icon="lucide:user"
-                                class="mr-2 w-5 h-5 inline"
-                            />
+                            <Icon icon="lucide:user" class="w-4 h-4 inline" />
+                            Player Name
                         </Label>
                         <Input
                             class="font-normal border-muted-foreground"
@@ -46,10 +54,7 @@
 
                     <div>
                         <Label class="text-sm text-muted-foreground">
-                            <Icon
-                                icon="lucide:trophy"
-                                class="mr-2 w-5 h-5 inline"
-                            />
+                            <Icon icon="lucide:trophy" class="w-4 h-4 inline" />
                             Player Rank
                         </Label>
                         <Input
@@ -62,10 +67,7 @@
 
                     <div>
                         <Label class="text-sm text-muted-foreground">
-                            <Icon
-                                icon="lucide:weight"
-                                class="mr-2 w-5 h-5 inline"
-                            />
+                            <Icon icon="lucide:weight" class="w-4 h-4 inline" />
                             Weight
                         </Label>
                         <Input
@@ -77,14 +79,12 @@
                     </div>
                 </div>
 
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3"
-                >
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div>
                         <Label class="text-sm text-muted-foreground">
                             <Icon
                                 icon="lucide:sliders"
-                                class="mr-2 w-5 h-5 inline"
+                                class="w-4 h-4 inline"
                             />
                             Mu (μ)
                         </Label>
@@ -100,7 +100,7 @@
                         <Label class="text-sm text-muted-foreground">
                             <Icon
                                 icon="lucide:sliders"
-                                class="mr-2 w-5 h-5 inline"
+                                class="w-4 h-4 inline"
                             />
                             Sigma (σ)
                         </Label>
@@ -116,7 +116,7 @@
                         <Label class="text-sm text-muted-foreground">
                             <Icon
                                 icon="lucide:arrow-up-narrow-wide"
-                                class="mr-2 w-5 h-5 inline"
+                                class="w-4 h-4 inline"
                             />
                             Δ Mu
                         </Label>
@@ -132,7 +132,7 @@
                         <Label class="text-sm text-muted-foreground">
                             <Icon
                                 icon="lucide:arrow-up-narrow-wide"
-                                class="mr-2 w-5 h-5 inline"
+                                class="w-4 h-4 inline"
                             />
                             Δ Sigma
                         </Label>
@@ -156,6 +156,20 @@ import { Input } from '@/components/ui/input';
 import type { ResultingTeam } from '~/types/trueskill';
 
 defineProps<{
+    matchQuality: number;
     team: ResultingTeam;
 }>();
 </script>
+
+<style scoped>
+input[type='number'][readonly]::-webkit-inner-spin-button,
+input[type='number'][readonly]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'][readonly] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+</style>

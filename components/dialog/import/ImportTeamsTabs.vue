@@ -2,6 +2,7 @@
     <Dialog>
         <DialogTrigger>
             <Button variant="secondary" class="hover:cursor-pointer text-xs">
+                <Icon icon="lucide:upload" class="w-4 h-4" />
                 Import
             </Button>
         </DialogTrigger>
@@ -32,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { InitialTeam } from '~/types/trueskill';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

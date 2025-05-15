@@ -76,7 +76,9 @@
                             aria-label="Link to GitHub"
                         >
                             <Icon icon="simple-icons:github" />
-                            <Label class="hidden sm:inline">
+                            <Label
+                                class="hidden sm:inline hover:cursor-pointer"
+                            >
                                 View on GitHub
                             </Label>
                         </Button>

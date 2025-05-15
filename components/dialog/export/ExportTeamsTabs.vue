@@ -6,6 +6,7 @@
                 class="hover:cursor-pointer text-xs"
                 @click="$emit('teamsExported')"
             >
+                <Icon icon="lucide:download" class="w-4 h-4" />
                 Export
             </Button>
         </DialogTrigger>
@@ -32,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { ResultingTeam } from '~/types/trueskill';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

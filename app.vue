@@ -14,7 +14,7 @@
                 />
 
                 <div
-                    class="p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
+                    class="p-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
                 >
                     <CardsInitialTeam
                         v-for="(team, i) in initialTeams"
@@ -48,6 +48,7 @@
                         variant="secondary"
                         @click="addTeam(trueskillSettings, initialTeams)"
                     >
+                        <Icon icon="lucide:plus" class="w-4 h-4" />
                         Add New Team
                     </Button>
 
@@ -58,6 +59,7 @@
                             initialTeams = getFirstTwoTeams(trueskillSettings)
                         "
                     >
+                        <Icon icon="lucide:rotate-ccw" class="w-4 h-4" />
                         Reset Teams
                     </Button>
 
@@ -65,18 +67,20 @@
                         class="hover:cursor-pointer w-full sm:w-auto"
                         @click="calculateTeams"
                     >
+                        <Icon icon="lucide:settings-2" class="w-4 h-4" />
                         Calculate Result
                     </Button>
                 </div>
 
                 <div
                     v-if="resultingTeams"
-                    class="p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
+                    class="p-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
                 >
                     <CardsResultingTeam
                         v-for="(team, i) in resultingTeams.teams"
                         :key="i"
                         :team="team"
+                        :match-quality="resultingTeams.matchQuality"
                     />
                 </div>
             </slot>
@@ -86,6 +90,7 @@
 
 <script setup lang="ts">
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { Icon } from '@iconify/vue';
 import type {
     InitialTeam,
     TrueSkillBody,
