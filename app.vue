@@ -135,4 +135,14 @@ watch(
         deep: 3,
     }
 );
+
+watch(
+    trueskillSettings,
+    async () => {
+        await calculateTeams();
+    },
+    {
+        deep: 1,
+    }
+);
 </script>
