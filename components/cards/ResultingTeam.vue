@@ -37,7 +37,7 @@
                 class="border rounded-lg p-4 space-y-3 bg-accent"
             >
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3"
+                    class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-3"
                 >
                     <div>
                         <Label class="text-sm text-muted-foreground">

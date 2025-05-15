@@ -99,7 +99,9 @@
                     </Button>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-3"
+                >
                     <div>
                         <Label
                             class="text-sm text-muted-foreground flex items-center gap-1"
