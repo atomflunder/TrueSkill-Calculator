@@ -10,7 +10,6 @@
                 <LayoutHeaderComponent
                     :output-teams="resultingTeams?.teams || []"
                     @teams-imported="(newTeams) => (initialTeams = newTeams)"
-                    @teams-exported="calculateTeams"
                 />
 
                 <div

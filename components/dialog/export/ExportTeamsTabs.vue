@@ -1,11 +1,7 @@
 <template>
     <Dialog>
         <DialogTrigger>
-            <Button
-                variant="secondary"
-                class="hover:cursor-pointer text-xs"
-                @click="$emit('teamsExported')"
-            >
+            <Button variant="secondary" class="hover:cursor-pointer text-xs">
                 <Icon icon="lucide:download" class="w-4 h-4" />
                 Export
             </Button>
@@ -42,9 +38,5 @@ import TeamsCsv from './TeamsCsv.vue';
 
 defineProps<{
     outputTeams: ResultingTeam[];
-}>();
-
-defineEmits<{
-    (e: 'teamsExported'): void;
 }>();
 </script>
