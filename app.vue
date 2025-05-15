@@ -9,7 +9,7 @@
             <slot>
                 <LayoutHeaderComponent
                     :output-teams="resultingTeams?.teams || []"
-                    @teams-imported="initialTeams = $event"
+                    @teams-imported="(newTeams) => (initialTeams = newTeams)"
                     @teams-exported="calculateTeams"
                 />
 
@@ -113,7 +113,7 @@ async function calculateTeams() {
         config: trueskillSettings.value,
     };
 
-    const { data } = await useFetch<TrueSkillResult>('/api/trueskill', {
+    const result = await $fetch<TrueSkillResult>('/api/trueskill', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
@@ -121,10 +121,18 @@ async function calculateTeams() {
         },
     });
 
-    if (data.value) {
-        resultingTeams.value = data.value;
-    }
+    resultingTeams.value = result;
 }
 
 await calculateTeams();
+
+watch(
+    initialTeams,
+    async () => {
+        await calculateTeams();
+    },
+    {
+        deep: 3,
+    }
+);
 </script>
