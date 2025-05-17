@@ -43,6 +43,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.name"
+                            aria-label="Player name"
                             type="text"
                             readonly
                         />
@@ -56,6 +57,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.suggestedRank"
+                            aria-label="Player rank"
                             type="number"
                             readonly
                         />
@@ -69,6 +71,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.weight"
+                            aria-label="Player weight"
                             type="number"
                             readonly
                         />
@@ -87,6 +90,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.rating[0]"
+                            aria-label="Player mu rating"
                             type="number"
                             readonly
                         />
@@ -103,6 +107,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.rating[1]"
+                            aria-label="Player sigma rating"
                             type="number"
                             readonly
                         />
@@ -119,6 +124,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.ratingChanges[0]"
+                            aria-label="Player mu rating difference"
                             type="number"
                             readonly
                         />
@@ -135,6 +141,7 @@
                         <Input
                             class="font-normal border-muted-foreground"
                             :model-value="player.ratingChanges[1]"
+                            aria-label="Player sigma rating difference"
                             type="number"
                             readonly
                         />
