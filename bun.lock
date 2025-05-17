@@ -9,7 +9,7 @@
         "@nuxtjs/color-mode": "3.5.2",
         "@tailwindcss/vite": "^4.1.6",
         "@tanstack/vue-table": "^8.21.3",
-        "@vueuse/core": "^13.1.0",
+        "@vueuse/core": "^13.2.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-vue-next": "^0.509.0",
@@ -610,11 +610,11 @@
 
     "@vue/test-utils": ["@vue/test-utils@2.4.6", "", { "dependencies": { "js-beautify": "^1.14.9", "vue-component-type-helpers": "^2.0.0" } }, "sha512-FMxEjOpYNYiFe0GkaHsnJPXFHxQ6m4t8vI/ElPGpMWxZKpmRvQ33OIrvRXemy6yha03RxhOlQuy+gZMC3CQSow=="],
 
-    "@vueuse/core": ["@vueuse/core@13.1.0", "", { "dependencies": { "@types/web-bluetooth": "^0.0.21", "@vueuse/metadata": "13.1.0", "@vueuse/shared": "13.1.0" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-PAauvdRXZvTWXtGLg8cPUFjiZEddTqmogdwYpnn60t08AA5a8Q4hZokBnpTOnVNqySlFlTcRYIC8OqreV4hv3Q=="],
+    "@vueuse/core": ["@vueuse/core@13.2.0", "", { "dependencies": { "@types/web-bluetooth": "^0.0.21", "@vueuse/metadata": "13.2.0", "@vueuse/shared": "13.2.0" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-n5TZoIAxbWAQ3PqdVPDzLgIRQOujFfMlatdI+f7ditSmoEeNpPBvp7h2zamzikCmrhFIePAwdEQB6ENccHr7Rg=="],
 
-    "@vueuse/metadata": ["@vueuse/metadata@13.1.0", "", {}, "sha512-+TDd7/a78jale5YbHX9KHW3cEDav1lz1JptwDvep2zSG8XjCsVE+9mHIzjTOaPbHUAk5XiE4jXLz51/tS+aKQw=="],
+    "@vueuse/metadata": ["@vueuse/metadata@13.2.0", "", {}, "sha512-kPpzuQCU0+D8DZCzK0iPpIcXI+6ufWSgwnjJ6//GNpEn+SHViaCtR+XurzORChSgvpHO9YC8gGM97Y1kB+UabA=="],
 
-    "@vueuse/shared": ["@vueuse/shared@13.1.0", "", { "peerDependencies": { "vue": "^3.5.0" } }, "sha512-IVS/qRRjhPTZ6C2/AM3jieqXACGwFZwWTdw5sNTSKk2m/ZpkuuN+ri+WCVUP8TqaKwJYt/KuMwmXspMAw8E6ew=="],
+    "@vueuse/shared": ["@vueuse/shared@13.2.0", "", { "peerDependencies": { "vue": "^3.5.0" } }, "sha512-vx9ZPDF5HcU9up3Jgt3G62dMUfZEdk6tLyBAHYAG4F4n73vpaA7J5hdncDI/lS9Vm7GA/FPlbOmh9TrDZROTpg=="],
 
     "@whatwg-node/disposablestack": ["@whatwg-node/disposablestack@0.0.6", "", { "dependencies": { "@whatwg-node/promise-helpers": "^1.0.0", "tslib": "^2.6.3" } }, "sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw=="],
 
