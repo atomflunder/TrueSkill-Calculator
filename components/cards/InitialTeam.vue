@@ -60,7 +60,7 @@
             <div
                 v-for="(player, i) in team.players"
                 :key="i"
-                class="border rounded-lg p-4 space-y-3 bg-accent"
+                class="border rounded-lg p-4 space-y-3 bg-sidebar"
             >
                 <div class="flex justify-between items-center gap-2">
                     <div class="flex items-center gap-2 flex-1">

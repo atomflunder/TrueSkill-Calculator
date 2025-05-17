@@ -30,7 +30,7 @@
             <div
                 v-for="(player, i) in team.players"
                 :key="i"
-                class="border rounded-lg p-4 space-y-3 bg-accent"
+                class="border rounded-lg p-4 space-y-3 bg-sidebar"
             >
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-3"
