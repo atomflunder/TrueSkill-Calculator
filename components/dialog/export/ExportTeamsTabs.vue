@@ -3,7 +3,7 @@
         <DialogTrigger>
             <Button variant="secondary" class="hover:cursor-pointer text-xs">
                 <Icon icon="lucide:download" class="w-4 h-4" />
-                Export
+                <span class="hidden lg:block">Export</span>
             </Button>
         </DialogTrigger>
         <DialogContent class="min-w-[80vw] min-h-[80vh] px-0">

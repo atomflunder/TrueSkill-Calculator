@@ -3,7 +3,7 @@
         <DialogTrigger>
             <Button variant="secondary" class="hover:cursor-pointer text-xs">
                 <Icon icon="lucide:message-circle-question" class="w-4 h-4" />
-                FAQ
+                <span class="hidden lg:block"> FAQ </span>
             </Button>
         </DialogTrigger>
         <DialogContent class="overflow-y-scroll max-h-screen">

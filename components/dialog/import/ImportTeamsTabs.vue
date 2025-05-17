@@ -3,7 +3,7 @@
         <DialogTrigger>
             <Button variant="secondary" class="hover:cursor-pointer text-xs">
                 <Icon icon="lucide:upload" class="w-4 h-4" />
-                Import
+                <span class="hidden lg:block">Import</span>
             </Button>
         </DialogTrigger>
         <DialogContent class="min-w-[80vw] min-h-[80vh] px-0">
