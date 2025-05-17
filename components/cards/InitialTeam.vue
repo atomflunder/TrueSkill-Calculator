@@ -20,7 +20,7 @@
                             type="text"
                             placeholder="Enter team name"
                             @update:model-value="
-                                $emit('teamRenamed', $event.toString())
+                                debouncedEmit('teamRenamed', $event.toString())
                             "
                         />
                     </div>
@@ -40,7 +40,7 @@
                             max="999"
                             placeholder="Enter team placement"
                             @update:model-value="
-                                $emit('teamRankUpdated', Number($event))
+                                debouncedEmit('teamRankUpdated', Number($event))
                             "
                         />
                     </div>
@@ -80,7 +80,7 @@
                                 type="text"
                                 placeholder="Player name"
                                 @update:model-value="
-                                    $emit('playerUpdated', i, {
+                                    debouncedEmit('playerUpdated', i, {
                                         name: $event.toString(),
                                         rating: player.rating,
                                         weight: player.weight,
@@ -118,7 +118,7 @@
                             step="0.1"
                             placeholder="Mu rating"
                             @update:model-value="
-                                $emit('playerUpdated', i, {
+                                debouncedEmit('playerUpdated', i, {
                                     name: player.name,
                                     rating: [Number($event), player.rating[1]],
                                     weight: player.weight,
@@ -143,7 +143,7 @@
                             step="0.1"
                             placeholder="Sigma rating"
                             @update:model-value="
-                                $emit('playerUpdated', i, {
+                                debouncedEmit('playerUpdated', i, {
                                     name: player.name,
                                     rating: [player.rating[0], Number($event)],
                                     weight: player.weight,
@@ -167,7 +167,7 @@
                             step="0.1"
                             placeholder="Player weight"
                             @update:model-value="
-                                $emit('playerUpdated', i, {
+                                debouncedEmit('playerUpdated', i, {
                                     name: player.name,
                                     rating: player.rating,
                                     weight: Number($event),
@@ -202,6 +202,7 @@ import {
 } from '@/components/ui/card';
 import { Icon } from '@iconify/vue';
 import { Input } from '@/components/ui/input';
+import { useDebounceFn } from '@vueuse/core';
 
 import type { InitialPlayer, InitialTeam } from '~/types/trueskill';
 
@@ -210,7 +211,7 @@ defineProps<{
     index: number;
 }>();
 
-defineEmits<{
+const emits = defineEmits<{
     (e: 'playerUpdated', playerIndex: number, newPlayer: InitialPlayer): void;
     (e: 'playerAdded'): void;
     (e: 'playerRemoved', index: number): void;
@@ -220,4 +221,10 @@ defineEmits<{
     // eslint-disable-next-line @typescript-eslint/unified-signatures
     (e: 'teamRemoved'): void;
 }>();
+
+const debouncedEmit = useDebounceFn((eventName: string, ...args: unknown[]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    emits(eventName, ...args);
+}, 500);
 </script>

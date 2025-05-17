@@ -8,36 +8,48 @@
                         <SidebarMenuItem>
                             <Label> Beta (β) </Label>
                             <Input
-                                v-model="trueskillSettings.beta"
+                                :model-value="trueskillSettings.beta"
                                 type="number"
                                 step="0.1"
                                 min="0"
                                 max="99"
                                 placeholder="Beta"
+                                @update:model-value="
+                                    debouncedEmit('updateBeta', Number($event))
+                                "
                             />
                         </SidebarMenuItem>
 
                         <SidebarMenuItem>
                             <Label> Tau (τ)</Label>
                             <Input
-                                v-model="trueskillSettings.tau"
+                                :model-value="trueskillSettings.tau"
                                 type="number"
                                 step="0.01"
                                 min="0"
                                 max="99"
                                 placeholder="Tau"
+                                @update:model-value="
+                                    debouncedEmit('updateTau', Number($event))
+                                "
                             />
                         </SidebarMenuItem>
 
                         <SidebarMenuItem>
                             <Label> Draw Probability </Label>
                             <Input
-                                v-model="trueskillSettings.drawProbability"
+                                :model-value="trueskillSettings.drawProbability"
                                 type="number"
                                 step="0.1"
                                 min="0"
                                 max="0.99"
                                 placeholder="Draw Probability"
+                                @update:model-value="
+                                    debouncedEmit(
+                                        'updateDrawProbability',
+                                        Number($event)
+                                    )
+                                "
                             />
                         </SidebarMenuItem>
                     </SidebarMenu>
@@ -116,12 +128,23 @@ import {
 } from '@/components/ui/sidebar';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { useDebounceFn } from '@vueuse/core';
 
 const trueskillSettings = defineModel<TrueSkillSettings>('trueskillSettings', {
     required: true,
 });
 
-defineEmits<{
+const emits = defineEmits<{
+    (
+        e: 'updateBeta' | 'updateTau' | 'updateDrawProbability',
+        newValue: number
+    ): void;
     (e: 'resetConfig'): void;
 }>();
+
+const debouncedEmit = useDebounceFn((eventName: string, ...args: unknown[]) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    emits(eventName, ...args);
+}, 500);
 </script>

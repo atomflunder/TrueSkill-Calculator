@@ -2,6 +2,12 @@
     <SidebarProvider>
         <LayoutAppSidebar
             :trueskill-settings="trueskillSettings"
+            @update-beta="(newBeta) => (trueskillSettings.beta = newBeta)"
+            @update-tau="(newTau) => (trueskillSettings.tau = newTau)"
+            @update-draw-probability="
+                (newDrawProbability) =>
+                    (trueskillSettings.drawProbability = newDrawProbability)
+            "
             @reset-config="resetConfig"
         />
 
@@ -12,8 +18,30 @@
                     @teams-imported="(newTeams) => (initialTeams = newTeams)"
                 />
 
+                <div class="flex flex-col sm:flex-row gap-4 p-4 sm:p-8">
+                    <Button
+                        class="hover:cursor-pointer w-full sm:w-auto"
+                        variant="secondary"
+                        @click="addTeam(trueskillSettings, initialTeams)"
+                    >
+                        <Icon icon="lucide:plus" class="w-4 h-4" />
+                        Add New Team
+                    </Button>
+
+                    <Button
+                        class="hover:cursor-pointer w-full sm:w-auto"
+                        variant="secondary"
+                        @click="
+                            initialTeams = getFirstTwoTeams(trueskillSettings)
+                        "
+                    >
+                        <Icon icon="lucide:rotate-ccw" class="w-4 h-4" />
+                        Reset Teams
+                    </Button>
+                </div>
+
                 <div
-                    class="p-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
+                    class="px-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
                 >
                     <CardsInitialTeam
                         v-for="(team, i) in initialTeams"
@@ -39,36 +67,6 @@
                                 (team.players[index] = newPlayer)
                         "
                     />
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-4 p-4 sm:p-8">
-                    <Button
-                        class="hover:cursor-pointer w-full sm:w-auto"
-                        variant="secondary"
-                        @click="addTeam(trueskillSettings, initialTeams)"
-                    >
-                        <Icon icon="lucide:plus" class="w-4 h-4" />
-                        Add New Team
-                    </Button>
-
-                    <Button
-                        class="hover:cursor-pointer w-full sm:w-auto"
-                        variant="secondary"
-                        @click="
-                            initialTeams = getFirstTwoTeams(trueskillSettings)
-                        "
-                    >
-                        <Icon icon="lucide:rotate-ccw" class="w-4 h-4" />
-                        Reset Teams
-                    </Button>
-
-                    <Button
-                        class="hover:cursor-pointer w-full sm:w-auto"
-                        @click="calculateTeams"
-                    >
-                        <Icon icon="lucide:settings-2" class="w-4 h-4" />
-                        Calculate Result
-                    </Button>
                 </div>
 
                 <div
@@ -136,12 +134,13 @@ watch(
 );
 
 watch(
-    trueskillSettings,
+    () => [
+        trueskillSettings.value.beta,
+        trueskillSettings.value.tau,
+        trueskillSettings.value.drawProbability,
+    ],
     async () => {
         await calculateTeams();
-    },
-    {
-        deep: 1,
     }
 );
 </script>
