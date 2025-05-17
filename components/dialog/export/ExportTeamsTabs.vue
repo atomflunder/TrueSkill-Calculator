@@ -1,6 +1,6 @@
 <template>
     <Dialog>
-        <DialogTrigger>
+        <DialogTrigger as-child>
             <Button
                 variant="secondary"
                 class="hover:cursor-pointer text-xs"
@@ -10,7 +10,15 @@
                 <span class="hidden lg:block">Export</span>
             </Button>
         </DialogTrigger>
-        <DialogContent class="min-w-[80vw] min-h-[80vh] px-0">
+        <DialogContent class="min-w-[80vw] min-h-[70vh] px-0">
+            <DialogHeader class="mx-6">
+                <DialogTitle>Export Teams</DialogTitle>
+            </DialogHeader>
+
+            <DialogDescription class="hidden">
+                Export the resulting teams as either CSV or JSON.
+            </DialogDescription>
+
             <Tabs>
                 <TabsList class="mx-6">
                     <TabsTrigger value="json" class="hover:cursor-pointer">
@@ -34,7 +42,12 @@
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogDescription,
+} from '@/components/ui/dialog';
 import type { ResultingTeam } from '~/types/trueskill';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TeamsJson from './TeamsJson.vue';

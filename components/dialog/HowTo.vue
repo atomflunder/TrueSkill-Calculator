@@ -1,6 +1,6 @@
 <template>
     <Dialog>
-        <DialogTrigger>
+        <DialogTrigger as-child>
             <Button
                 variant="secondary"
                 class="hover:cursor-pointer text-xs"
@@ -14,6 +14,10 @@
             <DialogHeader>
                 <DialogTitle>FAQ / How To</DialogTitle>
             </DialogHeader>
+
+            <DialogDescription>
+                FAQ about TrueSkill and this Calculator
+            </DialogDescription>
 
             <Accordion type="single" class="w-full" collapsible>
                 <AccordionItem value="trueskill">

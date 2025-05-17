@@ -1,6 +1,6 @@
 <template>
     <Dialog>
-        <DialogTrigger>
+        <DialogTrigger as-child>
             <Button
                 variant="secondary"
                 class="hover:cursor-pointer text-xs"
@@ -10,7 +10,15 @@
                 <span class="hidden lg:block">Import</span>
             </Button>
         </DialogTrigger>
-        <DialogContent class="min-w-[80vw] min-h-[80vh] px-0">
+        <DialogContent class="min-w-[80vw] min-h-[70vh] px-0">
+            <DialogHeader class="mx-6">
+                <DialogTitle>Import Teams</DialogTitle>
+            </DialogHeader>
+
+            <DialogDescription class="hidden">
+                Import the initial teams as either CSV or JSON.
+            </DialogDescription>
+
             <Tabs>
                 <TabsList class="mx-6">
                     <TabsTrigger value="json" class="hover:cursor-pointer">
