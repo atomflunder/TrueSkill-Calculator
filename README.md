@@ -4,7 +4,7 @@ A simple and fast Online TrueSkill calculator.
 Link to the calculator website: https://trueskill-calculator.vercel.app/  
 Or make a POST request to: https://trueskill-calculator.vercel.app/api/trueskill ([OpenAPI Spec](./openapi.yml))
 
-_Note: This calculator has undergone a redesign. To access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/_
+_Note: This calculator has undergone a redesign. To access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/ (Website only)_
 
 ## Table of Contents
 
