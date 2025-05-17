@@ -19,10 +19,6 @@
 
                 <div class="text-xs text-muted-foreground mt-2">
                     <p class="flex items-center gap-1">
-                        <Icon icon="lucide:activity" class="w-4 h-4" />
-                        Match Quality: {{ (matchQuality * 100).toFixed(4) }}%
-                    </p>
-                    <p class="flex items-center gap-1">
                         <Icon icon="lucide:star" class="w-4 h-4" />
                         Expected Score: {{ team.expectedScore.toFixed(4) }}
                     </p>
@@ -156,7 +152,6 @@ import { Input } from '@/components/ui/input';
 import type { ResultingTeam } from '~/types/trueskill';
 
 defineProps<{
-    matchQuality: number;
     team: ResultingTeam;
 }>();
 </script>

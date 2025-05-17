@@ -18,68 +18,91 @@
                     @teams-imported="(newTeams) => (initialTeams = newTeams)"
                 />
 
-                <div class="flex flex-col sm:flex-row gap-4 p-4 sm:p-8">
-                    <Button
-                        class="hover:cursor-pointer w-full sm:w-auto"
-                        variant="secondary"
-                        @click="addTeam(trueskillSettings, initialTeams)"
+                <section class="mt-8 px-4 sm:px-8">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-semibold">Initial Teams:</h2>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <Button
+                            class="w-full sm:w-auto hover:cursor-pointer"
+                            variant="secondary"
+                            @click="addTeam(trueskillSettings, initialTeams)"
+                        >
+                            <Icon icon="lucide:plus" class="w-4 h-4 mr-2" />
+                            Add New Team
+                        </Button>
+
+                        <Button
+                            class="w-full sm:w-auto hover:cursor-pointer"
+                            variant="secondary"
+                            @click="
+                                initialTeams =
+                                    getFirstTwoTeams(trueskillSettings)
+                            "
+                        >
+                            <Icon
+                                icon="lucide:rotate-ccw"
+                                class="w-4 h-4 mr-2"
+                            />
+                            Reset Teams
+                        </Button>
+                    </div>
+
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
                     >
-                        <Icon icon="lucide:plus" class="w-4 h-4" />
-                        Add New Team
-                    </Button>
+                        <CardsInitialTeam
+                            v-for="(team, i) in initialTeams"
+                            :key="i"
+                            :team="team"
+                            :index="i"
+                            @team-removed="removeTeam(initialTeams, i)"
+                            @team-renamed="(newName) => (team.name = newName)"
+                            @team-rank-updated="
+                                (newRank) =>
+                                    updateTeamRanks(
+                                        team,
+                                        initialTeams.length,
+                                        newRank
+                                    )
+                            "
+                            @player-added="
+                                addPlayerToTeam(trueskillSettings, team)
+                            "
+                            @player-removed="
+                                (index) => removePlayerFromTeam(team, index)
+                            "
+                            @player-updated="
+                                (index, newPlayer) =>
+                                    (team.players[index] = newPlayer)
+                            "
+                        />
+                    </div>
+                </section>
 
-                    <Button
-                        class="hover:cursor-pointer w-full sm:w-auto"
-                        variant="secondary"
-                        @click="
-                            initialTeams = getFirstTwoTeams(trueskillSettings)
-                        "
+                <Separator class="mt-8" />
+
+                <section v-if="resultingTeams" class="mt-8 px-4 sm:px-8">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-semibold">Resulting Teams:</h2>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        Match Quality:
+                        {{ (resultingTeams.matchQuality * 100).toFixed(4) }}%
+                    </div>
+
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
                     >
-                        <Icon icon="lucide:rotate-ccw" class="w-4 h-4" />
-                        Reset Teams
-                    </Button>
-                </div>
-
-                <div
-                    class="px-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
-                >
-                    <CardsInitialTeam
-                        v-for="(team, i) in initialTeams"
-                        :key="i"
-                        :team="team"
-                        :index="i"
-                        @team-removed="removeTeam(initialTeams, i)"
-                        @team-renamed="(newName) => (team.name = newName)"
-                        @team-rank-updated="
-                            (newRank) =>
-                                updateTeamRanks(
-                                    team,
-                                    initialTeams.length,
-                                    newRank
-                                )
-                        "
-                        @player-added="addPlayerToTeam(trueskillSettings, team)"
-                        @player-removed="
-                            (index) => removePlayerFromTeam(team, index)
-                        "
-                        @player-updated="
-                            (index, newPlayer) =>
-                                (team.players[index] = newPlayer)
-                        "
-                    />
-                </div>
-
-                <div
-                    v-if="resultingTeams"
-                    class="p-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
-                >
-                    <CardsResultingTeam
-                        v-for="(team, i) in resultingTeams.teams"
-                        :key="i"
-                        :team="team"
-                        :match-quality="resultingTeams.matchQuality"
-                    />
-                </div>
+                        <CardsResultingTeam
+                            v-for="(team, i) in resultingTeams.teams"
+                            :key="i"
+                            :team="team"
+                        />
+                    </div>
+                </section>
             </slot>
         </main>
     </SidebarProvider>
