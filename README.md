@@ -68,7 +68,7 @@ You can use this calculator via the website, or via the provided, 100% free, API
 - Assign each Team the correct Rank, meaning Placement in the game. The lower the rank, the better. If two or more Teams draw with each other, assign them the same rank.
 - Assign Weights between 0 and 1 to each Player. A Weight of 1 means the Player has played the whole match, and values below 1 mean the Player has left the game early. A Weight of 0 means the Player has not played at all.
 - Optionally you can name each Team and Player to make it easier to identify them.
-- Calculate the new ratings!
+- The new ratings will be calculated automatically
 
 The expected results will appear in the Resulting Teams section. The teams will be updated with the new ranks, the difference from before the match, and their expected score.
 

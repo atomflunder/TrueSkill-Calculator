@@ -328,7 +328,9 @@
                                 Optionally you can name each Team and Player to
                                 make it easier to identify them.
                             </li>
-                            <li>Calculate the new ratings!</li>
+                            <li>
+                                The new ratings will be calculated automatically
+                            </li>
                         </ul>
 
                         <p class="mt-4">
