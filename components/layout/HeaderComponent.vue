@@ -6,6 +6,7 @@
                     <Button
                         variant="ghost"
                         class="hover:cursor-pointer"
+                        aria-label="Toggle Sidebar"
                         @click="toggleSidebar"
                     >
                         <Icon icon="lucide:menu" />

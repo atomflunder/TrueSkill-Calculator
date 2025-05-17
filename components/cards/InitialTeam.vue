@@ -19,6 +19,7 @@
                             :model-value="team.name"
                             type="text"
                             placeholder="Enter team name"
+                            aria-label="Team Name"
                             @update:model-value="
                                 debouncedEmit('teamRenamed', $event.toString())
                             "
@@ -49,6 +50,7 @@
                 <Button
                     variant="ghost"
                     class="text-red-500 hover:text-red-600 hover:cursor-pointer p-1"
+                    aria-label="Remove Team"
                     @click="$emit('teamRemoved')"
                 >
                     <Icon icon="lucide:trash" class="w-5 h-5" />
@@ -79,6 +81,7 @@
                                 :model-value="player.name"
                                 type="text"
                                 placeholder="Player name"
+                                aria-label="Player name"
                                 @update:model-value="
                                     debouncedEmit('playerUpdated', i, {
                                         name: $event.toString(),
@@ -93,6 +96,7 @@
                     <Button
                         variant="ghost"
                         class="text-red-500 hover:text-red-600 hover:cursor-pointer p-1"
+                        aria-label="Remove Player"
                         @click="$emit('playerRemoved', i)"
                     >
                         <Icon icon="lucide:trash" class="w-4 h-4" />
@@ -117,6 +121,7 @@
                             max="100"
                             step="0.1"
                             placeholder="Mu rating"
+                            aria-label="Player mu rating"
                             @update:model-value="
                                 debouncedEmit('playerUpdated', i, {
                                     name: player.name,
@@ -142,6 +147,7 @@
                             max="100"
                             step="0.1"
                             placeholder="Sigma rating"
+                            aria-label="Player sigma rating"
                             @update:model-value="
                                 debouncedEmit('playerUpdated', i, {
                                     name: player.name,
@@ -166,6 +172,7 @@
                             max="1"
                             step="0.1"
                             placeholder="Player weight"
+                            aria-label="Player weight"
                             @update:model-value="
                                 debouncedEmit('playerUpdated', i, {
                                     name: player.name,

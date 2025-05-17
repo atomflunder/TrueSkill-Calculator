@@ -166,4 +166,11 @@ watch(
         await calculateTeams();
     }
 );
+
+useSeoMeta({
+    title: 'TrueSkill Calculator',
+    ogTitle: 'TrueSkill Calculator',
+    description: 'Online Calculator for the TrueSkill rating system',
+    ogDescription: 'Online Calculator for the TrueSkill rating system',
+});
 </script>

@@ -1,7 +1,11 @@
 <template>
     <Dialog>
         <DialogTrigger>
-            <Button variant="secondary" class="hover:cursor-pointer text-xs">
+            <Button
+                variant="secondary"
+                class="hover:cursor-pointer text-xs"
+                aria-label="Export Teams"
+            >
                 <Icon icon="lucide:download" class="w-4 h-4" />
                 <span class="hidden lg:block">Export</span>
             </Button>
