@@ -79,8 +79,8 @@
                                 type="number"
                                 placeholder="Default Team Size"
                                 step="1"
-                                min="1"
-                                max="99"
+                                :min="MIN_AMOUNT_PLAYERS"
+                                :max="MAX_AMOUNT_PLAYERS"
                             />
                         </SidebarMenuItem>
                     </SidebarMenu>
