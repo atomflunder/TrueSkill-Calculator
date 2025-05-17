@@ -80,7 +80,7 @@ You can also import and export the teams as CSV or JSON for ease of use.
 
 Instead of using the website directly, you can also use the provided API to calculate your results.
 
-`POST /api/trueskill`
+`POST https://trueskill-calculator.vercel.app/api/trueskill`
 
 <details>
 <summary>Sample Request Body:</summary>
