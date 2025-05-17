@@ -144,7 +144,9 @@ async function calculateTeams() {
     resultingTeams.value = result;
 }
 
-await calculateTeams();
+onMounted(async () => {
+    await calculateTeams();
+});
 
 watch(
     initialTeams,
