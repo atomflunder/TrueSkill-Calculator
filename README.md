@@ -1,7 +1,8 @@
 # TrueSkill Calculator
 
 A simple and fast Online TrueSkill calculator.  
-Link to the calculator: https://trueskill-calculator.vercel.app/
+Link to the calculator website: https://trueskill-calculator.vercel.app/  
+Or make a POST request to: https://trueskill-calculator.vercel.app/api/trueskill ([OpenAPI Spec](./openapi.yml))
 
 _Note: This calculator has undergone a redesign. To access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/_
 
@@ -84,51 +85,81 @@ Instead of using the website directly, you can also use the provided API to calc
 <details>
 <summary>Sample Request Body:</summary>
 
-```jsonc
+The config param is optional, the rest is required.  
+You need at least 2 teams, and every team needs at least 1 player.
+
+```json
 {
-    // config param is optional
     "config": {
         "beta": 4.166666666666667,
         "tau": 0.08333333333333333,
-        "drawProbability": 0.1,
+        "drawProbability": 0.1
     },
     "teams": [
         {
-            "name": "Team 1",
+            "name": "Team Red",
             "rank": 1,
             "players": [
                 {
-                    "name": "Pep",
-                    "rating": [25.0, 8.33],
-                    "weight": 1.0,
+                    "name": "Alice",
+                    "rating": [25, 8.333],
+                    "weight": 1
                 },
                 {
-                    "name": "Pep 2",
-                    "rating": [25.0, 8.33],
-                    "weight": 1.0,
+                    "name": "Bob",
+                    "rating": [26.5, 8.1],
+                    "weight": 1
                 },
-                // more players ...
-            ],
+                {
+                    "name": "Charlie",
+                    "rating": [24.5, 8],
+                    "weight": 1
+                }
+            ]
         },
         {
-            "name": "Team 2",
+            "name": "Team Blue",
             "rank": 2,
             "players": [
                 {
-                    "name": "Pep 3",
-                    "rating": [25.0, 8.33],
-                    "weight": 1.0,
+                    "name": "Dana",
+                    "rating": [23, 8.5],
+                    "weight": 1
                 },
                 {
-                    "name": "Pep 4",
-                    "rating": [25.0, 8.33],
-                    "weight": 1.0,
+                    "name": "Eli",
+                    "rating": [22, 8.4],
+                    "weight": 1
                 },
-                // more players ...
-            ],
+                {
+                    "name": "Frank",
+                    "rating": [24, 8.3],
+                    "weight": 1
+                }
+            ]
         },
-        // more teams ...
-    ],
+        {
+            "name": "Team Green",
+            "rank": 3,
+            "players": [
+                {
+                    "name": "Grace",
+                    "rating": [20, 8.7],
+                    "weight": 1
+                },
+                {
+                    "name": "Hannah",
+                    "rating": [21, 8.6],
+                    "weight": 1
+                },
+                {
+                    "name": "Ian",
+                    "rating": [22, 8.5],
+                    "weight": 1
+                }
+            ]
+        }
+    ]
 }
 ```
 
@@ -137,53 +168,99 @@ Instead of using the website directly, you can also use the provided API to calc
 <details>
 <summary>Sample Response Body:</summary>
 
-```jsonc
+```json
 {
     "teams": [
         {
-            "name": "Team 1",
+            "name": "Team Red",
             "rank": 1,
             "players": [
                 {
-                    "name": "Pep",
-                    "rating": [28.106874248258354, 7.771343226309424],
+                    "name": "Alice",
+                    "rating": [27.839367341244593, 7.876704169661205],
                     "weight": 1,
-                    "ratingChanges": [3.1068742482583502, -0.5586567736905756],
-                    "suggestedRank": 4.792844569330082,
+                    "ratingChanges": [2.839367341244593, -0.45629583033879495],
+                    "suggestedRank": 4.209254832260978
                 },
                 {
-                    "name": "Pep 2",
-                    "rating": [28.106874248258354, 7.771343226309424],
+                    "name": "Bob",
+                    "rating": [29.18281911018984, 7.681630162349011],
                     "weight": 1,
-                    "ratingChanges": [3.1068742482583502, -0.5586567736905756],
-                    "suggestedRank": 4.792844569330082,
+                    "ratingChanges": [2.6828191101898398, -0.4183698376509888],
+                    "suggestedRank": 6.137928623142805
                 },
+                {
+                    "name": "Charlie",
+                    "rating": [27.11699253438727, 7.597223761817734],
+                    "weight": 1,
+                    "ratingChanges": [2.6169925343872684, -0.40277623818226616],
+                    "suggestedRank": 4.325321248934067
+                }
             ],
-            "expectedScore": 0.5,
+            "expectedScore": 0.44046420086754107
         },
         {
-            "name": "Team 2",
+            "name": "Team Blue",
             "rank": 2,
             "players": [
                 {
-                    "name": "Pep 3",
-                    "rating": [21.893125751741643, 7.771343226309424],
+                    "name": "Dana",
+                    "rating": [23.01515213307437, 7.874194724875769],
                     "weight": 1,
-                    "ratingChanges": [-3.106874248258361, -0.5586567736905756],
-                    "suggestedRank": -1.4209039271866288,
+                    "ratingChanges": [0.0151521330743698, -0.6258052751242307],
+                    "suggestedRank": -0.6074320415529364
                 },
                 {
-                    "name": "Pep 4",
-                    "rating": [21.893125751741643, 7.771343226309424],
+                    "name": "Eli",
+                    "rating": [22.01479774354002, 7.796601180168476],
                     "weight": 1,
-                    "ratingChanges": [-3.106874248258361, -0.5586567736905756],
-                    "suggestedRank": -1.4209039271866288,
+                    "ratingChanges": [
+                        0.014797743540018615, -0.6033988198315248
+                    ],
+                    "suggestedRank": -1.3750057969654073
                 },
+                {
+                    "name": "Frank",
+                    "rating": [24.014447547964632, 7.718445900529321],
+                    "weight": 1,
+                    "ratingChanges": [
+                        0.014447547964635987, -0.5815540994706794
+                    ],
+                    "suggestedRank": 0.8591098463766684
+                }
             ],
-            "expectedScore": 0.5,
+            "expectedScore": 0.3273178872908227
         },
+        {
+            "name": "Team Green",
+            "rank": 3,
+            "players": [
+                {
+                    "name": "Grace",
+                    "rating": [16.889175790765307, 8.197200555477988],
+                    "weight": 1,
+                    "ratingChanges": [-3.1108242092346927, -0.5027994445220116],
+                    "suggestedRank": -7.702425875668656
+                },
+                {
+                    "name": "Hannah",
+                    "rating": [17.96027147265146, 8.114697089485928],
+                    "weight": 1,
+                    "ratingChanges": [-3.03972852734854, -0.48530291051407204],
+                    "suggestedRank": -6.383819795806321
+                },
+                {
+                    "name": "Ian",
+                    "rating": [19.030545239140086, 8.031771289730967],
+                    "weight": 1,
+                    "ratingChanges": [-2.9694547608599144, -0.4682287102690328],
+                    "suggestedRank": -5.064768630052814
+                }
+            ],
+            "expectedScore": 0.23221791184163632
+        }
     ],
-    "matchQuality": 0.4473567439300163,
+    "matchQuality": 0.168544066695238
 }
 ```
 
