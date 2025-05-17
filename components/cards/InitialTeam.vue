@@ -1,5 +1,5 @@
 <template>
-    <Card class="rounded-2xl shadow-md border border-gray-200">
+    <Card class="rounded-2xl shadow-md">
         <CardHeader>
             <CardTitle class="flex justify-between items-center gap-2">
                 <div class="flex items-center gap-2 w-full">

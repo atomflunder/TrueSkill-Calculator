@@ -1,5 +1,5 @@
 <template>
-    <Card class="rounded-2xl shadow-md border border-gray-200">
+    <Card class="rounded-2xl shadow-md">
         <CardHeader>
             <div>
                 <div>
