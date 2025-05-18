@@ -33,6 +33,6 @@ export function getDefaultConfig(): TrueSkillSettings {
 }
 
 export const MIN_AMOUNT_TEAMS = 2;
-export const MAX_AMOUNT_TEAMS = 256;
+export const MAX_AMOUNT_TEAMS = 128;
 export const MIN_AMOUNT_PLAYERS = 1;
 export const MAX_AMOUNT_PLAYERS = 128;
