@@ -1,10 +1,8 @@
 # TrueSkill Calculator
 
-A simple and fast Online TrueSkill calculator.  
-Link to the calculator website: https://trueskill-calculator.vercel.app/  
-Or make a POST request to: https://trueskill-calculator.vercel.app/api/trueskill ([OpenAPI Spec](./openapi.yml))
+A simple and fast online calculator for the TrueSkill rating system.
 
-_Note: This calculator has undergone a redesign. To access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/ (Website only)_
+https://trueskill-calculator.vercel.app/
 
 ## Table of Contents
 
@@ -13,6 +11,7 @@ _Note: This calculator has undergone a redesign. To access the legacy version, v
 - [Usage](#usage)
     - [Website](#website)
     - [API](#api)
+    - [Legacy Version](#legacy-version)
 - [Configuration](#configuration)
     - [Config Settings](#config-settings)
     - [Website Settings](#website-settings)
@@ -79,6 +78,8 @@ You can also import and export the teams as CSV or JSON for ease of use.
 ### API
 
 Instead of using the website directly, you can also use the provided API to calculate your results.
+
+See also the OpenAPI Spec: [openapi.yml](./openapi.yml)
 
 `POST https://trueskill-calculator.vercel.app/api/trueskill`
 
@@ -266,7 +267,11 @@ You need at least 2 teams, and every team needs at least 1 player.
 
 </details>
 
-See also the OpenAPI Spec: [openapi.yml](./openapi.yml)
+### Legacy Version
+
+This calculator has undergone a redesign.  
+If you'd like to access the legacy version, visit https://trueskill-calculator-legacy.vercel.app/ (Website only)  
+The code is accessible via this repositories [`legacy` branch](https://github.com/atomflunder/TrueSkill-Calculator/tree/legacy), or the [mirror repository](https://github.com/atomflunder/TrueSkill-Calculator-Legacy).
 
 ## Configuration
 
