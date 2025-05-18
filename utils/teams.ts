@@ -109,7 +109,6 @@ export function addTeam(
  * @param index The index of the team to remove.
  */
 export function removeTeam(currentTeams: InitialTeam[], index: number): void {
-    console.log(currentTeams, index);
     if (currentTeams.length > MIN_AMOUNT_TEAMS) {
         currentTeams.splice(index, 1);
     }
