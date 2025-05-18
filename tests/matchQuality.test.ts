@@ -2,13 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { calculateMatchQuality } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
+import { getDefaultConfig } from '@/utils/config';
 
 describe('calculateMatchQuality (multi-team)', () => {
-    const config: TrueSkillConfig = {
-        beta: 4.166666666666667,
-        tau: 0.08333333333333333,
-        drawProbability: 0.1,
-    };
+    const config: TrueSkillConfig = getDefaultConfig();
 
     it('should calculate correct match quality for multiple teams', () => {
         const teamOne: InitialTeam = {

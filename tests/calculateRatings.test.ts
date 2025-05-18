@@ -2,12 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { calculateRatings } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
+import { getDefaultConfig } from '@/utils/config';
 
-const config: TrueSkillConfig = {
-    beta: 25 / 6,
-    tau: 25 / 300,
-    drawProbability: 0.1,
-};
+const config: TrueSkillConfig = getDefaultConfig();
 
 describe('calculateRatings', () => {
     it('handles multi-team updates (Rust parity)', () => {

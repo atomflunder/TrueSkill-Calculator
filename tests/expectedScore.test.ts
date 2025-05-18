@@ -2,13 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { calculateExpectedScores } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
+import { getDefaultConfig } from '@/utils/config';
 
 describe('calculateExpectedScores', () => {
-    const defaultConfig: TrueSkillConfig = {
-        beta: 4.166666666666667,
-        tau: 0.08333333333333333,
-        drawProbability: 0.1,
-    };
+    const defaultConfig: TrueSkillConfig = getDefaultConfig();
 
     it('should give 50/50 expected score for equal ratings', () => {
         const teamOne: InitialTeam = {

@@ -1,4 +1,4 @@
-import type { Player } from '~/types/trueskill';
+import type { InitialPlayer } from '~/types/trueskill';
 import type { TrueSkillSettings } from './config';
 
 /**
@@ -11,7 +11,7 @@ import type { TrueSkillSettings } from './config';
 export function getDefaultPlayer(
     settings: TrueSkillSettings,
     playerIndex: number
-): Player {
+): InitialPlayer {
     return {
         name: `Player ${playerIndex}`,
         rating: [settings.defaultMu, settings.defaultSigma],
@@ -27,7 +27,7 @@ export function getDefaultPlayer(
  * @param newSigma The new sigma value, do not set this to 0.
  */
 export function updatePlayerMuSigma(
-    player: Player,
+    player: InitialPlayer,
     newMu: number,
     newSigma: number
 ) {
@@ -48,7 +48,7 @@ export function updatePlayerMuSigma(
  * @param player The player to update the weight for.
  * @param newWeight The new weight value, between 0 and 1.
  */
-export function updatePlayerWeight(player: Player, newWeight: number) {
+export function updatePlayerWeight(player: InitialPlayer, newWeight: number) {
     // The weight needs to be between 0 and 1.
     if (newWeight < 0 || !newWeight) {
         newWeight = 0;
