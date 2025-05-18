@@ -21,12 +21,21 @@ export default defineEventHandler(
             config = getDefaultConfig();
         }
 
-        const teams = calculateRatings(config, body.teams);
-        const matchQuality = calculateMatchQuality(config, body.teams);
+        try {
+            const teams = calculateRatings(config, body.teams);
+            const matchQuality = calculateMatchQuality(config, body.teams);
 
-        return {
-            teams,
-            matchQuality,
-        };
+            return {
+                teams,
+                matchQuality,
+            };
+        } catch (error) {
+            setResponseStatus(
+                event,
+                400,
+                `Calculations failed. Make sure you have valid values for each player and team(e.g. Sigma != 0). \nUnderlying Error: ${error}`
+            );
+            return;
+        }
     }
 );
