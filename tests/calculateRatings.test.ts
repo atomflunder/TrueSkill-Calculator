@@ -3,8 +3,17 @@ import { calculateRatings } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
 import { getDefaultConfig } from '@/utils/config';
+import { TrueSkill } from 'ts-trueskill';
 
 const config: TrueSkillConfig = getDefaultConfig();
+
+const env = new TrueSkill(
+    undefined,
+    undefined,
+    config.beta,
+    config.tau,
+    config.drawProbability
+);
 
 describe('calculateRatings', () => {
     it('handles multi-team updates (Rust parity)', () => {
@@ -37,7 +46,7 @@ describe('calculateRatings', () => {
             },
         ];
 
-        const results = calculateRatings(config, teams);
+        const results = calculateRatings(env, teams);
 
         const r = (t: number, p: number) => results[t].players[p].rating;
         expect(r(0, 0)[0]).toBeCloseTo(40.8768, 3);
@@ -81,7 +90,7 @@ describe('calculateRatings', () => {
             },
         ];
 
-        const results = calculateRatings(config, teams);
+        const results = calculateRatings(env, teams);
 
         expect(results[0].players[0].rating[0]).toBeCloseTo(41.7209, 3);
         expect(results[1].players[0].rating[0]).toBeCloseTo(20.9972, 3);
@@ -116,7 +125,7 @@ describe('calculateRatings', () => {
             },
         ];
 
-        const results = calculateRatings(config, teams);
+        const results = calculateRatings(env, teams);
 
         expect(results[0].players[0].rating[0]).toBeCloseTo(46.8443, 3);
         expect(results[1].players[0].rating[0]).toBeCloseTo(-21.0, 3);
@@ -130,7 +139,7 @@ describe('calculateRatings', () => {
     });
 
     it('handles empty teams or players', () => {
-        const results = calculateRatings(config, []);
+        const results = calculateRatings(env, []);
 
         expect(results).toHaveLength(0);
 
@@ -147,7 +156,7 @@ describe('calculateRatings', () => {
             },
         ];
 
-        const res = calculateRatings(config, teams);
+        const res = calculateRatings(env, teams);
         expect(res[0].players[0].rating[0]).toBeCloseTo(25);
         expect(res[0].players[0].rating[1]).toBeCloseTo(25 / 3);
         expect(res[1].players).toHaveLength(0);

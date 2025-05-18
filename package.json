@@ -4,6 +4,7 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
+        "bench": "bun run ./benchmarks/trueskill.bench.ts",
         "dev": "nuxt dev",
         "lint": "eslint .",
         "format": "prettier . --fix",
@@ -39,6 +40,7 @@
         "@nuxt/test-utils": "^3.18.0",
         "@vue/test-utils": "^2.4.6",
         "eslint": "^9.25.1",
+        "mitata": "^1.0.34",
         "prettier": "^3.5.3",
         "typescript": "^5.8.3",
         "vitest": "^3.1.3"

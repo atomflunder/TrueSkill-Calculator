@@ -3,9 +3,17 @@ import { calculateMatchQuality } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
 import { getDefaultConfig } from '@/utils/config';
+import { TrueSkill } from 'ts-trueskill';
 
 describe('calculateMatchQuality (multi-team)', () => {
     const config: TrueSkillConfig = getDefaultConfig();
+    const env = new TrueSkill(
+        undefined,
+        undefined,
+        config.beta,
+        config.tau,
+        config.drawProbability
+    );
 
     it('should calculate correct match quality for multiple teams', () => {
         const teamOne: InitialTeam = {
@@ -35,7 +43,7 @@ describe('calculateMatchQuality (multi-team)', () => {
             ],
         };
 
-        const result = calculateMatchQuality(config, [
+        const result = calculateMatchQuality(env, [
             teamOne,
             teamTwo,
             teamThree,
@@ -45,7 +53,7 @@ describe('calculateMatchQuality (multi-team)', () => {
     });
 
     it('should return 0 for empty team list', () => {
-        const result = calculateMatchQuality(config, []);
+        const result = calculateMatchQuality(env, []);
         expect(result).toBeLessThan(Number.EPSILON);
     });
 
@@ -65,7 +73,7 @@ describe('calculateMatchQuality (multi-team)', () => {
             players: [],
         };
 
-        const result = calculateMatchQuality(config, [teamOne, emptyTeam]);
+        const result = calculateMatchQuality(env, [teamOne, emptyTeam]);
         expect(result).toBeLessThan(Number.EPSILON);
     });
 });

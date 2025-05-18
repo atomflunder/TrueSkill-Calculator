@@ -3,9 +3,17 @@ import { calculateExpectedScores } from '@/utils/trueskill';
 import type { TrueSkillConfig } from '@/utils/config';
 import type { InitialTeam } from '~/types/trueskill';
 import { getDefaultConfig } from '@/utils/config';
+import { TrueSkill } from 'ts-trueskill';
 
 describe('calculateExpectedScores', () => {
     const defaultConfig: TrueSkillConfig = getDefaultConfig();
+    const env = new TrueSkill(
+        undefined,
+        undefined,
+        defaultConfig.beta,
+        defaultConfig.tau,
+        defaultConfig.drawProbability
+    );
 
     it('should give 50/50 expected score for equal ratings', () => {
         const teamOne: InitialTeam = {
@@ -24,10 +32,7 @@ describe('calculateExpectedScores', () => {
             ],
         };
 
-        const [exp1, exp2] = calculateExpectedScores(defaultConfig, [
-            teamOne,
-            teamTwo,
-        ]);
+        const [exp1, exp2] = calculateExpectedScores(env, [teamOne, teamTwo]);
 
         expect(Math.round(exp1 * 100)).toBeCloseTo(50, 0);
         expect(Math.round(exp2 * 100)).toBeCloseTo(50, 0);
@@ -57,10 +62,7 @@ describe('calculateExpectedScores', () => {
             players: [worsePlayer],
         };
 
-        const [exp1, exp2] = calculateExpectedScores(defaultConfig, [
-            teamOne,
-            teamTwo,
-        ]);
+        const [exp1, exp2] = calculateExpectedScores(env, [teamOne, teamTwo]);
 
         expect(Math.round(exp1 * 100)).toBeCloseTo(80, 0);
         expect(Math.round(exp2 * 100)).toBeCloseTo(20, 0);
@@ -82,11 +84,8 @@ describe('calculateExpectedScores', () => {
             players: [{ name: 'hi!', rating: [38.0, 3.0], weight: 1 }],
         };
 
-        const expectedScores = calculateExpectedScores(defaultConfig, [
-            teamOne,
-            teamTwo,
-        ]);
-        const reverseExpectedScores = calculateExpectedScores(defaultConfig, [
+        const expectedScores = calculateExpectedScores(env, [teamOne, teamTwo]);
+        const reverseExpectedScores = calculateExpectedScores(env, [
             teamOne,
             teamTwo,
         ]);
