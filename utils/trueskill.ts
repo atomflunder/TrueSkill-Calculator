@@ -80,7 +80,8 @@ export function calculateRatings(
             const newRating = newRatings[i][j];
 
             players[j] = {
-                ...team.players[j],
+                name: team.players[j].name,
+                weight: team.players[j].weight,
                 rating: [newRating.mu, newRating.sigma],
                 ratingChanges: [
                     newRating.mu - oldRating.mu,
