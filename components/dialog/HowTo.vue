@@ -38,6 +38,7 @@
                                 to="https://en.wikipedia.org/wiki/Elo_rating_system"
                                 :external="true"
                                 class="hover:cursor-pointer underline"
+                                target="_blank"
                                 >Elo</NuxtLink
                             >
                             and
@@ -45,6 +46,7 @@
                                 to="https://en.wikipedia.org/wiki/Glicko_rating_system"
                                 :external="true"
                                 class="hover:cursor-pointer underline"
+                                target="_blank"
                                 >Glicko-2</NuxtLink
                             >.
                         </p>
@@ -157,6 +159,7 @@
                                 to="https://www.microsoft.com/en-us/research/wp-content/uploads/2007/01/NIPS2006_0688.pdf"
                                 :external="true"
                                 class="hover:cursor-pointer underline"
+                                target="_blank"
                             >
                                 TrueSkill(TM): A Bayesian Skill Rating System
                             </NuxtLink>
@@ -468,6 +471,7 @@
                                 to="https://github.com/sublee/trueskill/issues/1#issuecomment-149762508"
                                 :external="true"
                                 class="hover:cursor-pointer underline"
+                                target="_blank"
                             >
                                 sublee/trueskill/issues#1
                             </NuxtLink>
